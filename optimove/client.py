@@ -6,8 +6,7 @@ import traceback
 import requests
 
 from general import General
-
-__all__ = ['Client']
+from model import Model
 
 
 class Client:
@@ -16,6 +15,7 @@ class Client:
 
     def __init__(self, username=None, password=None):
         self.general = General(self)
+        self.model = Model(self)
 
         if username and password:
             self.general.login(username, password)
