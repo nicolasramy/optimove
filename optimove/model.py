@@ -12,9 +12,11 @@ class Model(URLBuilder):
         self.client = client
 
     def get_customer_attribute_list(self):
+        """Returns all the available customer attribute names (which can be passed to certain other functions
+        as an input parameter) and a description of each."""
         response = self.client.get(self._get_url())
         if not response:
-            return None
+            return False
 
         results = {}
         for item in response.json():
@@ -23,12 +25,47 @@ class Model(URLBuilder):
         return results
 
     def get_lifecycle_stage_list(self):
+        """Returns all available lifecycle stages (for use in other functions, e.g., GetCustomerFutureValues)."""
         response = self.client.get(self._get_url())
         if not response:
-            return None
+            return False
 
         results = {}
         for item in response.json():
             results[item['StageId']] = item['StageName']
+
+        return results
+
+    def get_microsegment_list(self):
+        """Returns an dict containing the details of all microsegments."""
+        response = self.client.get(self._get_url())
+        if not response:
+            return False
+
+        results = {}
+        for item in response.json():
+            results[item['MicrosegmentID']] = item['MicrosegmentName']
+
+        return results
+
+    def get_microsegment_changers(self, start, end, attributes=None, delimiter=None):
+        """Returns an array of customer IDs, and their before and after micro-segment IDs,
+        for customers whose micro-segment changed during a particular date range."""
+        data = {
+            'StartDate': start,
+            'EndDate': end
+        }
+        if delimiter:
+            if delimiter in (';', ',', ':', '/', '?', '&', '#', '%', '$', '+', '='):
+                data['CustomerAttributesDelimiter'] = delimiter
+            else:
+                raise Exception('Invalid delimiter')
+
+        response = self.client.get(self._get_url())
+        if not response:
+            return False
+
+        results = [{'customer_id': item['CustomerID'], 'initial': item['InitialMicrosegment'],
+                    'final': item['FinalMicrosegment']} for item in response.json()]
 
         return results

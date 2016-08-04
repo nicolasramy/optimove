@@ -7,6 +7,7 @@ import requests
 
 from general import General
 from model import Model
+from segments import Segments
 
 
 class Client:
@@ -16,6 +17,7 @@ class Client:
     def __init__(self, username=None, password=None):
         self.general = General(self)
         self.model = Model(self)
+        self.segments = Segments(self)
 
         if username and password:
             self.general.login(username, password)

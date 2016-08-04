@@ -12,14 +12,19 @@ class General(URLBuilder):
         self.client = client
 
     def login(self, username, password):
+        """Returns the authentication token required for all other functions during a particular session"""
+        if not username or not password:
+            raise Exception('No credentials provide')
+
         data = {
             'Username': username,
             'Password': password
         }
         response = self.client.post(self._get_url(), data)
-        self.client.token = response.json() if response else None
+        self.client.token = response.json() if response else False
         return self.client.token
 
     def get_last_data_update(self):
+        """Returns the date of the most recently available customer data"""
         response = self.client.get(self._get_url())
-        return response.json() if response else None
+        return response.json() if response else False
