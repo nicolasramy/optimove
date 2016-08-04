@@ -48,24 +48,38 @@ class Model(URLBuilder):
 
         return results
 
-    def get_microsegment_changers(self, start, end, attributes=None, delimiter=None):
+    def get_microsegment_changers(self, start, end, attributes=None, delimiter=';'):
         """Returns an array of customer IDs, and their before and after micro-segment IDs,
         for customers whose micro-segment changed during a particular date range."""
         data = {
             'StartDate': start,
             'EndDate': end
         }
-        if delimiter:
-            if delimiter in (';', ',', ':', '/', '?', '&', '#', '%', '$', '+', '='):
-                data['CustomerAttributesDelimiter'] = delimiter
-            else:
-                raise Exception('Invalid delimiter')
+        if attributes and type(attributes) == type(list):
+            attributes = ';'.join(attributes)
+            data['CustomerAttributes'] = attributes
+
+            if delimiter:
+                if delimiter in (';', ',', ':', '/', '?', '&', '#', '%', '$', '+', '='):
+                    data['CustomerAttributesDelimiter'] = delimiter
+                else:
+                    raise Exception('Invalid delimiter')
 
         response = self.client.get(self._get_url())
         if not response:
             return False
 
-        results = [{'customer_id': item['CustomerID'], 'initial': item['InitialMicrosegment'],
-                    'final': item['FinalMicrosegment']} for item in response.json()]
+        results = list()
+        for item in response.json():
+            result = {
+                'customer_id': item['CustomerID'],
+                'initial': item['InitialMicrosegment'],
+                'final': item['FinalMicrosegment']
+            }
+            if attributes:
+                customer_attributes = item['CustomerAttributes'].split(delimiter)
+                for index, attribute in enumerate(attributes):
+                    result['attributes'][attribute] = customer_attributes[index]
+            results.append(result)
 
         return results
