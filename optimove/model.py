@@ -32,7 +32,7 @@ class Model(URLBuilder):
 
         results = {}
         for item in response.json():
-            results[item['StageId']] = item['StageName']
+            results[item['StageID']] = item['StageName']
 
         return results
 
@@ -51,6 +51,9 @@ class Model(URLBuilder):
     def get_microsegment_changers(self, start, end, attributes=None, delimiter=';'):
         """Returns an array of customer IDs, and their before and after micro-segment IDs,
         for customers whose micro-segment changed during a particular date range."""
+        if not start and not end:
+            raise Exception('No StartDate and EndDate provided')
+
         data = {
             'StartDate': start,
             'EndDate': end

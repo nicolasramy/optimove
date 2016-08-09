@@ -8,6 +8,7 @@ import requests
 
 from general import General
 from model import Model
+from actions import Actions
 from segments import Segments
 
 
@@ -20,6 +21,7 @@ class Client:
         self.general = General(self)
         self.model = Model(self)
         self.segments = Segments(self)
+        self.actions = Actions(self)
 
         if username and password:
             self.general.login(username, password)
@@ -36,7 +38,7 @@ class Client:
         return headers
 
     def refresh_token(self):
-        if (self.expire - datetime.utcnow()).seconds >= 20 * 60:
+        if (self.expire - datetime.utcnow()).seconds >= 1200:
             self.general.login(self.general.username, self.general.password)
         return
 
