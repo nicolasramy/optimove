@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import traceback
+
+from datetime import datetime, timedelta
 
 import requests
 
@@ -13,6 +14,7 @@ from segments import Segments
 class Client:
 
     token = None
+    expire = None
 
     def __init__(self, username=None, password=None):
         self.general = General(self)
@@ -33,13 +35,22 @@ class Client:
 
         return headers
 
+    def refresh_token(self):
+        if (self.expire - datetime.utcnow()).seconds >= 20 * 60:
+            self.general.login(self.general.username, self.general.password)
+        return
+
     def get(self, url, payload=None, headers=None):
+        self.refresh_token()
+
         headers = headers if headers else self._headers()
         response = requests.get(url, params=payload, headers=headers)
 
         return response if response.status_code == requests.codes.ok else False
 
     def post(self, url, payload=None, headers=None):
+        self.refresh_token()
+
         headers = headers if headers else self._headers()
         response = requests.post(url, payload, headers)
 

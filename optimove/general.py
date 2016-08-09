@@ -2,11 +2,15 @@
 from __future__ import unicode_literals
 
 
+from datetime import datetime, timedelta
+
 from . import URLBuilder
 
 
 class General(URLBuilder):
     client = None
+    username = None
+    password = None
 
     def __init__(self, client):
         self.client = client
@@ -16,15 +20,20 @@ class General(URLBuilder):
         if not username or not password:
             raise Exception('No credentials provide')
 
+        self.username = username
+        self.password = password
+
         data = {
-            'Username': username,
-            'Password': password
+            'Username': self.username,
+            'Password': self.password
         }
+
         response = self.client.post(self._get_url(), data)
         self.client.token = response.json() if response else False
+        self.client.expire = datetime.utcnow() if self.client.token else None
         return self.client.token
 
     def get_last_data_update(self):
         """Returns the date of the most recently available customer data"""
         response = self.client.get(self._get_url())
-        return response.json() if response else False
+        return response.json()['Date'] if response else False
