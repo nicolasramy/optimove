@@ -5,7 +5,7 @@ from __future__ import unicode_literals
 from . import URLBuilder
 
 
-class Model(URLBuilder):
+class Groups(URLBuilder):
     client = None
 
     def __init__(self, client):

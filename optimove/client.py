@@ -9,7 +9,7 @@ import requests
 from general import General
 from model import Model
 from actions import Actions
-from segments import Segments
+from customers import Customers
 
 
 class Client:
@@ -20,8 +20,8 @@ class Client:
     def __init__(self, username=None, password=None):
         self.general = General(self)
         self.model = Model(self)
-        self.segments = Segments(self)
         self.actions = Actions(self)
+        self.customers = Customers(self)
 
         if username and password:
             self.general.login(username, password)
