@@ -11,10 +11,10 @@ from model import Model
 from actions import Actions
 from customers import Customers
 from segments import Segments
+from integrations import Integrations
 
 
 class Client:
-
     token = None
     expire = None
 
@@ -24,6 +24,7 @@ class Client:
         self.actions = Actions(self)
         self.customers = Customers(self)
         self.segments = Segments(self)
+        self.integrations = Integrations(self)
 
         if username and password:
             self.general.login(username, password)
