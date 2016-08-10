@@ -1,24 +1,26 @@
+# Optimove
+
 [![Build Status](https://travis-ci.org/nicolasramy/optimove.svg?branch=master)](https://travis-ci.org/nicolasramy/optimove)
 
 **This library allows you to quickly and easily use the Optimove Web API v3 via Python**
 
-# Installation
+## Installation
 
-## Requirements
+### Requirements
 
 * requests
 
 see ```requirements.txt``` for more details
 
-## Install package
+### Install package
 
 ```
 python setup.py install
 ```
 
-# Quick start
+## Quick start
 
-## Instanciate a new client
+### Instanciate a new client
 
 ```python
 from optimove.client import Client
@@ -26,12 +28,18 @@ client = Client('username', 'password')
 print client.general.get_last_data_update()
 ````
 
+## Test
+
+```
+python setup.py test
+```
+
 ## Usage
 
-# Roadmap
+## Roadmap
 
-# How to contribute
+## How to contribute
 
-# Troubelshooting
+## Troubelshooting
 
-# About
+## About
