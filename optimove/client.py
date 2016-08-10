@@ -47,16 +47,28 @@ class Client:
 
         headers = headers if headers else self._headers()
         response = requests.get(url, params=payload, headers=headers)
-
-        return response if response.status_code == requests.codes.ok else False
+        return self.dispatch_response(response)
 
     def post(self, url, payload=None, headers=None):
         self.refresh_token()
 
         headers = headers if headers else self._headers()
         response = requests.post(url, payload, headers)
+        return self.dispatch_response(response)
 
-        return response if response.status_code == requests.codes.ok else False
+    def dispatch_response(self, response):
+        if response.status_code == 200:
+            return response
+        elif response.status_code == 400:
+            return self.bad_request()
+        elif response.status_code == 401:
+            return self.unauthorized()
+        elif response.status_code == 405:
+            return self.method_not_allowed()
+        elif response.status_code == 500:
+            return self.internal_server_error()
+        else:
+            return False
 
     def bad_request(self):
         pass

@@ -58,6 +58,7 @@ class Model(URLBuilder):
             'StartDate': start,
             'EndDate': end
         }
+
         if attributes and type(attributes) == type(list):
             attributes = ';'.join(attributes)
             data['CustomerAttributes'] = attributes
