@@ -10,6 +10,7 @@ from general import General
 from model import Model
 from actions import Actions
 from customers import Customers
+from segments import Segments
 
 
 class Client:
@@ -22,6 +23,7 @@ class Client:
         self.model = Model(self)
         self.actions = Actions(self)
         self.customers = Customers(self)
+        self.segments = Segments(self)
 
         if username and password:
             self.general.login(username, password)
