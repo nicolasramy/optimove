@@ -31,6 +31,7 @@ class Actions(URLBuilder):
         data = {
             'ActionName': action_name
         }
+
         response = self.client.get(self._get_url(), data)
         return response.json()['ActionID'] if response else False
 
@@ -219,7 +220,7 @@ class Actions(URLBuilder):
 
     def get_execution_channels(self):
         """Returns all available execution channels."""
-        response = self.client.get(self._get_url(), data)
+        response = self.client.get(self._get_url())
         if not response:
             return False
 

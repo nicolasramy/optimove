@@ -11,6 +11,9 @@ class URLBuilder(object):
     API_BASE_URL = 'https://api.optimove.net/'
     API_VERSION = 'v3.0'
 
+    AUTHORIZED_DELIMITERS = (',', ';')
+    UNAUTHORIZED_DELIMITERS = (':', '/', '?', '&', '#', '%', '$', '+', '=')
+
     def _get_url(self):
         method_name = getouterframes(currentframe(), 2)[1][3]
 

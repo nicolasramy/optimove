@@ -64,12 +64,12 @@ class Model(URLBuilder):
             data['CustomerAttributes'] = attributes
 
             if delimiter:
-                if delimiter in (';', ',', ':', '/', '?', '&', '#', '%', '$', '+', '='):
+                if delimiter in self.AUTHORIZED_DELIMITERS and delimiter not in self.UNAUTHORIZED_DELIMITERS:
                     data['CustomerAttributesDelimiter'] = delimiter
                 else:
                     raise Exception('Invalid delimiter')
 
-        response = self.client.get(self._get_url())
+        response = self.client.get(self._get_url(), data)
         if not response:
             return False
 
