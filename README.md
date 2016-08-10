@@ -40,6 +40,6 @@ python setup.py test
 
 ## How to contribute
 
-## Troubelshooting
+## Troubleshooting
 
 ## About
