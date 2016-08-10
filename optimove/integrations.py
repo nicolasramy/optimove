@@ -8,6 +8,12 @@ from . import URLBuilder
 class Integrations(URLBuilder):
     client = None
 
+    METRIC_SENT = 0
+    METRIC_DELIVERED = 1
+    METRIC_OPENED = 2
+    METRIC_CLICKED = 3
+    METRIC_UNSUBSCRIBED = 4
+
     def __init__(self, client):
         self.client = client
 
