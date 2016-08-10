@@ -41,19 +41,21 @@ class Client:
         return headers
 
     def refresh_token(self):
-        if (self.expire - datetime.utcnow()).seconds >= 1200:
+        if not self.expire or (self.expire - datetime.utcnow()).seconds >= 1200:
             self.general.login(self.general.username, self.general.password)
         return
 
-    def get(self, url, payload=None, headers=None):
-        self.refresh_token()
+    def get(self, url, payload=None, headers=None, check_token=True):
+        if check_token:
+            self.refresh_token()
 
         headers = headers if headers else self._headers()
         response = requests.get(url, params=payload, headers=headers)
         return self.dispatch_response(response)
 
-    def post(self, url, payload=None, headers=None):
-        self.refresh_token()
+    def post(self, url, payload=None, headers=None, check_token=True):
+        if check_token:
+            self.refresh_token()
 
         headers = headers if headers else self._headers()
         response = requests.post(url, payload, headers)

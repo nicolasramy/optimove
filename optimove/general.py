@@ -28,7 +28,7 @@ class General(URLBuilder):
             'Password': self.password
         }
 
-        response = self.client.post(self._get_url(), data)
+        response = self.client.post(self._get_url(), data, check_token=False)
         self.client.token = response.json() if response else False
         self.client.expire = datetime.utcnow() if self.client.token else None
         return self.client.token
