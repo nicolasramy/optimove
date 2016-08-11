@@ -44,7 +44,12 @@ class Model(URLBuilder):
 
         results = {}
         for item in response.json():
-            results[item['MicrosegmentID']] = item['MicrosegmentName']
+            results[item['MicrosegmentID']] = {
+                'name': item['MicrosegmentName'],
+                'stage_id': item['LifecycleStageID'],
+                'future_value': item['FutureValue'],
+                'churn_rate': item['ChurnRate'],
+            }
 
         return results
 
