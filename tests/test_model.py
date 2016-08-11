@@ -8,133 +8,71 @@ from urlparse import urlparse, parse_qs, parse_qsl
 from optimove.client import Client
 import responses
 
-from constants import TOKEN
+from constants import HEADERS, TOKEN
+from helpers import login_callback, token_required
 
 
 """Callbacks"""
 
 
-def login_callback(request):
-    payload = parse_qs(request.body)
-    headers = {'Content-Type': 'text/plain'}
-
-    if payload['Username'][0] == 'username' and payload['Password'][0] == 'password':
-        headers = {'Content-Type': 'application/json'}
-        resp_body = TOKEN
-        return 200, headers, json.dumps(resp_body)
-
-    else:
-        return 401, headers, 'Wrong user / password combination'
-
-
+@token_required
 def get_customer_attribute_list_callback(request):
-    headers = {'Content-Type': 'text/plain'}
-
-    if 'Authorization-Token' in request.headers:
-        if request.headers['Authorization-Token'] == TOKEN:
-            headers = {'Content-Type': 'application/json'}
-            resp_body = [
-                {'RealFieldName': 'Affiliate', 'Description': 'Acquisition affiliate'},
-                {'RealFieldName': 'Age', 'Description': 'Customer age'},
-                {'RealFieldName': 'Country', 'Description': 'Country of residence'}
-            ]
-            return 200, headers, json.dumps(resp_body)
-
-        else:
-            return 403, headers, 'Unauthorized User'
-
-    else:
-        return 401, headers, 'Missing Authorization-Token'
+    resp_body = [
+        {'RealFieldName': 'Affiliate', 'Description': 'Acquisition affiliate'},
+        {'RealFieldName': 'Age', 'Description': 'Customer age'},
+        {'RealFieldName': 'Country', 'Description': 'Country of residence'}
+    ]
+    return 200, HEADERS['json'], json.dumps(resp_body)
 
 
+@token_required
 def get_lifecycle_stage_list_callback(request):
-    headers = {'Content-Type': 'text/plain'}
-
-    if 'Authorization-Token' in request.headers:
-        if request.headers['Authorization-Token'] == TOKEN:
-            headers = {'Content-Type': 'application/json'}
-            resp_body = [
-                {'StageID': 1, 'StageName': 'New'},
-                {'StageID': 2, 'StageName': 'Active'},
-                {'StageID': 3, 'StageName': 'FromChurn'},
-                {'StageID': 4, 'StageName': 'Churn'}
-            ]
-            return 200, headers, json.dumps(resp_body)
-
-        else:
-            return 403, headers, 'Unauthorized User'
-
-    else:
-        return 401, headers, 'Missing Authorization-Token'
+    resp_body = [
+        {'StageID': 1, 'StageName': 'New'},
+        {'StageID': 2, 'StageName': 'Active'},
+        {'StageID': 3, 'StageName': 'FromChurn'},
+        {'StageID': 4, 'StageName': 'Churn'}
+    ]
+    return 200, HEADERS['json'], json.dumps(resp_body)
 
 
+@token_required
 def get_microsegment_list_callback(request):
-    headers = {'Content-Type': 'text/plain'}
-
-    if 'Authorization-Token' in request.headers:
-        if request.headers['Authorization-Token'] == TOKEN:
-            headers = {'Content-Type': 'application/json'}
-            resp_body = [
-                {'MicrosegmentID': 1, 'MicrosegmentName': 'DWag1-Europe-Winner',
-                 'LifecycleStageID': 1, 'FutureValue': 870.55, 'ChurnRate': 0.55},
-                {'MicrosegmentID': 2, 'MicrosegmentName': 'DWag2-US-Loser',
-                 'LifecycleStageID': 2, 'FutureValue': 1065.10, 'ChurnRate': 0.52},
-                {'MicrosegmentID': 3, 'MicrosegmentName': 'DWag3-ROW-Winner',
-                 'LifecycleStageID': 2, 'FutureValue': 1213.76, 'ChurnRate': 0.57}
-            ]
-            return 200, headers, json.dumps(resp_body)
-
-        else:
-            return 403, headers, 'Unauthorized User'
-
-    else:
-        return 401, headers, 'Missing Authorization-Token'
+    resp_body = [
+        {'MicrosegmentID': 1, 'MicrosegmentName': 'DWag1-Europe-Winner',
+         'LifecycleStageID': 1, 'FutureValue': 870.55, 'ChurnRate': 0.55},
+        {'MicrosegmentID': 2, 'MicrosegmentName': 'DWag2-US-Loser',
+         'LifecycleStageID': 2, 'FutureValue': 1065.10, 'ChurnRate': 0.52},
+        {'MicrosegmentID': 3, 'MicrosegmentName': 'DWag3-ROW-Winner',
+         'LifecycleStageID': 2, 'FutureValue': 1213.76, 'ChurnRate': 0.57}
+    ]
+    return 200, HEADERS['json'], json.dumps(resp_body)
 
 
+@token_required
 def get_microsegment_changers_callback(request):
-    headers = {'Content-Type': 'text/plain'}
-
-    if 'Authorization-Token' in request.headers:
-        if request.headers['Authorization-Token'] == TOKEN:
-            headers = {'Content-Type': 'application/json'}
-            resp_body = [
-                {'CustomerID': '231342', 'InitialMicrosegmentID': 4, 'FinalMicrosegmentID': 12},
-                {'CustomerID': '231342', 'InitialMicrosegmentID': 3, 'FinalMicrosegmentID': 67}
-            ]
-            return 200, headers, json.dumps(resp_body)
-
-        else:
-            return 403, headers, 'Unauthorized User'
-
-    else:
-        return 401, headers, 'Missing Authorization-Token'
+    resp_body = [
+        {'CustomerID': '231342', 'InitialMicrosegmentID': 4, 'FinalMicrosegmentID': 12},
+        {'CustomerID': '231342', 'InitialMicrosegmentID': 3, 'FinalMicrosegmentID': 67}
+    ]
+    return 200, HEADERS['json'], json.dumps(resp_body)
 
 
+@token_required
 def get_microsegment_changers_with_attributes_callback(request):
-    headers = {'Content-Type': 'text/plain'}
+    params = parse_qsl(urlparse(request.url).query)
 
-    if 'Authorization-Token' in request.headers:
-        if request.headers['Authorization-Token'] == TOKEN:
-            params = parse_qsl(urlparse(request.url).query)
-
-            if params[0][1] == '2016-01-01':
-                headers = {'Content-Type': 'application/json'}
-                resp_body = [
-                    {'CustomerID': '231342', 'InitialMicrosegmentID': 4, 'FinalMicrosegmentID': 12,
-                     'CustomerAttributes': 'BuddyZZ,UK'},
-                    {'CustomerID': '231342', 'InitialMicrosegmentID': 3, 'FinalMicrosegmentID': 67,
-                     'CustomerAttributes': 'Player99,US'}
-                ]
-                return 200, headers, json.dumps(resp_body)
-
-            else:
-                return 404, headers, 'Not Found'
-
-        else:
-            return 403, headers, 'Unauthorized User'
+    if params[0][1] == '2016-01-01':
+        resp_body = [
+            {'CustomerID': '231342', 'InitialMicrosegmentID': 4, 'FinalMicrosegmentID': 12,
+             'CustomerAttributes': 'BuddyZZ,UK'},
+            {'CustomerID': '231342', 'InitialMicrosegmentID': 3, 'FinalMicrosegmentID': 67,
+             'CustomerAttributes': 'Player99,US'}
+        ]
+        return 200, HEADERS['json'], json.dumps(resp_body)
 
     else:
-        return 401, headers, 'Missing Authorization-Token'
+        return 404, HEADERS['text'], 'Not Found'
 
 
 class TestModel(unittest.TestCase):
