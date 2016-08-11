@@ -258,7 +258,7 @@ class TestModel(unittest.TestCase):
                           '2016-01-01', '2016-01-31', ['Alias', 'Country'], '/')
 
     @responses.activate
-    def test_get_microsegment_changers_with_wrong_dates(self):
+    def test_get_microsegment_changers_with_empty_dates(self):
         responses.add_callback(
             responses.POST,
             'https://api.optimove.net/v3.0/general/login',
@@ -278,7 +278,7 @@ class TestModel(unittest.TestCase):
                           '2016-01-01', None, ['Alias', 'Country'], ',')
 
     @responses.activate
-    def test_get_microsegment_changers_with_unreasonable_dates(self):
+    def test_get_microsegment_changers_with_wrong_dates(self):
         responses.add_callback(
             responses.POST,
             'https://api.optimove.net/v3.0/general/login',
