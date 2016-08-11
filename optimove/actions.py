@@ -223,6 +223,7 @@ class Actions(URLBuilder):
         results = {}
         for item in response.json():
             results[item['ChannelID']] = item['ChannelName']
+        return results
 
     def get_executed_campaign_channel_details(self, campaign_id, channel_id):
         """Returns the details of a particular channel used in a particular executed campaign."""
