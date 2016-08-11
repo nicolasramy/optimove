@@ -117,7 +117,7 @@ def get_microsegment_changers_with_attributes_callback(request):
         if request.headers['Authorization-Token'] == TOKEN:
             params = parse_qsl(urlparse(request.url).query)
 
-            if '2016-01-01' == params[0][1]:
+            if params[0][1] == '2016-01-01':
                 headers = {'Content-Type': 'application/json'}
                 resp_body = [
                     {'CustomerID': '231342', 'InitialMicrosegmentID': 4, 'FinalMicrosegmentID': 12,
@@ -128,7 +128,7 @@ def get_microsegment_changers_with_attributes_callback(request):
                 return 200, headers, json.dumps(resp_body)
 
             else:
-                return 404, headers, 'Not found'
+                return 404, headers, 'Not Found'
 
         else:
             return 403, headers, 'Unauthorized User'

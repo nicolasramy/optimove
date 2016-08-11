@@ -18,7 +18,7 @@ class General(URLBuilder):
     def login(self, username, password):
         """Returns the authentication token required for all other functions during a particular session"""
         if not username or not password:
-            raise Exception('No credentials provide')
+            raise Exception('No credentials provided')
 
         self.username = username
         self.password = password
