@@ -77,6 +77,9 @@ def get_microsegment_changers_with_attributes_callback(request):
         return 404, HEADERS['text'], 'Not Found'
 
 
+"""Tests"""
+
+
 class TestModel(unittest.TestCase):
 
     @responses.activate

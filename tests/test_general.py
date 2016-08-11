@@ -21,6 +21,9 @@ def get_last_data_update_callback(request):
     return 200, HEADERS['json'], json.dumps(resp_body)
 
 
+"""Tests"""
+
+
 class TestGeneral(unittest.TestCase):
 
     @responses.activate
