@@ -38,8 +38,6 @@ class Actions(URLBuilder):
     def get_all_actions(self):
         """Returns all defined action IDs and corresponding action names."""
         response = self.client.get(self._get_url())
-        if not response:
-            return False
 
         results = {}
         for item in response.json():
@@ -83,8 +81,8 @@ class Actions(URLBuilder):
 
         results = [{
                 'target_group_id': item['TargetGroupID'],
-                'recipient_group_iD': item['RecipientGroupID'],
-                'action_iD': item['ActionID'],
+                'recipient_group_id': item['RecipientGroupID'],
+                'action_id': item['ActionID'],
                 'promo_code': item['PromoCode']
             } for item in response.json()]
 
@@ -105,8 +103,8 @@ class Actions(URLBuilder):
 
         results = [{
                 'campaign_id': campaign_id,
-                'recipient_group_iD': item['RecipientGroupID'],
-                'action_iD': item['ActionID'],
+                'recipient_group_id': item['RecipientGroupID'],
+                'action_id': item['ActionID'],
                 'promo_code': item['PromoCode']
             } for item in response.json()]
 
@@ -129,8 +127,8 @@ class Actions(URLBuilder):
 
         results = [{
                 'target_group_id': target_group_id,
-                'recipient_group_iD': item['RecipientGroupID'],
-                'action_iD': item['ActionID'],
+                'recipient_group_id': item['RecipientGroupID'],
+                'action_id': item['ActionID'],
                 'promo_code': item['PromoCode']
             } for item in response.json()]
 
@@ -153,8 +151,8 @@ class Actions(URLBuilder):
 
         results = [{
                 'target_group_id': target_group_id,
-                'recipient_group_iD': item['RecipientGroupID'],
-                'action_iD': item['ActionID'],
+                'recipient_group_id': item['RecipientGroupID'],
+                'action_id': item['ActionID'],
                 'duration': item['Duration'],
                 'lead_time': item['LeadTime'],
                 'channel_id': item['ChannelID']
@@ -221,8 +219,6 @@ class Actions(URLBuilder):
     def get_execution_channels(self):
         """Returns all available execution channels."""
         response = self.client.get(self._get_url())
-        if not response:
-            return False
 
         results = {}
         for item in response.json():
