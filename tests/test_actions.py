@@ -180,6 +180,20 @@ def get_executed_campaign_channel_details_callback(request):
         return 404, HEADERS['text'], 'Not Found'
 
 
+@token_required
+def get_executed_campaigns_by_channel_callback(request):
+    params = parse_qs(urlparse(request.url).query)
+
+    if params['ChannelID'][0] == '35' and params['Date'][0] == '2016-02-20':
+        resp_body = [
+            {'CampaignID': 12}, {'CampaignID': 16}, {'CampaignID': 17}, {'CampaignID': 19}
+        ]
+        return 200, HEADERS['json'], json.dumps(resp_body)
+
+    else:
+        return 404, HEADERS['text'], 'Not Found'
+
+
 """Tests"""
 
 
@@ -827,4 +841,63 @@ class TestActions(unittest.TestCase):
 
         client = Client('username', 'password')
         data = client.actions.get_executed_campaign_channel_details(9214, 34)
+        self.assertFalse(data)
+
+    @responses.activate
+    def test_get_executed_campaigns_by_channel(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/actions/GetExecutedCampaignsByChannel',
+            callback=get_executed_campaigns_by_channel_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        data = client.actions.get_executed_campaigns_by_channel(35, '2016-02-20')
+        self.assertEqual(data, [12, 16, 17, 19])
+
+    @responses.activate
+    def test_get_executed_campaigns_by_channel_empty_date(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/actions/GetExecutedCampaignsByChannel',
+            callback=get_executed_campaigns_by_channel_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        self.assertRaises(Exception, client.actions.get_executed_campaigns_by_channel, 35, None)
+
+    @responses.activate
+    def test_get_executed_campaigns_by_channel_wrong_date(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/actions/GetExecutedCampaignsByChannel',
+            callback=get_executed_campaigns_by_channel_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        data = client.actions.get_executed_campaigns_by_channel(35, '3016-02-20')
         self.assertFalse(data)
