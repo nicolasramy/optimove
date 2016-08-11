@@ -64,9 +64,8 @@ class Model(URLBuilder):
             'EndDate': end
         }
 
-        if attributes and type(attributes) == type(list):
-            attributes = ';'.join(attributes)
-            data['CustomerAttributes'] = attributes
+        if attributes and type(attributes) == list:
+            data['CustomerAttributes'] = ';'.join(attributes)
 
             if delimiter:
                 if delimiter in self.AUTHORIZED_DELIMITERS and delimiter not in self.UNAUTHORIZED_DELIMITERS:
@@ -82,10 +81,11 @@ class Model(URLBuilder):
         for item in response.json():
             result = {
                 'customer_id': item['CustomerID'],
-                'initial': item['InitialMicrosegment'],
-                'final': item['FinalMicrosegment']
+                'initial': item['InitialMicrosegmentID'],
+                'final': item['FinalMicrosegmentID']
             }
-            if attributes:
+            if attributes and type(attributes) == list:
+                result['attributes'] = {}
                 customer_attributes = item['CustomerAttributes'].split(delimiter)
                 for index, attribute in enumerate(attributes):
                     result['attributes'][attribute] = customer_attributes[index]

@@ -91,6 +91,46 @@ def get_microsegment_list_callback(request):
         return 401, headers, 'Missing Authorization-Token'
 
 
+def get_microsegment_changers_callback(request):
+    headers = {'Content-Type': 'text/plain'}
+
+    if 'Authorization-Token' in request.headers:
+        if request.headers['Authorization-Token'] == TOKEN:
+            headers = {'Content-Type': 'application/json'}
+            resp_body = [
+                {'CustomerID': '231342', 'InitialMicrosegmentID': 4, 'FinalMicrosegmentID': 12},
+                {'CustomerID': '231342', 'InitialMicrosegmentID': 3, 'FinalMicrosegmentID': 67}
+            ]
+            return 200, headers, json.dumps(resp_body)
+
+        else:
+            return 403, headers, 'Unauthorized User'
+
+    else:
+        return 401, headers, 'Missing Authorization-Token'
+
+
+def get_microsegment_changers_with_attributes_callback(request):
+    headers = {'Content-Type': 'text/plain'}
+
+    if 'Authorization-Token' in request.headers:
+        if request.headers['Authorization-Token'] == TOKEN:
+            headers = {'Content-Type': 'application/json'}
+            resp_body = [
+                {'CustomerID': '231342', 'InitialMicrosegmentID': 4, 'FinalMicrosegmentID': 12,
+                 'CustomerAttributes': 'BuddyZZ,UK'},
+                {'CustomerID': '231342', 'InitialMicrosegmentID': 3, 'FinalMicrosegmentID': 67,
+                 'CustomerAttributes': 'Player99,US'}
+            ]
+            return 200, headers, json.dumps(resp_body)
+
+        else:
+            return 403, headers, 'Unauthorized User'
+
+    else:
+        return 401, headers, 'Missing Authorization-Token'
+
+
 class TestModel(unittest.TestCase):
 
     @responses.activate
@@ -180,3 +220,73 @@ class TestModel(unittest.TestCase):
                 'churn_rate': 0.57
             }
         })
+
+    @responses.activate
+    def test_get_microsegment_changers(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/model/GetMicrosegmentChangers',
+            callback=get_microsegment_changers_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        data = client.model.get_microsegment_changers('2016-01-01', '2016-01-31')
+        self.assertEqual(data, [
+            {
+                'customer_id': '231342',
+                'initial': 4,
+                'final': 12
+            },
+            {
+                'customer_id': '231342',
+                'initial': 3,
+                'final': 67
+            },
+        ])
+
+    @responses.activate
+    def test_get_microsegment_changers_with_attributes(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/model/GetMicrosegmentChangers',
+            callback=get_microsegment_changers_with_attributes_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        data = client.model.get_microsegment_changers('2016-01-01', '2016-01-31', ['Alias', 'Country'], ',')
+        self.assertEqual(data, [
+            {
+                'customer_id': '231342',
+                'initial': 4,
+                'final': 12,
+                'attributes': {
+                    'Alias': 'BuddyZZ',
+                    'Country': 'UK'
+                }
+            },
+            {
+                'customer_id': '231342',
+                'initial': 3,
+                'final': 67,
+                'attributes': {
+                    'Alias': 'Player99',
+                    'Country': 'US'
+                }
+            },
+        ])
