@@ -122,6 +122,25 @@ def get_action_details_by_target_group_callback(request):
         return 404, HEADERS['text'], 'Not Found'
 
 
+@token_required
+def get_executed_campaign_details_callback(request):
+    params = parse_qs(urlparse(request.url).query)
+
+    if params['Date'][0] == '2015-06-19':
+        resp_body = [
+            {'CampaignID': 221, 'TargetGroupID': 15, 'CampaignType': 'Test/Control', 'Duration': 7,
+             'LeadTime': 3, 'Notes': '', 'IsMultiChannel': 'false', 'IsRecurrence': 'false',
+             'Status': 'Successful', 'Error': ''},
+            {'CampaignID': 81, 'TargetGroupID': 40, 'CampaignType': 'Test/Control', 'Duration': 10,
+             'LeadTime': 0, 'Notes': '', 'IsMultiChannel': 'true', 'IsRecurrence': 'true',
+             'Status': 'Failed', 'Error': 'ESP unavailable'}
+        ]
+        return 200, HEADERS['json'], json.dumps(resp_body)
+
+    else:
+        return 404, HEADERS['text'], 'Not Found'
+
+
 class TestActions(unittest.TestCase):
 
     @responses.activate
@@ -538,4 +557,86 @@ class TestActions(unittest.TestCase):
 
         client = Client('username', 'password')
         data = client.actions.get_action_details_by_target_group(9, '3015-11-11')
+        self.assertFalse(data)
+
+    @responses.activate
+    def test_get_executed_campaign_details(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/actions/GetExecutedCampaignDetails',
+            callback=get_executed_campaign_details_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        data = client.actions.get_executed_campaign_details('2015-06-19')
+        self.assertEqual(data, {
+            221: {
+                'target_group_id': 15,
+                'campaign_type': 'Test/Control',
+                'duration': 7,
+                'lead_time': 3,
+                'notes': '',
+                'is_multi_channel': 'false',
+                'is_recurrence': 'false',
+                'status': 'Successful',
+                'error': '',
+            },
+            81: {
+                'target_group_id': 40,
+                'campaign_type': 'Test/Control',
+                'duration': 10,
+                'lead_time': 0,
+                'notes': '',
+                'is_multi_channel': 'true',
+                'is_recurrence': 'true',
+                'status': 'Failed',
+                'error': 'ESP unavailable',
+            }
+        })
+
+    @responses.activate
+    def test_get_executed_campaign_details_with_empty_date(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/actions/GetExecutedCampaignDetails',
+            callback=get_executed_campaign_details_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        self.assertRaises(Exception, client.actions.get_executed_campaign_details, None)
+
+    @responses.activate
+    def test_get_executed_campaign_details_with_wrong_date(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/actions/GetExecutedCampaignDetails',
+            callback=get_executed_campaign_details_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        data = client.actions.get_executed_campaign_details('3015-06-19')
         self.assertFalse(data)
