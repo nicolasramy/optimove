@@ -155,6 +155,34 @@ def get_campaign_details_callback(request):
         return 404, HEADERS['text'], 'Not Found'
 
 
+@token_required
+def get_execution_channels_callback(request):
+    resp_body = [
+        {'ChannelID': 1, 'ChannelName': 'Silverpop'},
+        {'ChannelID': 2, 'ChannelName': 'ExactTarget'},
+        {'ChannelID': 3, 'ChannelName': 'Lobby Banner'},
+        {'ChannelID': 4, 'ChannelName': 'Call Center'}
+    ]
+    return 200, HEADERS['json'], json.dumps(resp_body)
+
+
+@token_required
+def get_executed_campaign_channel_details_callback(request):
+    params = parse_qs(urlparse(request.url).query)
+
+    if params['CampaignID'][0] == '9214' and params['ChannelID'][0] == '35':
+        resp_body = [
+            {'ListID': 12, 'SendID': 'YTGF3C', 'TemplateID': 520, 'ScheduledTime': '2015-12-30 08:00:00'}
+        ]
+        return 200, HEADERS['json'], json.dumps(resp_body)
+
+    else:
+        return 404, HEADERS['text'], 'Not Found'
+
+
+"""Tests"""
+
+
 class TestActions(unittest.TestCase):
 
     @responses.activate
@@ -714,4 +742,89 @@ class TestActions(unittest.TestCase):
 
         client = Client('username', 'password')
         data = client.actions.get_campaign_details(12)
+        self.assertFalse(data)
+
+    @responses.activate
+    def test_get_execution_channels(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/actions/GetExecutionChannels',
+            callback=get_execution_channels_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        data = client.actions.get_execution_channels()
+        self.assertEqual(data, {
+            1: 'Silverpop',
+            2: 'ExactTarget',
+            3: 'Lobby Banner',
+            4: 'Call Center',
+        })
+
+    @responses.activate
+    def test_get_executed_campaign_channel_details(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/actions/GetExecutedCampaignChannelDetails',
+            callback=get_executed_campaign_channel_details_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        data = client.actions.get_executed_campaign_channel_details(9214, 35)
+        self.assertEqual(data, {'campaign_id': 9214, 'channel_id': 35, 'list_id': 12,
+                                'send_id': 'YTGF3C', 'template_id': 520, 'scheduled_time': '2015-12-30 08:00:00'})
+
+    @responses.activate
+    def test_get_executed_campaign_channel_details_empty_channel_id(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/actions/GetExecutedCampaignChannelDetails',
+            callback=get_executed_campaign_channel_details_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        self.assertRaises(Exception, client.actions.get_executed_campaign_channel_details, 9214, None)
+
+    @responses.activate
+    def test_get_executed_campaign_channel_details_wrong_channel_id(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/actions/GetExecutedCampaignChannelDetails',
+            callback=get_executed_campaign_channel_details_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        data = client.actions.get_executed_campaign_channel_details(9214, 34)
         self.assertFalse(data)
