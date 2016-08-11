@@ -239,7 +239,7 @@ class Actions(URLBuilder):
         if not response:
             return False
 
-        item = response.json()
+        item = response.json()[0]
         return {
             'campaign_id': campaign_id,
             'channel_id': channel_id,
