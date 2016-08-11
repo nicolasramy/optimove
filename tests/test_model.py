@@ -11,7 +11,7 @@ import responses
 from constants import TOKEN
 
 
-"""Callbacks"""
+'''Callbacks'''
 
 
 def login_callback(request):
@@ -27,13 +27,17 @@ def login_callback(request):
         return 401, headers, 'Wrong user / password combination'
 
 
-def get_last_data_update_callback(request):
+def get_customer_attribute_list_callback(request):
     headers = {'Content-Type': 'text/plain'}
 
     if 'Authorization-Token' in request.headers:
         if request.headers['Authorization-Token'] == TOKEN:
             headers = {'Content-Type': 'application/json'}
-            resp_body = {'Date': '2016-08-10'}
+            resp_body = [
+                {'RealFieldName': 'Affiliate', 'Description': 'Acquisition affiliate'},
+                {'RealFieldName': 'Age', 'Description': 'Customer age'},
+                {'RealFieldName': 'Country', 'Description': 'Country of residence'}
+            ]
             return 200, headers, json.dumps(resp_body)
 
         else:
@@ -43,34 +47,10 @@ def get_last_data_update_callback(request):
         return 401, headers, 'Missing Authorization-Token'
 
 
-class TestGeneral(unittest.TestCase):
+class TestModel(unittest.TestCase):
 
     @responses.activate
-    def test_login_success(self):
-        responses.add_callback(
-            responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
-            callback=login_callback,
-            content_type='application/json'
-        )
-
-        client = Client('username', 'password')
-        self.assertEqual(client.token, TOKEN)
-
-    @responses.activate
-    def test_login_fail(self):
-        responses.add_callback(
-            responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
-            callback=login_callback,
-            content_type='application/json'
-        )
-
-        client = Client('username', 'wrong_password')
-        self.assertFalse(client.token)
-
-    @responses.activate
-    def test_last_update_date(self):
+    def test_get_customer_attribute_list(self):
         responses.add_callback(
             responses.POST,
             'https://api.optimove.net/v3.0/general/login',
@@ -80,11 +60,15 @@ class TestGeneral(unittest.TestCase):
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/general/GetLastDataUpdate',
-            callback=get_last_data_update_callback,
+            'https://api.optimove.net/v3.0/model/GetCustomerAttributeList',
+            callback=get_customer_attribute_list_callback,
             content_type='application/json'
         )
 
         client = Client('username', 'password')
-        data = client.general.get_last_data_update()
-        self.assertEqual(data, '2016-08-10')
+        data = client.model.get_customer_attribute_list()
+        self.assertEqual(data, {
+            'Affiliate': 'Acquisition affiliate',
+            'Age': 'Customer age',
+            'Country': 'Country of residence',
+        })

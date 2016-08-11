@@ -8,7 +8,7 @@ __version__ = "0.0.0"
 
 class URLBuilder(object):
 
-    API_BASE_URL = 'https://api.optimove.net/'
+    API_BASE_URL = 'https://api.optimove.net'
     API_VERSION = 'v3.0'
 
     AUTHORIZED_DELIMITERS = (',', ';')
@@ -18,9 +18,7 @@ class URLBuilder(object):
         method_name = getouterframes(currentframe(), 2)[1][3]
 
         if '_' in method_name:
-            method_name_splitted = method_name.split('_')
-            action_name_list = [method_name_splitted[0].lower(), ]
-            action_name_list += [part.capitalize() for part in method_name_splitted[1:]]
+            action_name_list = [part.capitalize() for part in method_name.split('_')]
             action_name = ''.join(action_name_list)
 
         else:
