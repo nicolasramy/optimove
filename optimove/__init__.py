@@ -18,7 +18,7 @@ class URLBuilder(object):
         method_name = getouterframes(currentframe(), 2)[1][3]
 
         if '_' in method_name:
-            action_name_list = [part.capitalize() for part in method_name.split('_')]
+            action_name_list = [part.upper() if part == 'id' else part.capitalize() for part in method_name.split('_')]
             action_name = ''.join(action_name_list)
 
         else:
