@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 import json
 import unittest
-from urlparse import urlparse, parse_qs, parse_qsl
+from urlparse import urlparse, parse_qs
 
 from optimove.client import Client
 import responses
@@ -60,9 +60,11 @@ def get_microsegment_changers_callback(request):
 
 @token_required
 def get_microsegment_changers_with_attributes_callback(request):
-    params = parse_qsl(urlparse(request.url).query)
+    params = parse_qs(urlparse(request.url).query)
 
-    if params[0][1] == '2016-01-01':
+    if params['StartDate'][0] == '2016-01-01' and params['EndDate'][0] == '2016-01-31'\
+            and params['CustomerAttributes'][0] == 'Alias;Country'\
+            and params['CustomerAttributesDelimiter'][0] == ',':
         resp_body = [
             {'CustomerID': '231342', 'InitialMicrosegmentID': 4, 'FinalMicrosegmentID': 12,
              'CustomerAttributes': 'BuddyZZ,UK'},

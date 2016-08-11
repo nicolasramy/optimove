@@ -17,7 +17,7 @@ from helpers import login_callback, token_required
 
 @token_required
 def get_last_data_update_callback(request):
-    resp_body = {'Date': '2016-08-10'}
+    resp_body = {'Date': '2015-08-13'}
     return 200, HEADERS['json'], json.dumps(resp_body)
 
 
@@ -77,4 +77,4 @@ class TestGeneral(unittest.TestCase):
 
         client = Client('username', 'password')
         data = client.general.get_last_data_update()
-        self.assertEqual(data, '2016-08-10')
+        self.assertEqual(data, '2015-08-13')
