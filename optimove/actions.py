@@ -181,8 +181,8 @@ class Actions(URLBuilder):
                 'duration': item['Duration'],
                 'lead_time': item['LeadTime'],
                 'notes': item['Notes'],
-                'is_multi_channel': item['IsMultiChannel'],
-                'is_recurrence': item['IsRecurrence'],
+                'is_multi_channel': item['IsMultiChannel'] == 'true',
+                'is_recurrence': item['IsRecurrence'] == 'true',
                 'status': item['Status'],
                 'error': item['Error'],
             }
@@ -210,8 +210,8 @@ class Actions(URLBuilder):
             'duration': item['Duration'],
             'lead_time': item['LeadTime'],
             'notes': item['Notes'],
-            'is_multi_channel': item['IsMultiChannel'],
-            'is_recurrence': item['IsRecurrence'],
+            'is_multi_channel': item['IsMultiChannel'] == 'true',
+            'is_recurrence': item['IsRecurrence'] == 'true',
             'status': item['Status'],
             'error': item['Error'],
         }

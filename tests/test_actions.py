@@ -141,6 +141,20 @@ def get_executed_campaign_details_callback(request):
         return 404, HEADERS['text'], 'Not Found'
 
 
+@token_required
+def get_campaign_details_callback(request):
+    params = parse_qs(urlparse(request.url).query)
+
+    if params['CampaignID'][0] == '21':
+        resp_body = {'TargetGroupID': 15, 'CampaignType': 'Test/Control', 'Duration': 7,
+                     'LeadTime': 3, 'Notes': '', 'IsMultiChannel': 'false', 'IsRecurrence': 'false',
+                     'Status': 'Successful', 'Error': ''}
+        return 200, HEADERS['json'], json.dumps(resp_body)
+
+    else:
+        return 404, HEADERS['text'], 'Not Found'
+
+
 class TestActions(unittest.TestCase):
 
     @responses.activate
@@ -584,8 +598,8 @@ class TestActions(unittest.TestCase):
                 'duration': 7,
                 'lead_time': 3,
                 'notes': '',
-                'is_multi_channel': 'false',
-                'is_recurrence': 'false',
+                'is_multi_channel': False,
+                'is_recurrence': False,
                 'status': 'Successful',
                 'error': '',
             },
@@ -595,8 +609,8 @@ class TestActions(unittest.TestCase):
                 'duration': 10,
                 'lead_time': 0,
                 'notes': '',
-                'is_multi_channel': 'true',
-                'is_recurrence': 'true',
+                'is_multi_channel': True,
+                'is_recurrence': True,
                 'status': 'Failed',
                 'error': 'ESP unavailable',
             }
@@ -639,4 +653,65 @@ class TestActions(unittest.TestCase):
 
         client = Client('username', 'password')
         data = client.actions.get_executed_campaign_details('3015-06-19')
+        self.assertFalse(data)
+
+    @responses.activate
+    def test_get_campaign_details(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/actions/GetCampaignDetails',
+            callback=get_campaign_details_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        data = client.actions.get_campaign_details(21)
+        self.assertEqual(data, {'campaign_id': 21, 'target_group_id': 15, 'campaign_type': 'Test/Control',
+                                'duration': 7, 'lead_time': 3, 'notes': '', 'is_multi_channel': False,
+                                'is_recurrence': False, 'status': 'Successful', 'error': ''})
+
+    @responses.activate
+    def test_get_campaign_details_with_empty_campaign_id(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/actions/GetCampaignDetails',
+            callback=get_campaign_details_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        self.assertRaises(Exception, client.actions.get_campaign_details, None)
+
+    @responses.activate
+    def test_get_campaign_details_with_wrong_campaign_id(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/actions/GetCampaignDetails',
+            callback=get_campaign_details_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        data = client.actions.get_campaign_details(12)
         self.assertFalse(data)
