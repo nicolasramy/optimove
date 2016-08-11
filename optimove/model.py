@@ -15,8 +15,6 @@ class Model(URLBuilder):
         """Returns all the available customer attribute names (which can be passed to certain other functions
         as an input parameter) and a description of each."""
         response = self.client.get(self._get_url())
-        if not response:
-            return False
 
         results = {}
         for item in response.json():
@@ -27,8 +25,6 @@ class Model(URLBuilder):
     def get_lifecycle_stage_list(self):
         """Returns all available lifecycle stages (for use in other functions, e.g., GetCustomerFutureValues)."""
         response = self.client.get(self._get_url())
-        if not response:
-            return False
 
         results = {}
         for item in response.json():
@@ -39,8 +35,6 @@ class Model(URLBuilder):
     def get_microsegment_list(self):
         """Returns an dict containing the details of all microsegments."""
         response = self.client.get(self._get_url())
-        if not response:
-            return False
 
         results = {}
         for item in response.json():
@@ -56,7 +50,7 @@ class Model(URLBuilder):
     def get_microsegment_changers(self, start, end, attributes=None, delimiter=';'):
         """Returns an array of customer IDs, and their before and after micro-segment IDs,
         for customers whose micro-segment changed during a particular date range."""
-        if not start and not end:
+        if not start or not end:
             raise Exception('No StartDate and EndDate provided')
 
         data = {

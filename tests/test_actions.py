@@ -100,3 +100,7 @@ class TestActions(unittest.TestCase):
         client = Client('username', 'password')
         data = client.actions.get_action_id('Free Shipping')
         self.assertEqual(data, 25)
+
+    @responses.activate
+    def test_get_all_actions(self):
+        pass

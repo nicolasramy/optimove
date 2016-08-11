@@ -66,8 +66,20 @@ class TestGeneral(unittest.TestCase):
             content_type='application/json'
         )
 
-        client = Client('username', 'wrong_password')
-        self.assertFalse(client.token)
+        client = Client()
+        self.assertRaises(Exception, client.general.login, 'username', 'wrong_password')
+
+    @responses.activate
+    def test_login_no_credentials(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        client = Client()
+        self.assertRaises(Exception, client.general.login, None, None)
 
     @responses.activate
     def test_last_update_date(self):

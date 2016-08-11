@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 import json
 import unittest
-from urlparse import parse_qs
+from urlparse import urlparse, parse_qs, parse_qsl
 
 from optimove.client import Client
 import responses
@@ -115,14 +115,20 @@ def get_microsegment_changers_with_attributes_callback(request):
 
     if 'Authorization-Token' in request.headers:
         if request.headers['Authorization-Token'] == TOKEN:
-            headers = {'Content-Type': 'application/json'}
-            resp_body = [
-                {'CustomerID': '231342', 'InitialMicrosegmentID': 4, 'FinalMicrosegmentID': 12,
-                 'CustomerAttributes': 'BuddyZZ,UK'},
-                {'CustomerID': '231342', 'InitialMicrosegmentID': 3, 'FinalMicrosegmentID': 67,
-                 'CustomerAttributes': 'Player99,US'}
-            ]
-            return 200, headers, json.dumps(resp_body)
+            params = parse_qsl(urlparse(request.url).query)
+
+            if '2016-01-01' == params[0][1]:
+                headers = {'Content-Type': 'application/json'}
+                resp_body = [
+                    {'CustomerID': '231342', 'InitialMicrosegmentID': 4, 'FinalMicrosegmentID': 12,
+                     'CustomerAttributes': 'BuddyZZ,UK'},
+                    {'CustomerID': '231342', 'InitialMicrosegmentID': 3, 'FinalMicrosegmentID': 67,
+                     'CustomerAttributes': 'Player99,US'}
+                ]
+                return 200, headers, json.dumps(resp_body)
+
+            else:
+                return 404, headers, 'Not found'
 
         else:
             return 403, headers, 'Unauthorized User'
@@ -290,3 +296,63 @@ class TestModel(unittest.TestCase):
                 }
             },
         ])
+
+    @responses.activate
+    def test_get_microsegment_changers_with_wrong_delimiter(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/model/GetMicrosegmentChangers',
+            callback=get_microsegment_changers_with_attributes_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        self.assertRaises(Exception, client.model.get_microsegment_changers,
+                          '2016-01-01', '2016-01-31', ['Alias', 'Country'], '/')
+
+    @responses.activate
+    def test_get_microsegment_changers_with_wrong_dates(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/model/GetMicrosegmentChangers',
+            callback=get_microsegment_changers_with_attributes_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        self.assertRaises(Exception, client.model.get_microsegment_changers,
+                          '2016-01-01', None, ['Alias', 'Country'], ',')
+
+    @responses.activate
+    def test_get_microsegment_changers_with_unreasonable_dates(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/model/GetMicrosegmentChangers',
+            callback=get_microsegment_changers_with_attributes_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        data = client.model.get_microsegment_changers('3016-01-01', '3016-01-31', ['Alias', 'Country'], ',')
+        self.assertFalse(data)

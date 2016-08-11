@@ -61,6 +61,22 @@ class Client:
         response = requests.post(url, payload, headers)
         return self.dispatch_response(response)
 
+    @staticmethod
+    def bad_request():
+        raise Exception('Bad Request')
+
+    @staticmethod
+    def unauthorized():
+        raise Exception('Unauthorized')
+
+    @staticmethod
+    def method_not_allowed():
+        raise Exception('Method Not allowed')
+
+    @staticmethod
+    def internal_server_error():
+        raise Exception('Internal Server error')
+
     def dispatch_response(self, response):
         if response.status_code == 200:
             return response
@@ -74,15 +90,3 @@ class Client:
             return self.internal_server_error()
         else:
             return False
-
-    def bad_request(self):
-        pass
-
-    def unauthorized(self):
-        pass
-
-    def method_not_allowed(self):
-        pass
-
-    def internal_server_error(self):
-        pass
