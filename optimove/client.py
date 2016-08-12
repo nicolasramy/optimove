@@ -9,6 +9,7 @@ import requests
 from general import General
 from model import Model
 from actions import Actions
+from groups import Groups
 from customers import Customers
 from segments import Segments
 from integrations import Integrations
@@ -22,6 +23,7 @@ class Client:
         self.general = General(self)
         self.model = Model(self)
         self.actions = Actions(self)
+        self.groups = Groups(self)
         self.customers = Customers(self)
         self.segments = Segments(self)
         self.integrations = Integrations(self)
