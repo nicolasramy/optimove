@@ -90,6 +90,63 @@ def get_customer_one_time_actions_by_date_callback(request):
         return 404, HEADERS['text'], 'Not Found'
 
 
+@token_required
+def get_target_group_changers_callback(request):
+    params = parse_qs(urlparse(request.url).query)
+    if params['StartDate'][0] == '2015-09-01' and params['EndDate'][0] == '2015-09-30':
+        if 'CustomerAttributes' in params and 'CustomerAttributesDelimiter' in params:
+            if params['CustomerAttributes'][0] == 'Alias;Country' and params['CustomerAttributesDelimiter'][0] == ',':
+                resp_body = [
+                    {'CustomerID': '231342', 'InitialTargetGroupID': 4, 'FinalTargetGroupID': 12,
+                     'CustomerAttributes': 'BuddyZZ,UK'},
+                    {'CustomerID': '931342', 'InitialTargetGroupID': -1, 'FinalTargetGroupID': 8,
+                     'CustomerAttributes': 'Pax65,DE'}
+                ]
+            else:
+                return 404, HEADERS['text'], 'Not Found'
+
+        else:
+            resp_body = [
+                {'CustomerID': '231342', 'InitialTargetGroupID': 4, 'FinalTargetGroupID': 12},
+                {'CustomerID': '931342', 'InitialTargetGroupID': -1, 'FinalTargetGroupID': 8}
+            ]
+
+        return 200, HEADERS['json'], json.dumps(resp_body)
+
+    else:
+        return 404, HEADERS['text'], 'Not Found'
+
+
+@token_required
+def get_customer_attribute_changers_callback(request):
+    params = parse_qs(urlparse(request.url).query)
+    if params['StartDate'][0] == '2015-01-30' and params['EndDate'][0] == '2015-01-31'and \
+            params['ChangedCustomerAttribute'][0] == 'OptimailUnsubscribed':
+        if 'CustomerAttributes' in params and 'CustomerAttributesDelimiter' in params:
+            if params['CustomerAttributes'][0] == 'Alias;Country' and params['CustomerAttributesDelimiter'][0] == ',':
+                resp_body = [
+                    {'CustomerID': '231342', 'InitialCustomerAttribute': 'NULL',
+                     'FinalCustomerAttribute': 'SuperBrand', 'CustomerAttributes': 'BuddyZZ,UK'},
+                    {'CustomerID': '231343', 'InitialCustomerAttribute': 'SuperBrand',
+                     'FinalCustomerAttribute': 'Super Brand, Mega Brand', 'CustomerAttributes': 'Pax65,DE'}
+                ]
+            else:
+                return 404, HEADERS['text'], 'Not Found'
+
+        else:
+            resp_body = [
+                {'CustomerID': '231342', 'InitialCustomerAttribute': 'NULL',
+                 'FinalCustomerAttribute': 'SuperBrand'},
+                {'CustomerID': '231343', 'InitialCustomerAttribute': 'SuperBrand',
+                 'FinalCustomerAttribute': 'Super Brand, Mega Brand'}
+            ]
+
+        return 200, HEADERS['json'], json.dumps(resp_body)
+
+    else:
+        return 404, HEADERS['text'], 'Not Found'
+
+
 """Tests"""
 
 
@@ -338,7 +395,6 @@ class TestCustomers(unittest.TestCase):
         self.assertRaises(Exception, client.customers.get_customer_actions_by_target_group, 2, '2015-12-24',
                           True, ['Alias', 'Country'], '/')
 
-    # TODO: Implementation in progress
     @responses.activate
     def test_get_customer_one_time_actions_by_date(self):
         responses.add_callback(
@@ -467,3 +523,263 @@ class TestCustomers(unittest.TestCase):
         client = Client('username', 'password')
         self.assertRaises(Exception, client.customers.get_customer_one_time_actions_by_date, '2015-06-24',
                           True, ['Alias', 'Country'], '/')
+
+    @responses.activate
+    def test_get_target_group_changers(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/customers/GetTargetGroupChangers',
+            callback=get_target_group_changers_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        data = client.customers.get_target_group_changers('2015-09-01', '2015-09-30')
+        self.assertEqual(data, [
+            {
+                'customer_id': '231342',
+                'initial_target_group_id': 4,
+                'final_target_group_id': 12
+            },
+            {
+                'customer_id': '931342',
+                'initial_target_group_id': -1,
+                'final_target_group_id': 8
+            }
+        ])
+
+    @responses.activate
+    def test_get_target_group_changers_with_empty_date(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/customers/GetTargetGroupChangers',
+            callback=get_target_group_changers_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        self.assertRaises(Exception, client.customers.get_target_group_changers, '2015-09-01', None)
+
+    @responses.activate
+    def test_get_target_group_changers_with_wrong_date(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/customers/GetTargetGroupChangers',
+            callback=get_target_group_changers_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        data = client.customers.get_target_group_changers('3015-09-01', '3015-09-30')
+        self.assertFalse(data)
+
+    @responses.activate
+    def test_get_target_group_changers_with_attributes(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/customers/GetTargetGroupChangers',
+            callback=get_target_group_changers_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        data = client.customers.get_target_group_changers('2015-09-01', '2015-09-30', ['Alias', 'Country'], ',')
+        self.assertEqual(data, [
+            {
+                'customer_id': '231342',
+                'initial_target_group_id': 4,
+                'final_target_group_id': 12,
+                'attributes': {
+                    'Alias': 'BuddyZZ',
+                    'Country': 'UK'
+                }
+            },
+            {
+                'customer_id': '931342',
+                'initial_target_group_id': -1,
+                'final_target_group_id': 8,
+                'attributes': {
+                    'Alias': 'Pax65',
+                    'Country': 'DE'
+                }
+            }
+        ])
+
+    @responses.activate
+    def test_get_target_group_changers_with_wrong_delimiter(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/customers/GetTargetGroupChangers',
+            callback=get_target_group_changers_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        self.assertRaises(Exception, client.customers.get_target_group_changers, '2015-09-01', '2015-09-30',
+                          ['Alias', 'Country'], '/')
+
+    @responses.activate
+    def test_get_customer_attribute_changers(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/customers/GetCustomerAttributeChangers',
+            callback=get_customer_attribute_changers_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        data = client.customers.get_customer_attribute_changers('2015-01-30', '2015-01-31', 'OptimailUnsubscribed')
+        self.assertEqual(data, [
+            {
+                'customer_id': '231342',
+                'initial_customer_attribute': None,
+                'final_customer_attribute': 'SuperBrand'
+            },
+            {
+                'customer_id': '231343',
+                'initial_customer_attribute': 'SuperBrand',
+                'final_customer_attribute': 'Super Brand, Mega Brand'
+            }
+        ])
+
+    @responses.activate
+    def test_get_customer_attribute_changers_with_empty_date(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/customers/GetCustomerAttributeChangers',
+            callback=get_customer_attribute_changers_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        self.assertRaises(Exception, client.customers.get_customer_attribute_changers, '2015-01-30', None,
+                          'OptimailUnsubscribed')
+
+    @responses.activate
+    def test_get_customer_attribute_changers_with_wrong_date(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/customers/GetCustomerAttributeChangers',
+            callback=get_customer_attribute_changers_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        data = client.customers.get_customer_attribute_changers('3015-01-30', '3015-01-31', 'OptimailUnsubscribed')
+        self.assertFalse(data)
+
+    @responses.activate
+    def test_get_customer_attribute_changers_with_attributes(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/customers/GetCustomerAttributeChangers',
+            callback=get_customer_attribute_changers_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        data = client.customers.get_customer_attribute_changers('2015-01-30', '2015-01-31', 'OptimailUnsubscribed',
+                                                                ['Alias', 'Country'], ',')
+        self.assertEqual(data, [
+            {
+                'customer_id': '231342',
+                'initial_customer_attribute': None,
+                'final_customer_attribute': 'SuperBrand',
+                'attributes': {
+                    'Alias': 'BuddyZZ',
+                    'Country': 'UK'
+                }
+            },
+            {
+                'customer_id': '231343',
+                'initial_customer_attribute': 'SuperBrand',
+                'final_customer_attribute': 'Super Brand, Mega Brand',
+                'attributes': {
+                    'Alias': 'Pax65',
+                    'Country': 'DE'
+                }
+            }
+        ])
+
+    @responses.activate
+    def test_get_customer_attribute_changers_with_wrong_delimiter(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/customers/GetCustomerAttributeChangers',
+            callback=get_customer_attribute_changers_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        self.assertRaises(Exception, client.customers.get_customer_attribute_changers, '2015-01-30', '2015-01-31',
+                          'OptimailUnsubscribed', ['Alias', 'Country'], '/')

@@ -137,9 +137,7 @@ class Customers(URLBuilder):
 
         return results
 
-    def get_target_group_changers(self, start_date, end_date,
-                                  customer_id=None, initial_target_group_id=None, final_target_group_id=None,
-                                  attributes=None, delimiter=';'):
+    def get_target_group_changers(self, start_date, end_date, attributes=None, delimiter=';'):
         """Returns the before and after target group IDs for customers whose target group changed during a particular
         date range."""
         if not start_date or not end_date:
@@ -150,18 +148,8 @@ class Customers(URLBuilder):
             'EndDate': end_date
         }
 
-        if customer_id:
-            data['CustomerID'] = customer_id
-
-        if initial_target_group_id:
-            data['InitialTargetGroupID'] = initial_target_group_id
-
-        if final_target_group_id:
-            data['FinalTargetGroupID'] = final_target_group_id
-
-        if attributes and type(attributes) == type(list):
-            attributes = ';'.join(attributes)
-            data['CustomerAttributes'] = attributes
+        if attributes and type(attributes) == list:
+            data['CustomerAttributes'] = ';'.join(attributes)
 
             if delimiter:
                 if delimiter in self.AUTHORIZED_DELIMITERS and delimiter not in self.UNAUTHORIZED_DELIMITERS:
@@ -180,7 +168,8 @@ class Customers(URLBuilder):
                 'initial_target_group_id': item['InitialTargetGroupID'],
                 'final_target_group_id': item['FinalTargetGroupID']
             }
-            if attributes:
+            if attributes and type(attributes) == list:
+                result['attributes'] = {}
                 customer_attributes = item['CustomerAttributes'].split(delimiter)
                 for index, attribute in enumerate(attributes):
                     result['attributes'][attribute] = customer_attributes[index]
@@ -188,8 +177,8 @@ class Customers(URLBuilder):
 
         return results
 
-    def get_cusomer_attribute_changers(self, start_date, end_date, changed_customer_attribute,
-                                       attributes=None, delimiter=';'):
+    def get_customer_attribute_changers(self, start_date, end_date, changed_customer_attribute,
+                                        attributes=None, delimiter=';'):
         """Returns an array of customer IDs, and their before and after attribute values, for customers whose selected
         attribute changed during a particular date range."""
         if not start_date or not end_date or not changed_customer_attribute:
@@ -201,9 +190,8 @@ class Customers(URLBuilder):
             'ChangedCustomerAttribute': changed_customer_attribute
         }
 
-        if attributes and type(attributes) == type(list):
-            attributes = ';'.join(attributes)
-            data['CustomerAttributes'] = attributes
+        if attributes and type(attributes) == list:
+            data['CustomerAttributes'] = ';'.join(attributes)
 
             if delimiter:
                 if delimiter in self.AUTHORIZED_DELIMITERS and delimiter not in self.UNAUTHORIZED_DELIMITERS:
@@ -219,10 +207,13 @@ class Customers(URLBuilder):
         for item in response.json():
             result = {
                 'customer_id': item['CustomerID'],
-                'initial_customer_attribute': item['InitialCustomerAttribute'],
-                'final_customer_attribute': item['FinalCustomerAttribute']
+                'initial_customer_attribute': None if item['InitialCustomerAttribute'] == 'NULL'
+                else item['InitialCustomerAttribute'],
+                'final_customer_attribute': None if item['FinalCustomerAttribute'] == 'NULL'
+                else item['FinalCustomerAttribute']
             }
-            if attributes:
+            if attributes and type(attributes) == list:
+                result['attributes'] = {}
                 customer_attributes = item['CustomerAttributes'].split(delimiter)
                 for index, attribute in enumerate(attributes):
                     result['attributes'][attribute] = customer_attributes[index]
