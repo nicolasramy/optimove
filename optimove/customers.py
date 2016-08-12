@@ -58,16 +58,15 @@ class Customers(URLBuilder):
             raise Exception('No TargetGroupID and Date provided')
 
         data = {
-            'TargetGroupId': target_group_id,
+            'TargetGroupID': target_group_id,
             'Date': date
         }
 
         if include_control_group:
             data['IncludeControlGroup'] = True
 
-        if attributes and type(attributes) == type(list):
-            attributes = ';'.join(attributes)
-            data['CustomerAttributes'] = attributes
+        if attributes and type(attributes) == list:
+            data['CustomerAttributes'] = ';'.join(attributes)
 
             if delimiter:
                 if delimiter in self.AUTHORIZED_DELIMITERS and delimiter not in self.UNAUTHORIZED_DELIMITERS:
@@ -86,7 +85,8 @@ class Customers(URLBuilder):
                 'action_id': item['ActionID'],
                 'channel_id': item['ChannelID']
             }
-            if attributes:
+            if attributes and type(attributes) == list:
+                result['attributes'] = {}
                 customer_attributes = item['CustomerAttributes'].split(delimiter)
                 for index, attribute in enumerate(attributes):
                     result['attributes'][attribute] = customer_attributes[index]
