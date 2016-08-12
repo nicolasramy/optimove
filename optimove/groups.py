@@ -50,8 +50,6 @@ class Groups(URLBuilder):
     def get_target_group_details(self):
         """Returns an array of IDs, names and priorities for all defined target groups."""
         response = self.client.get(self._get_url())
-        if not response:
-            return False
 
         results = {}
         for item in response.json():
