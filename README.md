@@ -1,6 +1,7 @@
 # Optimove
 
 [![Build Status](https://travis-ci.org/nicolasramy/optimove.svg?branch=master)](https://travis-ci.org/nicolasramy/optimove)
+[![Coverage Status](https://coveralls.io/repos/github/nicolasramy/optimove/badge.svg)](https://coveralls.io/github/nicolasramy/optimove)
 
 **This library allows you to quickly and easily use the Optimove Web API v3 via Python**
 
