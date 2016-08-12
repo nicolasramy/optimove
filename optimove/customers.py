@@ -23,9 +23,8 @@ class Customers(URLBuilder):
             'Date': date
         }
 
-        if attributes and type(attributes) == type(list):
-            attributes = ';'.join(attributes)
-            data['CustomerAttributes'] = attributes
+        if attributes and type(attributes) == list:
+            data['CustomerAttributes'] = ';'.join(attributes)
 
             if delimiter:
                 if delimiter in self.AUTHORIZED_DELIMITERS and delimiter not in self.UNAUTHORIZED_DELIMITERS:
@@ -37,16 +36,17 @@ class Customers(URLBuilder):
         if not response:
             return False
 
-        results = list()
-        for item in response.json():
-            result = {
-                'customer_id': item['CustomerID']
-            }
-            if attributes:
+        if attributes and type(attributes) == list:
+            results = list()
+            for item in response.json():
+                result = {'customer_id': item['CustomerID'], 'attributes': {}}
                 customer_attributes = item['CustomerAttributes'].split(delimiter)
                 for index, attribute in enumerate(attributes):
                     result['attributes'][attribute] = customer_attributes[index]
-            results.append(result)
+                results.append(result)
+
+        else:
+            results = [item['CustomerID'] for item in response.json()]
 
         return results
 
