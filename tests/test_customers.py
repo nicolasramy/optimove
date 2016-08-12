@@ -48,7 +48,7 @@ def get_customer_actions_by_target_group_callback(request):
             if params['CustomerAttributes'][0] == 'Alias;Country' and params['CustomerAttributesDelimiter'][0] == ',':
                 resp_body = [
                     {'CustomerID': 'A1342', 'ActionID': 49, 'ChannelID': 6, 'CustomerAttributes': 'BuddyZZ,UK'},
-                    {'CustomerID': 'G4650', 'ActionID': 49, 'ChannelID': 6, 'CustomerAttributes': 'Pax65,DE'}
+                    {'CustomerID': 'G4650', 'ActionID': 49, 'ChannelID': 6, 'CustomerAttributes': 'Mighty6,ES'}
                 ]
             else:
                 return 404, HEADERS['text'], 'Not Found'
@@ -57,6 +57,31 @@ def get_customer_actions_by_target_group_callback(request):
             resp_body = [
                 {'CustomerID': 'A1342', 'ActionID': 49, 'ChannelID': 6},
                 {'CustomerID': 'G4650', 'ActionID': 49, 'ChannelID': 6}
+            ]
+
+        return 200, HEADERS['json'], json.dumps(resp_body)
+
+    else:
+        return 404, HEADERS['text'], 'Not Found'
+
+
+@token_required
+def get_customer_one_time_actions_by_date_callback(request):
+    params = parse_qs(urlparse(request.url).query)
+    if params['Date'][0] == '2015-06-24':
+        if 'CustomerAttributes' in params and 'CustomerAttributesDelimiter' in params:
+            if params['CustomerAttributes'][0] == 'Alias;Country' and params['CustomerAttributesDelimiter'][0] == ',':
+                resp_body = [
+                    {'CustomerID': '8D871', 'ActionID': 19, 'ChannelID': 3, 'CustomerAttributes': 'Yo999,UA'},
+                    {'CustomerID': '8U76T', 'ActionID': 19, 'ChannelID': 3, 'CustomerAttributes': 'Neto2,TR'}
+                ]
+            else:
+                return 404, HEADERS['text'], 'Not Found'
+
+        else:
+            resp_body = [
+                {'CustomerID': '8D871', 'ActionID': 19, 'ChannelID': 3},
+                {'CustomerID': '8U76T', 'ActionID': 19, 'ChannelID': 3}
             ]
 
         return 200, HEADERS['json'], json.dumps(resp_body)
@@ -287,8 +312,8 @@ class TestCustomers(unittest.TestCase):
                 'action_id': 49,
                 'channel_id': 6,
                 'attributes': {
-                    'Alias': 'Pax65',
-                    'Country': 'DE'
+                    'Alias': 'Mighty6',
+                    'Country': 'ES'
                 }
             }
         ])
@@ -311,4 +336,134 @@ class TestCustomers(unittest.TestCase):
 
         client = Client('username', 'password')
         self.assertRaises(Exception, client.customers.get_customer_actions_by_target_group, 2, '2015-12-24',
+                          True, ['Alias', 'Country'], '/')
+
+    # TODO: Implementation in progress
+    @responses.activate
+    def test_get_customer_one_time_actions_by_date(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/customers/GetCustomerOneTimeActionsByDate',
+            callback=get_customer_one_time_actions_by_date_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        data = client.customers.get_customer_one_time_actions_by_date('2015-06-24')
+        self.assertEqual(data, [
+            {
+                'customer_id': '8D871',
+                'action_id': 19,
+                'channel_id': 3
+            },
+            {
+                'customer_id': '8U76T',
+                'action_id': 19,
+                'channel_id': 3
+            }
+        ])
+
+    @responses.activate
+    def test_get_customer_one_time_actions_by_date_with_empty_date(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/customers/GetCustomerOneTimeActionsByDate',
+            callback=get_customer_one_time_actions_by_date_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        self.assertRaises(Exception, client.customers.get_customer_one_time_actions_by_date, None)
+
+    @responses.activate
+    def test_get_customer_one_time_actions_by_date_with_wrong_date(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/customers/GetCustomerOneTimeActionsByDate',
+            callback=get_customer_one_time_actions_by_date_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        data = client.customers.get_customer_one_time_actions_by_date('3015-06-24')
+        self.assertFalse(data)
+
+    @responses.activate
+    def test_get_customer_one_time_actions_by_date_with_attributes(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/customers/GetCustomerOneTimeActionsByDate',
+            callback=get_customer_one_time_actions_by_date_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        data = client.customers.get_customer_one_time_actions_by_date('2015-06-24', True, ['Alias', 'Country'], ',')
+        self.assertEqual(data, [
+            {
+                'customer_id': '8D871',
+                'action_id': 19,
+                'channel_id': 3,
+                'attributes': {
+                    'Alias': 'Yo999',
+                    'Country': 'UA'
+                }
+            },
+            {
+                'customer_id': '8U76T',
+                'action_id': 19,
+                'channel_id': 3,
+                'attributes': {
+                    'Alias': 'Neto2',
+                    'Country': 'TR'
+                }
+            }
+        ])
+
+    @responses.activate
+    def test_get_customer_one_time_actions_by_date_with_wrong_delimiter(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/customers/GetCustomerOneTimeActionsByDate',
+            callback=get_customer_one_time_actions_by_date_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        self.assertRaises(Exception, client.customers.get_customer_one_time_actions_by_date, '2015-06-24',
                           True, ['Alias', 'Country'], '/')
