@@ -197,4 +197,3 @@ class TestSegments(unittest.TestCase):
             3: 'Silver',
             4: 'Bronze'
         })
-

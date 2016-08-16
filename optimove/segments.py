@@ -38,8 +38,6 @@ class Segments(URLBuilder):
     def get_value_segments(self):
         """Returns all defined value segment names and IDs."""
         response = self.client.get(self._get_url())
-        if not response:
-            return False
 
         results = {}
         for item in response.json():
