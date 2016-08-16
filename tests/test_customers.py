@@ -25,6 +25,7 @@ def get_customers_by_action_callback(request):
                     {'CustomerID': '231342', 'CustomerAttributes': 'BuddyZZ,UK'},
                     {'CustomerID': '943157', 'CustomerAttributes': 'Pax65,DE'}
                 ]
+
             else:
                 return 404, HEADERS['text'], 'Not Found'
 
@@ -50,6 +51,7 @@ def get_customer_actions_by_target_group_callback(request):
                     {'CustomerID': 'A1342', 'ActionID': 49, 'ChannelID': 6, 'CustomerAttributes': 'BuddyZZ,UK'},
                     {'CustomerID': 'G4650', 'ActionID': 49, 'ChannelID': 6, 'CustomerAttributes': 'Mighty6,ES'}
                 ]
+
             else:
                 return 404, HEADERS['text'], 'Not Found'
 
@@ -75,6 +77,7 @@ def get_customer_one_time_actions_by_date_callback(request):
                     {'CustomerID': '8D871', 'ActionID': 19, 'ChannelID': 3, 'CustomerAttributes': 'Yo999,UA'},
                     {'CustomerID': '8U76T', 'ActionID': 19, 'ChannelID': 3, 'CustomerAttributes': 'Neto2,TR'}
                 ]
+
             else:
                 return 404, HEADERS['text'], 'Not Found'
 
@@ -102,6 +105,7 @@ def get_target_group_changers_callback(request):
                     {'CustomerID': '931342', 'InitialTargetGroupID': -1, 'FinalTargetGroupID': 8,
                      'CustomerAttributes': 'Pax65,DE'}
                 ]
+
             else:
                 return 404, HEADERS['text'], 'Not Found'
 
@@ -241,6 +245,34 @@ def get_customer_send_details_by_campaign_callback(request):
             {'CustomerID': '231342', 'ChannelID': 4, 'ScheduledTime': '2015-12-30 10:30:00', 'SendID': 'HG65D'},
             {'CustomerID': '917251', 'ChannelID': 4, 'ScheduledTime': '2015-12-30 11:45:00', 'SendID': 'HG65E'}
         ]
+        return 200, HEADERS['json'], json.dumps(resp_body)
+
+    else:
+        return 404, HEADERS['text'], 'Not Found'
+
+
+@token_required
+def get_customer_send_details_by_channel_callback(request):
+    params = parse_qs(urlparse(request.url).query)
+    if params['ChannelID'][0] == '5' and params['CampaignID'][0] == '65874':
+        if 'CustomerAttributes' in params and 'CustomerAttributesDelimiter' in params:
+            if params['CustomerAttributes'][0] == 'Email;Country' and params['CustomerAttributesDelimiter'][0] == ',':
+                resp_body = [
+                    {'CustomerID': '96134', 'TemplateID': 14, 'ScheduledTime': '2016-08-30 10:00:00',
+                     'CustomerAttributes': 'jdavis@aol.com,US'},
+                    {'CustomerID': '13482', 'TemplateID': 14, 'ScheduledTime': '2016-08-30 10:00:00',
+                     'CustomerAttributes': 'plsmits@gmail.com,UK'}
+                ]
+
+            else:
+                return 404, HEADERS['text'], 'Not Found'
+
+        else:
+            resp_body = [
+                {'CustomerID': '96134', 'TemplateID': 14, 'ScheduledTime': '2016-08-30 10:00:00'},
+                {'CustomerID': '13482', 'TemplateID': 14, 'ScheduledTime': '2016-08-30 10:00:00'}
+            ]
+
         return 200, HEADERS['json'], json.dumps(resp_body)
 
     else:
@@ -1378,4 +1410,133 @@ class TestCustomers(unittest.TestCase):
 
         client = Client('username', 'password')
         data = client.customers.get_customer_send_details_by_campaign(65847)
+        self.assertFalse(data)
+
+    @responses.activate
+    def test_get_customer_send_details_by_channel(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/customers/GetCustomerSendDetailsByChannel',
+            callback=get_customer_send_details_by_channel_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        data = client.customers.get_customer_send_details_by_channel(5, 65874)
+        self.assertEqual(data, [
+            {
+                'customer_id': '96134',
+                'template_id': 14,
+                'scheduled_time': '2016-08-30 10:00:00'
+            },
+            {
+                'customer_id': '13482',
+                'template_id': 14,
+                'scheduled_time': '2016-08-30 10:00:00'
+            },
+        ])
+
+    @responses.activate
+    def test_get_customer_send_details_by_channel_with_empty_campaign_id(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/customers/GetCustomerSendDetailsByChannel',
+            callback=get_customer_send_details_by_channel_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        self.assertRaises(Exception, client.customers.get_customer_send_details_by_channel, 5, None)
+
+    @responses.activate
+    def test_get_customer_send_details_by_channel_with_attributes(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/customers/GetCustomerSendDetailsByChannel',
+            callback=get_customer_send_details_by_channel_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        data = client.customers.get_customer_send_details_by_channel(5, 65874, ['Email', 'Country'], ',')
+        self.assertEqual(data, [
+            {
+                'customer_id': '96134',
+                'template_id': 14,
+                'scheduled_time': '2016-08-30 10:00:00',
+                'attributes': {
+                    'Email': 'jdavis@aol.com',
+                    'Country': 'US'
+                }
+            },
+            {
+                'customer_id': '13482',
+                'template_id': 14,
+                'scheduled_time': '2016-08-30 10:00:00',
+                'attributes': {
+                    'Email': 'plsmits@gmail.com',
+                    'Country': 'UK'
+                }
+            }
+        ])
+
+    @responses.activate
+    def test_get_customer_send_details_by_channel_with_wrong_delimiter(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/customers/GetCustomerSendDetailsByChannel',
+            callback=get_customer_send_details_by_channel_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        self.assertRaises(Exception, client.customers.get_customer_send_details_by_channel, 5, 65874,
+                          ['Email', 'Country'], '/')
+
+    @responses.activate
+    def test_get_customer_send_details_by_channel_with_wrong_campaign_id(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/customers/GetCustomerSendDetailsByChannel',
+            callback=get_customer_send_details_by_channel_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        data = client.customers.get_customer_send_details_by_channel(5, 65847)
         self.assertFalse(data)
