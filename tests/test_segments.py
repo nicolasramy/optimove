@@ -27,6 +27,18 @@ def get_value_segment_name_callback(request):
         return 404, HEADERS['text'], 'Not Found'
 
 
+@token_required
+def get_value_segment_id_callback(request):
+    params = parse_qs(urlparse(request.url).query)
+
+    if params['ValueSegmentName'][0] == 'Diamond':
+        resp_body = {'ValueSegmentID': 1}
+        return 200, HEADERS['json'], json.dumps(resp_body)
+
+    else:
+        return 404, HEADERS['text'], 'Not Found'
+
+
 """Tests"""
 
 
@@ -89,4 +101,63 @@ class TestSegments(unittest.TestCase):
 
         client = Client('username', 'password')
         data = client.segments.get_value_segment_name(2)
+        self.assertFalse(data)
+
+    @responses.activate
+    def test_get_value_segment_id(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/segments/GetValueSegmentID',
+            callback=get_value_segment_id_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        data = client.segments.get_value_segment_id('Diamond')
+        self.assertEqual(data, 1)
+
+    @responses.activate
+    def test_get_value_segment_id_with_empty_segment_name(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/segments/GetValueSegmentID',
+            callback=get_value_segment_id_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        self.assertRaises(Exception, client.segments.get_value_segment_id, None)
+
+    @responses.activate
+    def test_get_value_segment_id_with_wrong_segment_name(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/segments/GetValueSegmentID',
+            callback=get_value_segment_id_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        data = client.segments.get_value_segment_id('Gold')
         self.assertFalse(data)
