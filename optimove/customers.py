@@ -223,15 +223,22 @@ class Customers(URLBuilder):
 
     def get_customer_future_values(self, life_cycle_stage_id=None, attribute=None, attribute_value=None):
         """Returns customer IDs and their current future values."""
-        data = {}
-        if life_cycle_stage_id:
-            data['LifeCycleStageID'] = life_cycle_stage_id
+        if not life_cycle_stage_id and not attribute and not attribute_value:
+            raise Exception('No LifecycleStageID or CustomerAttribute and CustomerAttributeValue provided')
 
-        if attribute and attribute_value:
-            data['CustomerAttribute'] = attribute
-            data['CustomerAttributeValue'] = attribute_value
+        if life_cycle_stage_id and not attribute and not attribute_value:
+            data = {'LifecycleStageID': life_cycle_stage_id}
 
-        response = self.client(self._get_url(), data) if data else self.client(self._get_url())
+        elif not life_cycle_stage_id and attribute and attribute_value:
+            data = {
+                'CustomerAttribute': attribute,
+                'CustomerAttributeValue': attribute_value
+            }
+
+        else:
+            raise Exception('Wrong combination for LifecycleStageID, CustomerAttribute and CustomerAttributeValue')
+
+        response = self.client.get(self._get_url(), data)
         if not response:
             return False
 

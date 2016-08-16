@@ -147,6 +147,36 @@ def get_customer_attribute_changers_callback(request):
         return 404, HEADERS['text'], 'Not Found'
 
 
+@token_required
+def get_customer_future_values_callback(request):
+    params = parse_qs(urlparse(request.url).query)
+
+    if 'LifecycleStageID' in params and 'CustomerAttribute' not in params and 'CustomerAttributeValue' not in params:
+        if params['LifecycleStageID'][0] == '6':
+            resp_body = [
+                {'CustomerID': '631942', 'FutureValue': 342.65},
+                {'CustomerID': '257938', 'FutureValue': 102.33}
+            ]
+            return 200, HEADERS['json'], json.dumps(resp_body)
+
+        else:
+            return 404, HEADERS['text'], 'Not Found'
+
+    elif 'LifecycleStageID' not in params and 'CustomerAttribute' in params and 'CustomerAttributeValue' in params:
+        if params['CustomerAttribute'][0] == 'Country' and params['CustomerAttributeValue'][0] == 'Australia':
+            resp_body = [
+                {'CustomerID': '631942', 'FutureValue': 342.65},
+                {'CustomerID': '257938', 'FutureValue': 102.33}
+            ]
+            return 200, HEADERS['json'], json.dumps(resp_body)
+
+        else:
+            return 404, HEADERS['text'], 'Not Found'
+
+    else:
+        return 404, HEADERS['text'], 'Not Found'
+
+
 """Tests"""
 
 
@@ -783,3 +813,107 @@ class TestCustomers(unittest.TestCase):
         client = Client('username', 'password')
         self.assertRaises(Exception, client.customers.get_customer_attribute_changers, '2015-01-30', '2015-01-31',
                           'OptimailUnsubscribed', ['Alias', 'Country'], '/')
+
+    @responses.activate
+    def test_get_customer_future_values(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/customers/GetCustomerFutureValues',
+            callback=get_customer_future_values_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        data = client.customers.get_customer_future_values(attribute='Country', attribute_value='Australia')
+        self.assertEqual(data, {
+            '631942': 342.65,
+            '257938': 102.33
+        })
+
+    @responses.activate
+    def test_get_customer_future_values_alt(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/customers/GetCustomerFutureValues',
+            callback=get_customer_future_values_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        data = client.customers.get_customer_future_values(6)
+        self.assertEqual(data, {
+            '631942': 342.65,
+            '257938': 102.33
+        })
+
+    @responses.activate
+    def test_get_customer_future_values_no_params(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/customers/GetCustomerFutureValues',
+            callback=get_customer_future_values_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        self.assertRaises(Exception, client.customers.get_customer_future_values)
+
+    @responses.activate
+    def test_get_customer_future_values_wrong_params_combination(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/customers/GetCustomerFutureValues',
+            callback=get_customer_future_values_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        self.assertRaises(Exception, client.customers.get_customer_future_values, 6, 'Country')
+
+    @responses.activate
+    def test_get_customer_future_values_wrong_customer_attribute(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/customers/GetCustomerFutureValues',
+            callback=get_customer_future_values_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        data = client.customers.get_customer_future_values(attribute='Language', attribute_value='Australia')
+        self.assertFalse(data)
