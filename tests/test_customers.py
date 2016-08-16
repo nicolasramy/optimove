@@ -1015,6 +1015,25 @@ class TestCustomers(unittest.TestCase):
         })
 
     @responses.activate
+    def test_get_customer_last_action_executed_with_empty_customer_id(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/customers/GetCustomerLastActionExecuted',
+            callback=get_customer_last_action_executed_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        self.assertRaises(Exception, client.customers.get_customer_last_action_executed, None)
+
+    @responses.activate
     def test_get_customer_last_action_executed_with_wrong_customer_id(self):
         responses.add_callback(
             responses.POST,
@@ -1068,6 +1087,25 @@ class TestCustomers(unittest.TestCase):
         ])
 
     @responses.activate
+    def test_get_customer_action_details_by_date_with_empty_date(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/customers/GetCustomerActionDetailsByDate',
+            callback=get_customer_action_details_by_date_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        self.assertRaises(Exception, client.customers.get_customer_action_details_by_date, None)
+
+    @responses.activate
     def test_get_customer_action_details_by_date_with_wrong_date(self):
         responses.add_callback(
             responses.POST,
@@ -1119,6 +1157,25 @@ class TestCustomers(unittest.TestCase):
                 'recipient_group_id': 2
             }
         ])
+
+    @responses.activate
+    def test_get_customer_action_details_by_date_with_empty_date(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/customers/GetCustomerActionDetailsByDate',
+            callback=get_customer_action_details_by_date_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        self.assertRaises(Exception, client.customers.get_customer_action_details_by_date, None)
 
     @responses.activate
     def test_get_customer_action_details_by_date_with_wrong_date(self):
@@ -1176,6 +1233,25 @@ class TestCustomers(unittest.TestCase):
                 'target_group_id': 34
             }
         ])
+
+    @responses.activate
+    def test_get_customers_action_ended_by_date_with_empty_date(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/customers/GetCustomersActionEndedByDate',
+            callback=get_customers_action_ended_by_date_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        self.assertRaises(Exception, client.customers.get_customers_action_ended_by_date, None)
 
     @responses.activate
     def test_get_customers_action_ended_by_date_with_wrong_date(self):
