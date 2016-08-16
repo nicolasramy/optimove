@@ -77,6 +77,35 @@ def get_customers_by_value_segment_callback(request):
         return 404, HEADERS['text'], 'Not Found'
 
 
+@token_required
+def get_value_segment_changers_callback(request):
+    params = parse_qs(urlparse(request.url).query)
+
+    if params['StartDate'][0] == '2015-09-01' and params['EndDate'][0] == '2015-09-30':
+        if 'CustomerAttributes' in params and 'CustomerAttributesDelimiter' in params:
+            if params['CustomerAttributes'][0] == 'Alias;Country' and params['CustomerAttributesDelimiter'][0] == ',':
+                resp_body = [
+                    {'CustomerID': '231342', 'InitialValueSegmentID': 2, 'FinalValueSegmentID': 3,
+                     'CustomerAttributes': 'BuddyZZ,UK'},
+                    {'CustomerID': '931342', 'InitialValueSegmentID': 1, 'FinalValueSegmentID': 2,
+                     'CustomerAttributes': 'Pax65,DE'}
+                ]
+
+            else:
+                return 404, HEADERS['text'], 'Not Found'
+
+        else:
+            resp_body = [
+                {'CustomerID': '231342', 'InitialValueSegmentID': 2, 'FinalValueSegmentID': 3},
+                {'CustomerID': '931342', 'InitialValueSegmentID': 1, 'FinalValueSegmentID': 2}
+            ]
+
+        return 200, HEADERS['json'], json.dumps(resp_body)
+
+    else:
+        return 404, HEADERS['text'], 'Not Found'
+
+
 """Tests"""
 
 
@@ -332,3 +361,133 @@ class TestSegments(unittest.TestCase):
         client = Client('username', 'password')
         data = client.segments.get_customers_by_value_segment(3, '3015-05-10')
         self.assertFalse(data)
+
+    @responses.activate
+    def test_get_value_segment_changers(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/segments/GetValueSegmentChangers',
+            callback=get_value_segment_changers_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        data = client.segments.get_value_segment_changers('2015-09-01', '2015-09-30')
+        self.assertEqual(data, [
+            {
+                'customer_id': '231342',
+                'initial_value_segment': 2,
+                'final_value_segment': 3
+            },
+            {
+                'customer_id': '931342',
+                'initial_value_segment': 1,
+                'final_value_segment': 2
+            },
+        ])
+
+    @responses.activate
+    def test_get_value_segment_changers_with_delimiter(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/segments/GetValueSegmentChangers',
+            callback=get_value_segment_changers_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        data = client.segments.get_value_segment_changers('2015-09-01', '2015-09-30', ['Alias', 'Country'], ',')
+        self.assertEqual(data, [
+            {
+                'customer_id': '231342',
+                'initial_value_segment': 2,
+                'final_value_segment': 3,
+                'attributes': {
+                    'Alias': 'BuddyZZ',
+                    'Country': 'UK'
+                }
+            },
+            {
+                'customer_id': '931342',
+                'initial_value_segment': 1,
+                'final_value_segment': 2,
+                'attributes': {
+                    'Alias': 'Pax65',
+                    'Country': 'DE'
+                }
+            }
+        ])
+
+    @responses.activate
+    def test_get_value_segment_changers_with_empty_date(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/segments/GetValueSegmentChangers',
+            callback=get_value_segment_changers_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        self.assertRaises(Exception, client.segments.get_value_segment_changers, '2015-09-01', None)
+
+    @responses.activate
+    def test_get_value_segment_changers_with_wrong_delimiter(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/segments/GetValueSegmentChangers',
+            callback=get_value_segment_changers_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        self.assertRaises(Exception, client.segments.get_value_segment_changers, '2015-09-01', '2015-09-30',
+                          ['Country', 'Alias'], '/')
+
+    @responses.activate
+    def test_get_value_segment_changers_with_wrong_start_date(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/segments/GetValueSegmentChangers',
+            callback=get_value_segment_changers_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        data = client.segments.get_value_segment_changers('3015-09-01', '3015-09-30')
+        self.assertFalse(data)
+

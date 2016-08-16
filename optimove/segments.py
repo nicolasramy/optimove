@@ -92,9 +92,8 @@ class Segments(URLBuilder):
             'EndDate': end_date
         }
 
-        if attributes and type(attributes) == type(list):
-            attributes = ';'.join(attributes)
-            data['CustomerAttributes'] = attributes
+        if attributes and type(attributes) == list:
+            data['CustomerAttributes'] = ';'.join(attributes)
 
             if delimiter:
                 if delimiter in self.AUTHORIZED_DELIMITERS and delimiter not in self.UNAUTHORIZED_DELIMITERS:
@@ -113,10 +112,11 @@ class Segments(URLBuilder):
                 'initial_value_segment': item['InitialValueSegmentID'],
                 'final_value_segment': item['FinalValueSegmentID']
             }
-            if attributes:
+            if attributes and type(attributes) == list:
+                result['attributes'] = {}
                 customer_attributes = item['CustomerAttributes'].split(delimiter)
                 for index, attribute in enumerate(attributes):
                     result['attributes'][attribute] = customer_attributes[index]
-                results.append(result)
+            results.append(result)
 
         return results
