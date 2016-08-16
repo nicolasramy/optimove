@@ -250,6 +250,9 @@ class Customers(URLBuilder):
 
     def get_customer_last_action_executed(self, customer_id):
         """Returns details of the last action executed for a particular customer ID."""
+        if not customer_id:
+            raise Exception('No CustomerID provided')
+
         data = {
             'CustomerID': customer_id
         }
@@ -269,6 +272,9 @@ class Customers(URLBuilder):
 
     def get_customer_action_details_by_date(self, date):
         """Returns customer IDs and details of the campaigns sent to them on a particular date."""
+        if not date:
+            raise Exception('No Date provided')
+
         data = {
             'Date': date
         }
@@ -292,6 +298,9 @@ class Customers(URLBuilder):
     def get_customers_action_ended_by_date(self, date):
         """Returns customer IDs and details of the campaigns they received, for action durations which ended on a
         particular date."""
+        if not date:
+            raise Exception('No Date provided')
+
         data = {
             'Date': date
         }
@@ -335,12 +344,12 @@ class Customers(URLBuilder):
         for item in response.json():
             result = {
                 'customer_id': item['CustomerID'],
-                'channel_id': item['CustomerID'],
-                'scheduled_time': item['CustomerID'],
+                'channel_id': item['ChannelID'],
+                'scheduled_time': item['ScheduledTime'],
                 'send_id': item['SendID']
             }
             if include_templates_ids:
-                data['template_id'] = item['TemplateID']
+                result['template_id'] = item['TemplateID']
             results.append(result)
 
         return results

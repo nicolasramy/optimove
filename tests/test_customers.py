@@ -223,6 +223,30 @@ def get_customers_action_ended_by_date_callback(request):
         return 404, HEADERS['text'], 'Not Found'
 
 
+@token_required
+def get_customer_send_details_by_campaign_callback(request):
+    params = parse_qs(urlparse(request.url).query)
+    if params['CampaignID'][0] == '65874':
+        if 'IncludeTemplateIDs' in params:
+            if params['IncludeTemplateIDs'][0] == 'True':
+                resp_body = [
+                    {'CustomerID': '231342', 'ChannelID': 4, 'ScheduledTime': '2015-12-30 10:30:00',
+                     'SendID': 'HG65D', 'TemplateID': 12},
+                    {'CustomerID': '917251', 'ChannelID': 4, 'ScheduledTime': '2015-12-30 11:45:00',
+                     'SendID': 'HG65E', 'TemplateID': 7}
+                ]
+                return 200, HEADERS['json'], json.dumps(resp_body)
+
+        resp_body = [
+            {'CustomerID': '231342', 'ChannelID': 4, 'ScheduledTime': '2015-12-30 10:30:00', 'SendID': 'HG65D'},
+            {'CustomerID': '917251', 'ChannelID': 4, 'ScheduledTime': '2015-12-30 11:45:00', 'SendID': 'HG65E'}
+        ]
+        return 200, HEADERS['json'], json.dumps(resp_body)
+
+    else:
+        return 404, HEADERS['text'], 'Not Found'
+
+
 """Tests"""
 
 
@@ -1173,3 +1197,109 @@ class TestCustomers(unittest.TestCase):
         data = client.customers.get_customers_action_ended_by_date('3014-12-10')
         self.assertFalse(data)
 
+    @responses.activate
+    def test_get_customer_send_details_by_campaign(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/customers/GetCustomerSendDetailsByCampaign',
+            callback=get_customer_send_details_by_campaign_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        data = client.customers.get_customer_send_details_by_campaign(65874)
+        self.assertEqual(data, [
+            {
+                'customer_id': '231342',
+                'channel_id': 4,
+                'scheduled_time': '2015-12-30 10:30:00',
+                'send_id': 'HG65D'
+            },
+            {
+                'customer_id': '917251',
+                'channel_id': 4,
+                'scheduled_time': '2015-12-30 11:45:00',
+                'send_id': 'HG65E'
+            }
+        ])
+
+    @responses.activate
+    def test_get_customer_send_details_by_campaign_with_empty_campaign_id(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/customers/GetCustomerSendDetailsByCampaign',
+            callback=get_customer_send_details_by_campaign_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        self.assertRaises(Exception, client.customers.get_customer_send_details_by_campaign, None)
+
+    @responses.activate
+    def test_get_customer_send_details_by_campaign_with_templates(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/customers/GetCustomerSendDetailsByCampaign',
+            callback=get_customer_send_details_by_campaign_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        data = client.customers.get_customer_send_details_by_campaign(65874, True)
+        self.assertEqual(data, [
+            {
+                'customer_id': '231342',
+                'channel_id': 4,
+                'scheduled_time': '2015-12-30 10:30:00',
+                'send_id': 'HG65D',
+                'template_id': 12
+            },
+            {
+                'customer_id': '917251',
+                'channel_id': 4,
+                'scheduled_time': '2015-12-30 11:45:00',
+                'send_id': 'HG65E',
+                'template_id': 7
+            }
+        ])
+
+    @responses.activate
+    def test_get_customer_send_details_by_campaign_with_wrong_campaign_id(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/customers/GetCustomerSendDetailsByCampaign',
+            callback=get_customer_send_details_by_campaign_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        data = client.customers.get_customer_send_details_by_campaign(65847)
+        self.assertFalse(data)
