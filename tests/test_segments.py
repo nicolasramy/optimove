@@ -39,6 +39,17 @@ def get_value_segment_id_callback(request):
         return 404, HEADERS['text'], 'Not Found'
 
 
+@token_required
+def get_value_segments_callback(request):
+    resp_body = [
+        {'ValueSegmentName': 'Diamond', 'ValueSegmentID': 1},
+        {'ValueSegmentName': 'Gold', 'ValueSegmentID': 2},
+        {'ValueSegmentName': 'Silver', 'ValueSegmentID': 3},
+        {'ValueSegmentName': 'Bronze', 'ValueSegmentID': 4}
+    ]
+    return 200, HEADERS['json'], json.dumps(resp_body)
+
+
 """Tests"""
 
 
@@ -161,3 +172,29 @@ class TestSegments(unittest.TestCase):
         client = Client('username', 'password')
         data = client.segments.get_value_segment_id('Gold')
         self.assertFalse(data)
+
+    @responses.activate
+    def test_get_value_segments(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/segments/GetValueSegments',
+            callback=get_value_segments_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        data = client.segments.get_value_segments()
+        self.assertEqual(data, {
+            1: 'Diamond',
+            2: 'Gold',
+            3: 'Silver',
+            4: 'Bronze'
+        })
+
