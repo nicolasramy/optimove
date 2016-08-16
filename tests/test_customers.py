@@ -1062,10 +1062,62 @@ class TestCustomers(unittest.TestCase):
         client = Client('username', 'password')
         data = client.customers.get_customer_action_details_by_date('3014-12-10')
         self.assertFalse(data)
-        self.assertFalse(data)
 
     @responses.activate
     def test_get_customer_action_details_by_date(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/customers/GetCustomerActionDetailsByDate',
+            callback=get_customer_action_details_by_date_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        data = client.customers.get_customer_action_details_by_date('2014-12-10')
+        self.assertEqual(data, [
+            {
+                'customer_id': '231342',
+                'action_id': 42,
+                'channel_id': 10,
+                'recipient_group_id': 1
+            },
+            {
+                'customer_id': '940023',
+                'action_id': 42,
+                'channel_id': 10,
+                'recipient_group_id': 2
+            }
+        ])
+
+    @responses.activate
+    def test_get_customer_action_details_by_date_with_wrong_date(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/customers/GetCustomerActionDetailsByDate',
+            callback=get_customer_action_details_by_date_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        data = client.customers.get_customer_action_details_by_date('3014-12-10')
+        self.assertFalse(data)
+
+    @responses.activate
+    def test_get_customers_action_ended_by_date(self):
         responses.add_callback(
             responses.POST,
             'https://api.optimove.net/v3.0/general/login',
@@ -1102,7 +1154,7 @@ class TestCustomers(unittest.TestCase):
         ])
 
     @responses.activate
-    def test_get_customer_action_details_by_date_with_wrong_date(self):
+    def test_get_customers_action_ended_by_date_with_wrong_date(self):
         responses.add_callback(
             responses.POST,
             'https://api.optimove.net/v3.0/general/login',
