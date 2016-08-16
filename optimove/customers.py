@@ -269,9 +269,6 @@ class Customers(URLBuilder):
 
     def get_customer_action_details_by_date(self, date):
         """Returns customer IDs and details of the campaigns sent to them on a particular date."""
-        if not date:
-            raise Exception('No Date provided')
-
         data = {
             'Date': date
         }
