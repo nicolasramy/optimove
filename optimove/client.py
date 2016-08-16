@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 
 from datetime import datetime, timedelta
+import json
 
 import requests
 
@@ -60,7 +61,7 @@ class Client:
             self.refresh_token()
 
         headers = headers if headers else self._headers()
-        response = requests.post(url, payload, headers)
+        response = requests.post(url, data=json.dumps(payload), headers=headers)
         return self.dispatch_response(response)
 
     @staticmethod

@@ -8,8 +8,8 @@ from constants import TOKEN, HEADERS
 
 
 def login_callback(request):
-    payload = parse_qs(request.body)
-    if payload['Username'][0] == 'username' and payload['Password'][0] == 'password':
+    payload = json.loads(request.body)
+    if payload['Username'] == 'username' and payload['Password'] == 'password':
         resp_body = TOKEN
         return 200, HEADERS['json'], json.dumps(resp_body)
 
