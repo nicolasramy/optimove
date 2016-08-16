@@ -177,6 +177,21 @@ def get_customer_future_values_callback(request):
         return 404, HEADERS['text'], 'Not Found'
 
 
+@token_required
+def get_customer_last_action_executed_callback(request):
+    params = parse_qs(urlparse(request.url).query)
+    if params['CustomerID'][0] == '2872732':
+        resp_body = {
+            'ActionID': 428,
+            'Date': '2014-12-24',
+            'Duration': 7,
+            'TargetGroupID': 15
+        }
+        return 200, HEADERS['json'], json.dumps(resp_body)
+    else:
+        return 404, HEADERS['text'], 'Not Found'
+
+
 """Tests"""
 
 
@@ -917,3 +932,50 @@ class TestCustomers(unittest.TestCase):
         client = Client('username', 'password')
         data = client.customers.get_customer_future_values(attribute='Language', attribute_value='Australia')
         self.assertFalse(data)
+
+    @responses.activate
+    def test_get_customer_last_action_executed(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/customers/GetCustomerLastActionExecuted',
+            callback=get_customer_last_action_executed_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        data = client.customers.get_customer_last_action_executed('2872732')
+        self.assertEqual(data, {
+            'customer_id': '2872732',
+            'action_id': 428,
+            'date': '2014-12-24',
+            'duration': 7,
+            'target_group_id': 15
+        })
+
+    @responses.activate
+    def test_get_customer_last_action_executed_wrong_customer_id(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/customers/GetCustomerLastActionExecuted',
+            callback=get_customer_last_action_executed_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        data = client.customers.get_customer_last_action_executed('2872723')
+        self.assertFalse(data)
+

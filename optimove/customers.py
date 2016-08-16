@@ -250,9 +250,6 @@ class Customers(URLBuilder):
 
     def get_customer_last_action_executed(self, customer_id):
         """Returns details of the last action executed for a particular customer ID."""
-        if not customer:
-            raise Exception('No CustomerID provided')
-
         data = {
             'CustomerID': customer_id
         }
