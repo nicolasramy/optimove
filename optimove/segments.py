@@ -45,7 +45,7 @@ class Segments(URLBuilder):
 
         return results
 
-    def get_customer_by_value_segment(self, segment_id, date, attributes=None, delimiter=';'):
+    def get_customers_by_value_segment(self, segment_id, date, attributes=None, delimiter=';'):
         """Returns the list of customer IDs associated with a particular value segment on a particular date."""
         if not segment_id or not date:
             raise Exception('No ValueSegmentID and Date provided')
@@ -55,9 +55,8 @@ class Segments(URLBuilder):
             'Date': date
         }
 
-        if attributes and type(attributes) == type(list):
-            attributes = ';'.join(attributes)
-            data['CustomerAttributes'] = attributes
+        if attributes and type(attributes) == list:
+            data['CustomerAttributes'] = ';'.join(attributes)
 
             if delimiter:
                 if delimiter in self.AUTHORIZED_DELIMITERS and delimiter not in self.UNAUTHORIZED_DELIMITERS:
@@ -69,15 +68,16 @@ class Segments(URLBuilder):
         if not response:
             return False
 
-        if attributes:
-            results = [item['CustomerID'] for item in response.json()]
-        else:
+        if attributes and type(attributes) == list:
             results = {}
             for item in response.json():
                 results[item['CustomerID']] = {}
                 customer_attributes = item['CustomerAttributes'].split(delimiter)
                 for index, attribute in enumerate(attributes):
                     results[item['CustomerID']][attribute] = customer_attributes[index]
+
+        else:
+            results = [item['CustomerID'] for item in response.json()]
 
         return results
 
