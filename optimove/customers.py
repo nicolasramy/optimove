@@ -397,8 +397,6 @@ class Customers(URLBuilder):
     def get_currently_targeted_customers(self):
         """Returns an array of all customer IDs currently included in one or more campaigns."""
         response = self.client.get(self._get_url())
-        if not response:
-            return False
 
         results = list()
         for item in response.json():
@@ -413,11 +411,13 @@ class Customers(URLBuilder):
 
         return results
 
-    def get_cancelled_campaign_customers(self, campaign_id):
+    def get_canceled_campaign_customers(self, campaign_id):
         """Returns an array of all customer IDs that had been included in a campaign that was canceled, along with their
         associated action IDs and promo codes."""
         if not campaign_id:
             raise Exception('No CampaignID provided')
+
+        data = {'CampaignID': campaign_id}
 
         response = self.client.get(self._get_url(), data)
         if not response:

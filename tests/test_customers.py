@@ -279,6 +279,29 @@ def get_customer_send_details_by_channel_callback(request):
         return 404, HEADERS['text'], 'Not Found'
 
 
+@token_required
+def get_currently_targeted_customers_callback(request):
+    resp_body = [
+        {'CustomerID': '231342', 'CampaignID': 428, 'ActionID': 4, 'StartDate': '2015-12-30', 'EndDate': '2016-01-02'},
+        {'CustomerID': '745611', 'CampaignID': 370, 'ActionID': 18, 'StartDate': '2015-12-30', 'EndDate': '2016-01-03'}
+    ]
+    return 200, HEADERS['json'], json.dumps(resp_body)
+
+
+@token_required
+def get_canceled_campaign_customers_callback(request):
+    params = parse_qs(urlparse(request.url).query)
+    if params['CampaignID'][0] == '6574':
+        resp_body = [
+            {'CustomerID': '231342', 'ActionID': 4, 'PromoCode': 'A7Bonus'},
+            {'CustomerID': '463516', 'ActionID': 4, 'PromoCode': 'A7Bonus'}
+        ]
+        return 200, HEADERS['json'], json.dumps(resp_body)
+
+    else:
+        return 404, HEADERS['text'], 'Not Found'
+
+
 """Tests"""
 
 
@@ -1539,4 +1562,109 @@ class TestCustomers(unittest.TestCase):
 
         client = Client('username', 'password')
         data = client.customers.get_customer_send_details_by_channel(5, 65847)
+        self.assertFalse(data)
+
+    @responses.activate
+    def test_get_currently_targeted_customers(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/customers/GetCurrentlyTargetedCustomers',
+            callback=get_currently_targeted_customers_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        data = client.customers.get_currently_targeted_customers()
+        self.assertEqual(data, [
+            {
+                'customer_id': '231342',
+                'campaign_id': 428,
+                'action_id': 4,
+                'start_date': '2015-12-30',
+                'end_date': '2016-01-02'
+            },
+            {
+                'customer_id': '745611',
+                'campaign_id': 370,
+                'action_id': 18,
+                'start_date': '2015-12-30',
+                'end_date': '2016-01-03'
+            }
+        ])
+
+    @responses.activate
+    def test_get_canceled_campaign_customers(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/customers/GetCanceledCampaignCustomers',
+            callback=get_canceled_campaign_customers_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        data = client.customers.get_canceled_campaign_customers(6574)
+        self.assertEqual(data, [
+            {
+                'customer_id': '231342',
+                'action_id': 4,
+                'promo_code': 'A7Bonus'
+            },
+            {
+                'customer_id': '463516',
+                'action_id': 4,
+                'promo_code': 'A7Bonus'
+            }
+        ])
+
+    @responses.activate
+    def test_get_canceled_campaign_customers_with_empty_campaign_id(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/customers/GetCanceledCampaignCustomers',
+            callback=get_canceled_campaign_customers_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        self.assertRaises(Exception, client.customers.get_canceled_campaign_customers, None)
+
+    @responses.activate
+    def test_get_canceled_campaign_customers_with_wrong_campaign_id(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/customers/GetCanceledCampaignCustomers',
+            callback=get_canceled_campaign_customers_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        data = client.customers.get_canceled_campaign_customers(6547)
         self.assertFalse(data)
