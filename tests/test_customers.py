@@ -207,6 +207,22 @@ def get_customer_action_details_by_date_callback(request):
         return 404, HEADERS['text'], 'Not Found'
 
 
+@token_required
+def get_customers_action_ended_by_date_callback(request):
+    params = parse_qs(urlparse(request.url).query)
+    if params['Date'][0] == '2014-12-10':
+        resp_body = [
+            {'CustomerID': '231342', 'ActionID': 428, 'ChannelID': 4, 'Date': '2014-12-03',
+             'Duration': 7, 'TargetGroupID': 15},
+            {'CustomerID': '981002', 'ActionID': 22, 'ChannelID': 9, 'Date': '2014-12-05',
+             'Duration': 5, 'TargetGroupID': 34}
+        ]
+        return 200, HEADERS['json'], json.dumps(resp_body)
+
+    else:
+        return 404, HEADERS['text'], 'Not Found'
+
+
 """Tests"""
 
 
@@ -1045,5 +1061,63 @@ class TestCustomers(unittest.TestCase):
 
         client = Client('username', 'password')
         data = client.customers.get_customer_action_details_by_date('3014-12-10')
+        self.assertFalse(data)
+        self.assertFalse(data)
+
+    @responses.activate
+    def test_get_customer_action_details_by_date(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/customers/GetCustomersActionEndedByDate',
+            callback=get_customers_action_ended_by_date_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        data = client.customers.get_customers_action_ended_by_date('2014-12-10')
+        self.assertEqual(data, [
+            {
+                'customer_id': '231342',
+                'action_id': 428,
+                'channel_id': 4,
+                'date': '2014-12-03',
+                'duration': 7,
+                'target_group_id': 15
+            },
+            {
+                'customer_id': '981002',
+                'action_id': 22,
+                'channel_id': 9,
+                'date': '2014-12-05',
+                'duration': 5,
+                'target_group_id': 34
+            }
+        ])
+
+    @responses.activate
+    def test_get_customer_action_details_by_date_with_wrong_date(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/customers/GetCustomersActionEndedByDate',
+            callback=get_customers_action_ended_by_date_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        data = client.customers.get_customers_action_ended_by_date('3014-12-10')
         self.assertFalse(data)
 

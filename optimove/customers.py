@@ -289,12 +289,9 @@ class Customers(URLBuilder):
 
         return results
 
-    def get_customers_actions_ended_by_date(self, date):
+    def get_customers_action_ended_by_date(self, date):
         """Returns customer IDs and details of the campaigns they received, for action durations which ended on a
         particular date."""
-        if not date:
-            raise Exception('No Date provided')
-
         data = {
             'Date': date
         }
