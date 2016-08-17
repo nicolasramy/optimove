@@ -1,3 +1,4 @@
+sudo: false
 language: python
 
 python:
@@ -6,10 +7,11 @@ python:
 install:
   - pip install -r requirements.txt
   - pip install responses
+  - pip install coverage
   - pip install python-coveralls
 
 script:
-  - python setup.py test
+  - coverage run ./setup.py test
 
 after_success:
   - coveralls
