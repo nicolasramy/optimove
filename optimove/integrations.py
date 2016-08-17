@@ -129,14 +129,15 @@ class Integrations(URLBuilder):
         if len(applications) >= 100:
             raise Exception('Too much AppID and AppName provided, max 100')
 
-        data =[
+        data = [
             {
                 'AppID': item,
                 'AppName': applications[item]
             } for item in applications
         ]
 
-        response = self.client.post(self._get_url(), data)
+        url = '%s?ChannelID=%d' % (self._get_url(), channel_id)
+        response = self.client.post(url, data)
         return bool(response)
 
     def delete_channel_apps(self, applications):

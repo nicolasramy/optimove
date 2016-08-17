@@ -44,9 +44,15 @@ def delete_promotions_callback(request):
 @token_required
 def add_channel_templates_callback(request):
     payload = json.loads(request.body)
-    resp_body = all([True if item['TemplateID'] is not None and item['TemplateName'] is not None else False
-                     for item in payload])
-    return 200, HEADERS['json'], json.dumps(resp_body)
+    params = parse_qs(urlparse(request.url).query)
+
+    if params['ChannelID'][0] == '3':
+        resp_body = all([True if item['TemplateID'] is not None and item['TemplateName'] is not None else False
+                         for item in payload])
+        return 200, HEADERS['json'], json.dumps(resp_body)
+
+    else:
+        return 404, HEADERS['text'], 'Not Found'
 
 
 @token_required
@@ -68,6 +74,28 @@ def get_channel_templates_callback(request):
 def delete_channel_templates_callback(request):
     payload = json.loads(request.body)
     resp_body = all([True if item['ChannelID'] is not None and item['TemplateID'] is not None else False
+                     for item in payload])
+    return 200, HEADERS['json'], json.dumps(resp_body)
+
+
+@token_required
+def add_channel_apps_callback(request):
+    payload = json.loads(request.body)
+    params = parse_qs(urlparse(request.url).query)
+
+    if params['ChannelID'][0] == '3':
+        resp_body = all([True if item['AppID'] is not None and item['AppName'] is not None else False
+                         for item in payload])
+        return 200, HEADERS['json'], json.dumps(resp_body)
+
+    else:
+        return 404, HEADERS['text'], 'Not Found'
+
+
+@token_required
+def delete_channel_apps_callback(request):
+    payload = json.loads(request.body)
+    resp_body = all([True if item['ChannelID'] is not None and item['AppID'] is not None else False
                      for item in payload])
     return 200, HEADERS['json'], json.dumps(resp_body)
 
@@ -436,3 +464,141 @@ class TestIntegrations(unittest.TestCase):
             too_much_channel_templates.append(channel_template)
 
         self.assertRaises(Exception, client.integrations.delete_channel_templates, too_much_channel_templates)
+
+    @responses.activate
+    def test_add_channel_apps(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/integrations/AddChannelApps',
+            callback=add_channel_apps_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        data = client.integrations.add_channel_apps(3, {
+            1: 'Bingo Mania',
+            2: 'Super Slots'
+        })
+        self.assertTrue(data)
+
+    @responses.activate
+    def test_add_channel_apps_with_empty_channel_id(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/integrations/AddChannelApps',
+            callback=add_channel_apps_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        self.assertRaises(Exception, client.integrations.add_channel_apps, None, {
+            1: 'Bingo Mania',
+            2: 'Super Slots'
+        })
+
+    @responses.activate
+    def test_add_channel_apps_overflow(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/integrations/AddChannelApps',
+            callback=add_channel_apps_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        too_much_channel_apps = {}
+        for app_id in range(150):
+            too_much_channel_apps[app_id] = \
+                ''.join([random.choice(string.ascii_uppercase + string.digits + ' ') for _ in range(50)])
+
+        self.assertRaises(Exception, client.integrations.add_channel_apps, 3, too_much_channel_apps)
+
+    @responses.activate
+    def test_delete_channel_apps(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/integrations/DeleteChannelApps',
+            callback=delete_channel_apps_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        data = client.integrations.delete_channel_apps([
+            {'channel_id': 3, 'app_id': 1},
+            {'channel_id': 3, 'app_id': 2}
+        ])
+        self.assertTrue(data)
+
+    @responses.activate
+    def test_delete_channel_apps_with_empty_channel_apps(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/integrations/DeleteChannelApps',
+            callback=delete_channel_apps_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        self.assertRaises(Exception, client.integrations.delete_channel_apps, None)
+
+    @responses.activate
+    def test_delete_channel_apps_overflow(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/integrations/DeleteChannelApps',
+            callback=delete_channel_apps_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        too_much_channel_apps = []
+        for channel_app_id in range(150):
+            channel_app = {
+                'app_id': channel_app_id,
+                'channel_id': random.choice(range(1, 5))
+            }
+            too_much_channel_apps.append(channel_app)
+
+        self.assertRaises(Exception, client.integrations.delete_channel_apps, too_much_channel_apps)
