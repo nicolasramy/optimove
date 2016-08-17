@@ -41,6 +41,37 @@ def delete_promotions_callback(request):
     return 200, HEADERS['json'], json.dumps(resp_body)
 
 
+@token_required
+def add_channel_templates_callback(request):
+    payload = json.loads(request.body)
+    resp_body = all([True if item['TemplateID'] is not None and item['TemplateName'] is not None else False
+                     for item in payload])
+    return 200, HEADERS['json'], json.dumps(resp_body)
+
+
+@token_required
+def get_channel_templates_callback(request):
+    params = parse_qs(urlparse(request.url).query)
+
+    if params['ChannelID'][0] == '3':
+        resp_body = [
+            {'TemplateID': 1, 'TemplateName': 'Welcome Back English'},
+            {'TemplateID': 2, 'TemplateName': 'Welcome Back Spanish'}
+        ]
+        return 200, HEADERS['json'], json.dumps(resp_body)
+
+    else:
+        return 404, HEADERS['text'], 'Not Found'
+
+
+@token_required
+def delete_channel_templates_callback(request):
+    payload = json.loads(request.body)
+    resp_body = all([True if item['ChannelID'] is not None and item['TemplateID'] is not None else False
+                     for item in payload])
+    return 200, HEADERS['json'], json.dumps(resp_body)
+
+
 """Tests"""
 
 
@@ -70,7 +101,7 @@ class TestIntegrations(unittest.TestCase):
         self.assertTrue(data)
 
     @responses.activate
-    def test_add_promotion_with_empty_promotions(self):
+    def test_add_promotions_with_empty_promotions(self):
         responses.add_callback(
             responses.POST,
             'https://api.optimove.net/v3.0/general/login',
@@ -156,7 +187,7 @@ class TestIntegrations(unittest.TestCase):
         self.assertTrue(data)
 
     @responses.activate
-    def test_delete_promotion_with_empty_promotions(self):
+    def test_delete_promotions_with_empty_promotions(self):
         responses.add_callback(
             responses.POST,
             'https://api.optimove.net/v3.0/general/login',
@@ -197,3 +228,211 @@ class TestIntegrations(unittest.TestCase):
             too_much_promotions.append(promo_code)
 
         self.assertRaises(Exception, client.integrations.delete_promotions, too_much_promotions)
+
+    @responses.activate
+    def test_add_channel_templates(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/integrations/AddChannelTemplates',
+            callback=add_channel_templates_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        data = client.integrations.add_channel_templates(3, [
+            {'id': 1, 'name': 'Welcome Back English'},
+            {'id': 2, 'name': 'Welcome Back Spanish', 'app_id': 'app123'},
+        ])
+        self.assertTrue(data)
+
+    @responses.activate
+    def test_add_channel_templates_with_empty_channel_id(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/integrations/AddChannelTemplates',
+            callback=add_channel_templates_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        self.assertRaises(Exception, client.integrations.add_channel_templates, None, [
+            {'id': 1, 'name': 'Welcome Back English'},
+            {'id': 2, 'name': 'Welcome Back Spanish', 'app_id': 'app123'},
+        ])
+
+    @responses.activate
+    def test_add_channel_templates_overflow(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/integrations/AddChannelTemplates',
+            callback=add_channel_templates_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        too_much_channel_templates = []
+        for channel_template_id in range(150):
+            channel_template = {
+                'id': channel_template_id,
+                'name': ''.join([random.choice(string.ascii_uppercase + string.digits + ' ') for _ in range(50)])
+            }
+
+            if random.choice([True, False]):
+                channel_template['app_id'] = ''.join([random.choice(string.ascii_uppercase + string.digits)
+                                                      for _ in range(5)])
+
+            too_much_channel_templates.append(channel_template)
+
+        self.assertRaises(Exception, client.integrations.add_channel_templates, 3, too_much_channel_templates)
+
+    @responses.activate
+    def test_get_channels_templates(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/integrations/GetChannelTemplates',
+            callback=get_channel_templates_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        data = client.integrations.get_channel_templates(3)
+        self.assertEqual(data, {
+            1: 'Welcome Back English',
+            2: 'Welcome Back Spanish'
+        })
+
+    @responses.activate
+    def test_get_channels_templates_with_empty_channel_id(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/integrations/GetChannelTemplates',
+            callback=get_channel_templates_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        self.assertRaises(Exception, client.integrations.get_channel_templates, None)
+
+    @responses.activate
+    def test_get_channels_templates_with_wrong_channel_id(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.GET,
+            'https://api.optimove.net/v3.0/integrations/GetChannelTemplates',
+            callback=get_channel_templates_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        data = client.integrations.get_channel_templates(4)
+        self.assertFalse(data)
+
+    @responses.activate
+    def test_delete_channel_templates(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/integrations/DeleteChannelTemplates',
+            callback=delete_channel_templates_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        data = client.integrations.delete_channel_templates([
+            {'channel_id': 3, 'template_id': 15},
+            {'channel_id': 4, 'template_id': 26}
+        ])
+        self.assertTrue(data)
+
+    @responses.activate
+    def test_delete_channel_templates_with_empty_channel_templates(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/integrations/DeleteChannelTemplates',
+            callback=delete_channel_templates_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        self.assertRaises(Exception, client.integrations.delete_channel_templates, None)
+
+    @responses.activate
+    def test_delete_channel_templates_overflow(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/integrations/DeleteChannelTemplates',
+            callback=delete_channel_templates_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        too_much_channel_templates = []
+        for channel_template_id in range(150):
+            channel_template = {
+                'template_id': channel_template_id,
+                'channel_id': random.choice(range(1, 5))
+            }
+            too_much_channel_templates.append(channel_template)
+
+        self.assertRaises(Exception, client.integrations.delete_channel_templates, too_much_channel_templates)

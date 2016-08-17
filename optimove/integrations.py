@@ -79,7 +79,7 @@ class Integrations(URLBuilder):
 
             data.append(_data)
 
-        url = '%s?%d' % (self._get_url(), channel_id)
+        url = '%s?ChannelID=%d' % (self._get_url(), channel_id)
         response = self.client.post(url, data)
         return bool(response)
 
