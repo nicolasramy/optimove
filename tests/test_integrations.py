@@ -8,6 +8,7 @@ import unittest
 from urlparse import parse_qs, urlparse
 
 from optimove.client import Client
+from optimove.integrations import Integrations
 import responses
 
 from constants import HEADERS, TOKEN
@@ -97,6 +98,18 @@ def delete_channel_apps_callback(request):
     payload = json.loads(request.body)
     resp_body = all([True if item['ChannelID'] is not None and item['AppID'] is not None else False
                      for item in payload])
+    return 200, HEADERS['json'], json.dumps(resp_body)
+
+
+@token_required
+def update_campaign_metrics_callback(request):
+    payload = json.loads(request.body)
+
+    resp_body = all([True if item['ChannelID'] is not None
+                     and item['CampaignID'] is not None
+                     and item['TemplateID'] is not None
+                     and item['MetricID'] is not None
+                     and item['MetricValue'] is not None else False for item in payload])
     return 200, HEADERS['json'], json.dumps(resp_body)
 
 
@@ -602,3 +615,111 @@ class TestIntegrations(unittest.TestCase):
             too_much_channel_apps.append(channel_app)
 
         self.assertRaises(Exception, client.integrations.delete_channel_apps, too_much_channel_apps)
+
+    @responses.activate
+    def test_update_campaign_metrics(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/integrations/UpdateCampaignMetrics',
+            callback=update_campaign_metrics_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        data = client.integrations.update_campaign_metrics([
+            {'channel_id': 3, 'campaign_id': 42, 'template_id': 8,
+             'metric': Integrations.METRIC_SENT, 'value': 925},
+            {'channel_id': 3, 'campaign_id': 42, 'template_id': 8,
+             'metric': Integrations.METRIC_DELIVERED, 'value': 809},
+            {'channel_id': 3, 'campaign_id': 42, 'template_id': 8,
+             'metric': Integrations.METRIC_OPENED, 'value': 250},
+            {'channel_id': 3, 'campaign_id': 42, 'template_id': 8,
+             'metric': Integrations.METRIC_CLICKED, 'value': 122},
+            {'channel_id': 3, 'campaign_id': 42, 'template_id': 8,
+             'metric': Integrations.METRIC_UNSUBSCRIBED, 'value': 11}
+        ])
+        self.assertTrue(data)
+
+    @responses.activate
+    def test_update_campaign_metrics_with_empty_metrics(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/integrations/UpdateCampaignMetrics',
+            callback=update_campaign_metrics_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        self.assertRaises(Exception, client.integrations.update_campaign_metrics, None)
+
+    @responses.activate
+    def test_update_campaign_metrics_overflow(self):
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/general/login',
+            callback=login_callback,
+            content_type='application/json'
+        )
+
+        responses.add_callback(
+            responses.POST,
+            'https://api.optimove.net/v3.0/integrations/UpdateCampaignMetrics',
+            callback=update_campaign_metrics_callback,
+            content_type='application/json'
+        )
+
+        client = Client('username', 'password')
+        too_much_metrics = []
+        for campaign_id in range(20):
+            template_id = random.choice(range(1, 100))
+            too_much_metrics.append({
+                'channel_id': 3,
+                'campaign_id': campaign_id,
+                'template_id': template_id,
+                'metric': Integrations.METRIC_SENT,
+                'value': random.choice(range(1000))
+            })
+            too_much_metrics.append({
+                'channel_id': 3,
+                'campaign_id': campaign_id,
+                'template_id': template_id,
+                'metric': Integrations.METRIC_DELIVERED,
+                'value': random.choice(range(1000))
+            })
+            too_much_metrics.append({
+                'channel_id': 3,
+                'campaign_id': campaign_id,
+                'template_id': template_id,
+                'metric': Integrations.METRIC_OPENED,
+                'value': random.choice(range(1000))
+            })
+            too_much_metrics.append({
+                'channel_id': 3,
+                'campaign_id': campaign_id,
+                'template_id': template_id,
+                'metric': Integrations.METRIC_CLICKED,
+                'value': random.choice(range(1000))
+            })
+            too_much_metrics.append({
+                'channel_id': 3,
+                'campaign_id': campaign_id,
+                'template_id': template_id,
+                'metric': Integrations.METRIC_UNSUBSCRIBED,
+                'value': random.choice(range(1000))
+            })
+
+        self.assertRaises(Exception, client.integrations.update_campaign_metrics, too_much_metrics)
