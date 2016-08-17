@@ -36,8 +36,6 @@ class Integrations(URLBuilder):
     def get_promotions(self):
         """Returns an array of all defined promo codes and associated names."""
         response = self.client.get(self._get_url())
-        if not response:
-            return False
 
         results = {}
         for item in response.json():
