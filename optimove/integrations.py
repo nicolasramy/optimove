@@ -22,7 +22,7 @@ class Integrations(URLBuilder):
         if not promotions:
             raise Exception('No PromoCode and PromotionName provided')
 
-        if len(promotions) >= 100:
+        if len(promotions) > 100:
             raise Exception('Too much PromoCode and PromotionName provided')
 
         data = [{
@@ -48,7 +48,7 @@ class Integrations(URLBuilder):
         if not promotions:
             raise Exception('No PromoCode provided')
 
-        if len(promotions) >= 100:
+        if len(promotions) > 100:
             raise Exception('Too much PromoCode provided')
 
         data = [
@@ -65,7 +65,7 @@ class Integrations(URLBuilder):
         if not channel_id or not templates:
             raise Exception('No ChannelID, TemplateID and TemplateName provided')
 
-        if len(templates) >= 100:
+        if len(templates) > 100:
             raise Exception('Too much TemplateID and TemplatesName provided')
 
         data = list()
@@ -107,7 +107,7 @@ class Integrations(URLBuilder):
         if not templates:
             raise Exception('No ChannelID and TemplateID provided')
 
-        if len(templates) >= 100:
+        if len(templates) > 100:
             raise Exception('Too much ChannelID and TemplateID provided, max 100')
 
         data = [
@@ -126,7 +126,7 @@ class Integrations(URLBuilder):
         if not channel_id or not applications:
             raise Exception('No ChannelID, AppID and AppName provided')
 
-        if len(applications) >= 100:
+        if len(applications) > 100:
             raise Exception('Too much AppID and AppName provided, max 100')
 
         data = [
@@ -145,7 +145,7 @@ class Integrations(URLBuilder):
         if not applications:
             raise Exception('No ChannelID and AppID provided')
 
-        if len(applications) >= 100:
+        if len(applications) > 100:
             raise Exception('Too much ChannelID and AppID provided')
 
         data = [
@@ -162,7 +162,7 @@ class Integrations(URLBuilder):
         if not metrics:
             raise Exception('No ChannelID, CampaignID, TemplateID, MetricID and MetricValue provided')
 
-        if len(metrics) >= 100:
+        if len(metrics) > 100:
             raise Exception('Too much ChannelID, CampaignID, TemplateID, MetricID and MetricValue provided')
 
         data = [{

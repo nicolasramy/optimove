@@ -684,7 +684,7 @@ class TestIntegrations(unittest.TestCase):
 
         client = Client('username', 'password')
         too_much_metrics = []
-        for campaign_id in range(20):
+        for campaign_id in range(25):
             template_id = random.choice(range(1, 100))
             too_much_metrics.append({
                 'channel_id': 3,
