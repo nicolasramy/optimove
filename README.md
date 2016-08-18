@@ -1,5 +1,6 @@
 # Optimove
 
+[![PyPI version](https://badge.fury.io/py/optimove.svg)](https://badge.fury.io/py/optimove)
 [![Build Status](https://travis-ci.org/nicolasramy/optimove.svg?branch=master)](https://travis-ci.org/nicolasramy/optimove)
 [![Coverage Status](https://coveralls.io/repos/github/nicolasramy/optimove/badge.svg?branch=master)](https://coveralls.io/github/nicolasramy/optimove?branch=master)
 
