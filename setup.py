@@ -14,10 +14,10 @@ setup(
     author_email='nicolas.ramy@darkelda.com',
     license='MIT',
     description='This library allows you to quickly and easily use the Optimove Web API v3 via Python',
-    long_description=open('README.md').read(),
+    long_description=open('README.rst').read(),
     include_package_data=True,
     test_suite='tests',
-    url='http://github.com/nicolas-ramy/optimove',
+    url='https://github.com/nicolasramy/optimove',
     classifiers=[
         'Development Status :: 4 - Beta',
         'License :: OSI Approved :: MIT License',

@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 from inspect import currentframe, getouterframes
 
-__version__ = "1.0"
+__version__ = "1.0.0b3"
 
 
 class URLBuilder(object):
