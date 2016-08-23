@@ -172,7 +172,9 @@ def get_executed_campaign_channel_details_callback(request):
 
     if params['CampaignID'][0] == '9214' and params['ChannelID'][0] == '35':
         resp_body = [
-            {'ListID': 12, 'SendID': 'YTGF3C', 'TemplateID': 520, 'ScheduledTime': '2015-12-30 08:00:00'}
+            {'ListID': 12, 'SendID': 'YTGF3C', 'TemplateID': 520, 'ScheduledTime': '2015-12-30 08:00:00'},
+            {'TemplateID': 27, 'ScheduledTime': '2016-08-23 16:00:00', 'SendID': ''},
+            {'TemplateID': 1321, 'ScheduledTime': '2016-08-23 18:00:00', 'SendID': ''}
         ]
         return 200, HEADERS['json'], json.dumps(resp_body)
 
@@ -801,8 +803,12 @@ class TestActions(unittest.TestCase):
 
         client = Client('username', 'password')
         data = client.actions.get_executed_campaign_channel_details(9214, 35)
-        self.assertEqual(data, {'campaign_id': 9214, 'channel_id': 35, 'list_id': 12,
-                                'send_id': 'YTGF3C', 'template_id': 520, 'scheduled_time': '2015-12-30 08:00:00'})
+        self.assertEqual(data, [{'campaign_id': 9214, 'channel_id': 35, 'list_id': 12,
+                                'send_id': 'YTGF3C', 'template_id': 520, 'scheduled_time': '2015-12-30 08:00:00'},
+                                {'campaign_id': 9214, 'channel_id': 35, 'send_id': '', 'template_id': 27,
+                                 'scheduled_time': '2016-08-23 16:00:00'},
+                                {'campaign_id': 9214, 'channel_id': 35, 'send_id': '', 'template_id': 1321,
+                                 'scheduled_time': '2016-08-23 18:00:00'}])
 
     @responses.activate
     def test_get_executed_campaign_channel_details_empty_channel_id(self):

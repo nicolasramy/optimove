@@ -239,15 +239,19 @@ class Actions(URLBuilder):
         if not response:
             return False
 
-        item = response.json()[0]
-        return {
-            'campaign_id': campaign_id,
-            'channel_id': channel_id,
-            'list_id': item['ListID'],
-            'send_id': item['SendID'],
-            'template_id': item['TemplateID'],
-            'scheduled_time': item['ScheduledTime']
-        }
+        results = []
+        for item in response.json():
+            result = {
+                'campaign_id': campaign_id,
+                'channel_id': channel_id,
+                'send_id': item['SendID'],
+                'template_id': item['TemplateID'],
+                'scheduled_time': item['ScheduledTime']
+            }
+            if 'ListID' in item:
+                result['list_id'] = item['ListID']
+            results.append(result)
+        return results
 
     def get_executed_campaigns_by_channel(self, channel_id, date):
         """Returns the list of campaigns executed for a particular channel on a particular date."""
