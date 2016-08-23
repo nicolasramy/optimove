@@ -11,7 +11,8 @@ class Customers(URLBuilder):
     def __init__(self, client):
         self.client = client
 
-    def get_customers_by_action(self, recipient_group_id, action_id, date, attributes=None, delimiter=';'):
+    def get_customers_by_action(self, recipient_group_id, action_id, date, attributes=None, delimiter=';',
+                                top=None, skip=None):
         """Returns the list of customer IDs associated with a particular recipient group and action on
         a particular date, plus an optional customer attribute."""
         if not recipient_group_id or not action_id or not date:
@@ -32,6 +33,12 @@ class Customers(URLBuilder):
                 else:
                     raise Exception('Invalid delimiter')
 
+        if top and type(top) == int:
+            data['$top'] = top
+
+        if skip and type(skip) == int:
+            data['$skip'] = skip
+
         response = self.client.get(self._get_url(), data)
         if not response:
             return False
@@ -51,7 +58,8 @@ class Customers(URLBuilder):
         return results
 
     def get_customer_actions_by_target_group(self, target_group_id, date,
-                                             include_control_group=False, attributes=None, delimiter=';'):
+                                             include_control_group=False, attributes=None, delimiter=';',
+                                             top=None, skip=None):
         """Returns a list of customers and the details of the marketing actions they received, for a
         particular target group ID on a particular date."""
         if not target_group_id or not date:
@@ -74,6 +82,12 @@ class Customers(URLBuilder):
                 else:
                     raise Exception('Invalid delimiter')
 
+        if top and type(top) == int:
+            data['$top'] = top
+
+        if skip and type(skip) == int:
+            data['$skip'] = skip
+
         response = self.client.get(self._get_url(), data)
         if not response:
             return False
@@ -94,8 +108,8 @@ class Customers(URLBuilder):
 
         return results
 
-    def get_customer_one_time_actions_by_date(self, date,
-                                              include_control_group=False, attributes=None, delimiter=';'):
+    def get_customer_one_time_actions_by_date(self, date, include_control_group=False, attributes=None, delimiter=';',
+                                              top=None, skip=None):
         """Returns a list of customers and the details of the marketing actions they received as part of one-time
         campaigns executed on a particular date."""
         if not date:
@@ -117,6 +131,12 @@ class Customers(URLBuilder):
                 else:
                     raise Exception('Invalid delimiter')
 
+        if top and type(top) == int:
+            data['$top'] = top
+
+        if skip and type(skip) == int:
+            data['$skip'] = skip
+
         response = self.client.get(self._get_url(), data)
         if not response:
             return False
@@ -137,7 +157,7 @@ class Customers(URLBuilder):
 
         return results
 
-    def get_target_group_changers(self, start_date, end_date, attributes=None, delimiter=';'):
+    def get_target_group_changers(self, start_date, end_date, attributes=None, delimiter=';', top=None, skip=None):
         """Returns the before and after target group IDs for customers whose target group changed during a particular
         date range."""
         if not start_date or not end_date:
@@ -156,6 +176,12 @@ class Customers(URLBuilder):
                     data['CustomerAttributesDelimiter'] = delimiter
                 else:
                     raise Exception('Invalid delimiter')
+
+        if top and type(top) == int:
+            data['$top'] = top
+
+        if skip and type(skip) == int:
+            data['$skip'] = skip
 
         response = self.client.get(self._get_url(), data)
         if not response:
@@ -178,7 +204,7 @@ class Customers(URLBuilder):
         return results
 
     def get_customer_attribute_changers(self, start_date, end_date, changed_customer_attribute,
-                                        attributes=None, delimiter=';'):
+                                        attributes=None, delimiter=';', top=None, skip=None):
         """Returns an array of customer IDs, and their before and after attribute values, for customers whose selected
         attribute changed during a particular date range."""
         if not start_date or not end_date or not changed_customer_attribute:
@@ -198,6 +224,12 @@ class Customers(URLBuilder):
                     data['CustomerAttributesDelimiter'] = delimiter
                 else:
                     raise Exception('Invalid delimiter')
+
+        if top and type(top) == int:
+            data['$top'] = top
+
+        if skip and type(skip) == int:
+            data['$skip'] = skip
 
         response = self.client.get(self._get_url(), data)
         if not response:
@@ -221,7 +253,8 @@ class Customers(URLBuilder):
 
         return results
 
-    def get_customer_future_values(self, life_cycle_stage_id=None, attribute=None, attribute_value=None):
+    def get_customer_future_values(self, life_cycle_stage_id=None, attribute=None, attribute_value=None,
+                                   top=None, skip=None):
         """Returns customer IDs and their current future values."""
         if not life_cycle_stage_id and not attribute and not attribute_value:
             raise Exception('No LifecycleStageID or CustomerAttribute and CustomerAttributeValue provided')
@@ -237,6 +270,12 @@ class Customers(URLBuilder):
 
         else:
             raise Exception('Wrong combination for LifecycleStageID, CustomerAttribute and CustomerAttributeValue')
+
+        if top and type(top) == int:
+            data['$top'] = top
+
+        if skip and type(skip) == int:
+            data['$skip'] = skip
 
         response = self.client.get(self._get_url(), data)
         if not response:
@@ -270,7 +309,7 @@ class Customers(URLBuilder):
             'target_group_id': item['TargetGroupID']
         }
 
-    def get_customer_action_details_by_date(self, date):
+    def get_customer_action_details_by_date(self, date, top=None, skip=None):
         """Returns customer IDs and details of the campaigns sent to them on a particular date."""
         if not date:
             raise Exception('No Date provided')
@@ -278,6 +317,12 @@ class Customers(URLBuilder):
         data = {
             'Date': date
         }
+
+        if top and type(top) == int:
+            data['$top'] = top
+
+        if skip and type(skip) == int:
+            data['$skip'] = skip
 
         response = self.client.get(self._get_url(), data)
         if not response:
@@ -295,7 +340,7 @@ class Customers(URLBuilder):
 
         return results
 
-    def get_customers_action_ended_by_date(self, date):
+    def get_customers_action_ended_by_date(self, date, top=None, skip=None):
         """Returns customer IDs and details of the campaigns they received, for action durations which ended on a
         particular date."""
         if not date:
@@ -304,6 +349,12 @@ class Customers(URLBuilder):
         data = {
             'Date': date
         }
+
+        if top and type(top) == int:
+            data['$top'] = top
+
+        if skip and type(skip) == int:
+            data['$skip'] = skip
 
         response = self.client.get(self._get_url(), data)
         if not response:
@@ -323,7 +374,7 @@ class Customers(URLBuilder):
 
         return results
 
-    def get_customer_send_details_by_campaign(self, campaign_id, include_templates_ids=False):
+    def get_customer_send_details_by_campaign(self, campaign_id, include_templates_ids=False, top=None, skip=None):
         """Returns an array of all customer IDs, channel IDs, send times and channel send IDs for
         a particular campaign ID."""
         if not campaign_id:
@@ -335,6 +386,12 @@ class Customers(URLBuilder):
 
         if include_templates_ids:
             data['IncludeTemplateIDs'] = True
+
+        if top and type(top) == int:
+            data['$top'] = top
+
+        if skip and type(skip) == int:
+            data['$skip'] = skip
 
         response = self.client.get(self._get_url(), data)
         if not response:
@@ -354,7 +411,8 @@ class Customers(URLBuilder):
 
         return results
 
-    def get_customer_send_details_by_channel(self, channel_id, campaign_id, attributes=None, delimiter=';'):
+    def get_customer_send_details_by_channel(self, channel_id, campaign_id, attributes=None, delimiter=';',
+                                             top=None, skip=None):
         """Returns an array of all customer IDs, template IDs, send times and customer attributes for a particular
         combination of channel ID and campaign ID."""
         if not channel_id or not campaign_id:
@@ -373,6 +431,12 @@ class Customers(URLBuilder):
                     data['CustomerAttributesDelimiter'] = delimiter
                 else:
                     raise Exception('Invalid delimiter')
+
+        if top and type(top) == int:
+            data['$top'] = top
+
+        if skip and type(skip) == int:
+            data['$skip'] = skip
 
         response = self.client.get(self._get_url(), data)
         if not response:
@@ -394,9 +458,17 @@ class Customers(URLBuilder):
 
         return results
 
-    def get_currently_targeted_customers(self):
+    def get_currently_targeted_customers(self, top=None, skip=None):
         """Returns an array of all customer IDs currently included in one or more campaigns."""
-        response = self.client.get(self._get_url())
+
+        data = {}
+        if top and type(top) == int:
+            data['$top'] = top
+
+        if skip and type(skip) == int:
+            data['$skip'] = skip
+
+        response = self.client.get(self._get_url()) if not data else self.client.get(self._get_url(), data)
 
         results = list()
         for item in response.json():
@@ -411,13 +483,19 @@ class Customers(URLBuilder):
 
         return results
 
-    def get_canceled_campaign_customers(self, campaign_id):
+    def get_canceled_campaign_customers(self, campaign_id, top=None, skip=None):
         """Returns an array of all customer IDs that had been included in a campaign that was canceled, along with their
         associated action IDs and promo codes."""
         if not campaign_id:
             raise Exception('No CampaignID provided')
 
         data = {'CampaignID': campaign_id}
+
+        if top and type(top) == int:
+            data['$top'] = top
+
+        if skip and type(skip) == int:
+            data['$skip'] = skip
 
         response = self.client.get(self._get_url(), data)
         if not response:
