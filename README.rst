@@ -9,13 +9,6 @@ v3 via Python**
 Installation
 ------------
 
-Requirements
-~~~~~~~~~~~~
-
--  `requests <docs.python-requests.org/en/latest/index.html>`__
-
-see ``requirements.txt`` for more details
-
 Install package
 ~~~~~~~~~~~~~~~
 
