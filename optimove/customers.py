@@ -47,7 +47,7 @@ class Customers(URLBuilder):
             results = list()
             for item in response.json():
                 result = {'customer_id': item['CustomerID'], 'attributes': {}}
-                customer_attributes = item['CustomerAttributes'].split(delimiter)
+                customer_attributes = item['CustomerAttribute'].split(delimiter)
                 for index, attribute in enumerate(attributes):
                     result['attributes'][attribute] = customer_attributes[index]
                 results.append(result)
@@ -101,7 +101,7 @@ class Customers(URLBuilder):
             }
             if attributes and type(attributes) == list:
                 result['attributes'] = {}
-                customer_attributes = item['CustomerAttributes'].split(delimiter)
+                customer_attributes = item['CustomerAttribute'].split(delimiter)
                 for index, attribute in enumerate(attributes):
                     result['attributes'][attribute] = customer_attributes[index]
             results.append(result)
@@ -150,7 +150,7 @@ class Customers(URLBuilder):
             }
             if attributes and type(attributes) == list:
                 result['attributes'] = {}
-                customer_attributes = item['CustomerAttributes'].split(delimiter)
+                customer_attributes = item['CustomerAttribute'].split(delimiter)
                 for index, attribute in enumerate(attributes):
                     result['attributes'][attribute] = customer_attributes[index]
             results.append(result)
@@ -196,7 +196,7 @@ class Customers(URLBuilder):
             }
             if attributes and type(attributes) == list:
                 result['attributes'] = {}
-                customer_attributes = item['CustomerAttributes'].split(delimiter)
+                customer_attributes = item['CustomerAttribute'].split(delimiter)
                 for index, attribute in enumerate(attributes):
                     result['attributes'][attribute] = customer_attributes[index]
             results.append(result)
@@ -246,7 +246,7 @@ class Customers(URLBuilder):
             }
             if attributes and type(attributes) == list:
                 result['attributes'] = {}
-                customer_attributes = item['CustomerAttributes'].split(delimiter)
+                customer_attributes = item['CustomerAttribute'].split(delimiter)
                 for index, attribute in enumerate(attributes):
                     result['attributes'][attribute] = customer_attributes[index]
             results.append(result)
@@ -451,7 +451,7 @@ class Customers(URLBuilder):
             }
             if attributes and type(attributes) == list:
                 result['attributes'] = {}
-                customer_attributes = item['CustomerAttributes'].split(delimiter)
+                customer_attributes = item['CustomerAttribute'].split(delimiter)
                 for index, attribute in enumerate(attributes):
                     result['attributes'][attribute] = customer_attributes[index]
             results.append(result)

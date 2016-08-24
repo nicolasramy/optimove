@@ -22,8 +22,8 @@ def get_customers_by_action_callback(request):
         if 'CustomerAttributes' in params and 'CustomerAttributesDelimiter' in params:
             if params['CustomerAttributes'][0] == 'Alias;Country' and params['CustomerAttributesDelimiter'][0] == ',':
                 resp_body = [
-                    {'CustomerID': '231342', 'CustomerAttributes': 'BuddyZZ,UK'},
-                    {'CustomerID': '943157', 'CustomerAttributes': 'Pax65,DE'}
+                    {'CustomerID': '231342', 'CustomerAttribute': 'BuddyZZ,UK'},
+                    {'CustomerID': '943157', 'CustomerAttribute': 'Pax65,DE'}
                 ]
 
             else:
@@ -48,8 +48,8 @@ def get_customer_actions_by_target_group_callback(request):
         if 'CustomerAttributes' in params and 'CustomerAttributesDelimiter' in params:
             if params['CustomerAttributes'][0] == 'Alias;Country' and params['CustomerAttributesDelimiter'][0] == ',':
                 resp_body = [
-                    {'CustomerID': 'A1342', 'ActionID': 49, 'ChannelID': 6, 'CustomerAttributes': 'BuddyZZ,UK'},
-                    {'CustomerID': 'G4650', 'ActionID': 49, 'ChannelID': 6, 'CustomerAttributes': 'Mighty6,ES'}
+                    {'CustomerID': 'A1342', 'ActionID': 49, 'ChannelID': 6, 'CustomerAttribute': 'BuddyZZ,UK'},
+                    {'CustomerID': 'G4650', 'ActionID': 49, 'ChannelID': 6, 'CustomerAttribute': 'Mighty6,ES'}
                 ]
 
             else:
@@ -74,8 +74,8 @@ def get_customer_one_time_actions_by_date_callback(request):
         if 'CustomerAttributes' in params and 'CustomerAttributesDelimiter' in params:
             if params['CustomerAttributes'][0] == 'Alias;Country' and params['CustomerAttributesDelimiter'][0] == ',':
                 resp_body = [
-                    {'CustomerID': '8D871', 'ActionID': 19, 'ChannelID': 3, 'CustomerAttributes': 'Yo999,UA'},
-                    {'CustomerID': '8U76T', 'ActionID': 19, 'ChannelID': 3, 'CustomerAttributes': 'Neto2,TR'}
+                    {'CustomerID': '8D871', 'ActionID': 19, 'ChannelID': 3, 'CustomerAttribute': 'Yo999,UA'},
+                    {'CustomerID': '8U76T', 'ActionID': 19, 'ChannelID': 3, 'CustomerAttribute': 'Neto2,TR'}
                 ]
 
             else:
@@ -101,9 +101,9 @@ def get_target_group_changers_callback(request):
             if params['CustomerAttributes'][0] == 'Alias;Country' and params['CustomerAttributesDelimiter'][0] == ',':
                 resp_body = [
                     {'CustomerID': '231342', 'InitialTargetGroupID': 4, 'FinalTargetGroupID': 12,
-                     'CustomerAttributes': 'BuddyZZ,UK'},
+                     'CustomerAttribute': 'BuddyZZ,UK'},
                     {'CustomerID': '931342', 'InitialTargetGroupID': -1, 'FinalTargetGroupID': 8,
-                     'CustomerAttributes': 'Pax65,DE'}
+                     'CustomerAttribute': 'Pax65,DE'}
                 ]
 
             else:
@@ -130,9 +130,9 @@ def get_customer_attribute_changers_callback(request):
             if params['CustomerAttributes'][0] == 'Alias;Country' and params['CustomerAttributesDelimiter'][0] == ',':
                 resp_body = [
                     {'CustomerID': '231342', 'InitialCustomerAttribute': 'NULL',
-                     'FinalCustomerAttribute': 'SuperBrand', 'CustomerAttributes': 'BuddyZZ,UK'},
+                     'FinalCustomerAttribute': 'SuperBrand', 'CustomerAttribute': 'BuddyZZ,UK'},
                     {'CustomerID': '231343', 'InitialCustomerAttribute': 'SuperBrand',
-                     'FinalCustomerAttribute': 'Super Brand, Mega Brand', 'CustomerAttributes': 'Pax65,DE'}
+                     'FinalCustomerAttribute': 'Super Brand, Mega Brand', 'CustomerAttribute': 'Pax65,DE'}
                 ]
             else:
                 return 404, HEADERS['text'], 'Not Found'
@@ -259,9 +259,9 @@ def get_customer_send_details_by_channel_callback(request):
             if params['CustomerAttributes'][0] == 'Email;Country' and params['CustomerAttributesDelimiter'][0] == ',':
                 resp_body = [
                     {'CustomerID': '96134', 'TemplateID': 14, 'ScheduledTime': '2016-08-30 10:00:00',
-                     'CustomerAttributes': 'jdavis@aol.com,US'},
+                     'CustomerAttribute': 'jdavis@aol.com,US'},
                     {'CustomerID': '13482', 'TemplateID': 14, 'ScheduledTime': '2016-08-30 10:00:00',
-                     'CustomerAttributes': 'plsmits@gmail.com,UK'}
+                     'CustomerAttribute': 'plsmits@gmail.com,UK'}
                 ]
 
             else:
