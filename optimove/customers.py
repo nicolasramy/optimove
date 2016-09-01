@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from . import constants
 
-from . import URLBuilder
 
-
-class Customers(URLBuilder):
+class Customers(object):
     client = None
 
     def __init__(self, client):
@@ -28,7 +27,7 @@ class Customers(URLBuilder):
             data['CustomerAttributes'] = ';'.join(attributes)
 
             if delimiter:
-                if delimiter in self.AUTHORIZED_DELIMITERS and delimiter not in self.UNAUTHORIZED_DELIMITERS:
+                if delimiter in constants.AUTHORIZED_DELIMITERS and delimiter not in constants.UNAUTHORIZED_DELIMITERS:
                     data['CustomerAttributesDelimiter'] = delimiter
                 else:
                     raise Exception('Invalid delimiter')
@@ -39,7 +38,7 @@ class Customers(URLBuilder):
         if skip and type(skip) == int:
             data['$skip'] = skip
 
-        response = self.client.get(self._get_url(), data)
+        response = self.client.get(self.client.get_url(), data)
         if not response:
             return False
 
@@ -77,7 +76,7 @@ class Customers(URLBuilder):
             data['CustomerAttributes'] = ';'.join(attributes)
 
             if delimiter:
-                if delimiter in self.AUTHORIZED_DELIMITERS and delimiter not in self.UNAUTHORIZED_DELIMITERS:
+                if delimiter in constants.AUTHORIZED_DELIMITERS and delimiter not in constants.UNAUTHORIZED_DELIMITERS:
                     data['CustomerAttributesDelimiter'] = delimiter
                 else:
                     raise Exception('Invalid delimiter')
@@ -88,7 +87,7 @@ class Customers(URLBuilder):
         if skip and type(skip) == int:
             data['$skip'] = skip
 
-        response = self.client.get(self._get_url(), data)
+        response = self.client.get(self.client.get_url(), data)
         if not response:
             return False
 
@@ -126,7 +125,7 @@ class Customers(URLBuilder):
             data['CustomerAttributes'] = ';'.join(attributes)
 
             if delimiter:
-                if delimiter in self.AUTHORIZED_DELIMITERS and delimiter not in self.UNAUTHORIZED_DELIMITERS:
+                if delimiter in constants.AUTHORIZED_DELIMITERS and delimiter not in constants.UNAUTHORIZED_DELIMITERS:
                     data['CustomerAttributesDelimiter'] = delimiter
                 else:
                     raise Exception('Invalid delimiter')
@@ -137,7 +136,7 @@ class Customers(URLBuilder):
         if skip and type(skip) == int:
             data['$skip'] = skip
 
-        response = self.client.get(self._get_url(), data)
+        response = self.client.get(self.client.get_url(), data)
         if not response:
             return False
 
@@ -172,7 +171,7 @@ class Customers(URLBuilder):
             data['CustomerAttributes'] = ';'.join(attributes)
 
             if delimiter:
-                if delimiter in self.AUTHORIZED_DELIMITERS and delimiter not in self.UNAUTHORIZED_DELIMITERS:
+                if delimiter in constants.AUTHORIZED_DELIMITERS and delimiter not in constants.UNAUTHORIZED_DELIMITERS:
                     data['CustomerAttributesDelimiter'] = delimiter
                 else:
                     raise Exception('Invalid delimiter')
@@ -183,7 +182,7 @@ class Customers(URLBuilder):
         if skip and type(skip) == int:
             data['$skip'] = skip
 
-        response = self.client.get(self._get_url(), data)
+        response = self.client.get(self.client.get_url(), data)
         if not response:
             return False
 
@@ -220,7 +219,7 @@ class Customers(URLBuilder):
             data['CustomerAttributes'] = ';'.join(attributes)
 
             if delimiter:
-                if delimiter in self.AUTHORIZED_DELIMITERS and delimiter not in self.UNAUTHORIZED_DELIMITERS:
+                if delimiter in constants.AUTHORIZED_DELIMITERS and delimiter not in constants.UNAUTHORIZED_DELIMITERS:
                     data['CustomerAttributesDelimiter'] = delimiter
                 else:
                     raise Exception('Invalid delimiter')
@@ -231,7 +230,7 @@ class Customers(URLBuilder):
         if skip and type(skip) == int:
             data['$skip'] = skip
 
-        response = self.client.get(self._get_url(), data)
+        response = self.client.get(self.client.get_url(), data)
         if not response:
             return False
 
@@ -277,7 +276,7 @@ class Customers(URLBuilder):
         if skip and type(skip) == int:
             data['$skip'] = skip
 
-        response = self.client.get(self._get_url(), data)
+        response = self.client.get(self.client.get_url(), data)
         if not response:
             return False
 
@@ -296,7 +295,7 @@ class Customers(URLBuilder):
             'CustomerID': customer_id
         }
 
-        response = self.client.get(self._get_url(), data)
+        response = self.client.get(self.client.get_url(), data)
         if not response:
             return False
 
@@ -324,7 +323,7 @@ class Customers(URLBuilder):
         if skip and type(skip) == int:
             data['$skip'] = skip
 
-        response = self.client.get(self._get_url(), data)
+        response = self.client.get(self.client.get_url(), data)
         if not response:
             return False
 
@@ -356,7 +355,7 @@ class Customers(URLBuilder):
         if skip and type(skip) == int:
             data['$skip'] = skip
 
-        response = self.client.get(self._get_url(), data)
+        response = self.client.get(self.client.get_url(), data)
         if not response:
             return False
 
@@ -393,7 +392,7 @@ class Customers(URLBuilder):
         if skip and type(skip) == int:
             data['$skip'] = skip
 
-        response = self.client.get(self._get_url(), data)
+        response = self.client.get(self.client.get_url(), data)
         if not response:
             return False
 
@@ -427,7 +426,7 @@ class Customers(URLBuilder):
             data['CustomerAttributes'] = ';'.join(attributes)
 
             if delimiter:
-                if delimiter in self.AUTHORIZED_DELIMITERS and delimiter not in self.UNAUTHORIZED_DELIMITERS:
+                if delimiter in constants.AUTHORIZED_DELIMITERS and delimiter not in constants.UNAUTHORIZED_DELIMITERS:
                     data['CustomerAttributesDelimiter'] = delimiter
                 else:
                     raise Exception('Invalid delimiter')
@@ -438,7 +437,7 @@ class Customers(URLBuilder):
         if skip and type(skip) == int:
             data['$skip'] = skip
 
-        response = self.client.get(self._get_url(), data)
+        response = self.client.get(self.client.get_url(), data)
         if not response:
             return False
 
@@ -468,7 +467,7 @@ class Customers(URLBuilder):
         if skip and type(skip) == int:
             data['$skip'] = skip
 
-        response = self.client.get(self._get_url()) if not data else self.client.get(self._get_url(), data)
+        response = self.client.get(self.client.get_url()) if not data else self.client.get(self.client.get_url(), data)
 
         results = list()
         for item in response.json():
@@ -497,7 +496,7 @@ class Customers(URLBuilder):
         if skip and type(skip) == int:
             data['$skip'] = skip
 
-        response = self.client.get(self._get_url(), data)
+        response = self.client.get(self.client.get_url(), data)
         if not response:
             return False
 

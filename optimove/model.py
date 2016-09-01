@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from . import constants
 
-from . import URLBuilder
 
-
-class Model(URLBuilder):
+class Model(object):
     client = None
 
     def __init__(self, client):
@@ -14,7 +13,7 @@ class Model(URLBuilder):
     def get_customer_attribute_list(self):
         """Returns all the available customer attribute names (which can be passed to certain other functions
         as an input parameter) and a description of each."""
-        response = self.client.get(self._get_url())
+        response = self.client.get(self.client.get_url())
 
         results = {}
         for item in response.json():
@@ -24,7 +23,7 @@ class Model(URLBuilder):
 
     def get_lifecycle_stage_list(self):
         """Returns all available lifecycle stages (for use in other functions, e.g., GetCustomerFutureValues)."""
-        response = self.client.get(self._get_url())
+        response = self.client.get(self.client.get_url())
 
         results = {}
         for item in response.json():
@@ -34,7 +33,7 @@ class Model(URLBuilder):
 
     def get_microsegment_list(self):
         """Returns an dict containing the details of all microsegments."""
-        response = self.client.get(self._get_url())
+        response = self.client.get(self.client.get_url())
 
         results = {}
         for item in response.json():
@@ -62,12 +61,12 @@ class Model(URLBuilder):
             data['CustomerAttributes'] = ';'.join(attributes)
 
             if delimiter:
-                if delimiter in self.AUTHORIZED_DELIMITERS and delimiter not in self.UNAUTHORIZED_DELIMITERS:
+                if delimiter in constants.AUTHORIZED_DELIMITERS and delimiter not in constants.UNAUTHORIZED_DELIMITERS:
                     data['CustomerAttributesDelimiter'] = delimiter
                 else:
                     raise Exception('Invalid delimiter')
 
-        response = self.client.get(self._get_url(), data)
+        response = self.client.get(self.client.get_url(), data)
         if not response:
             return False
 

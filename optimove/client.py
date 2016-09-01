@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-
 from datetime import datetime, timedelta
+from inspect import currentframe, getouterframes
 import json
 
 import requests
 
+from . import constants
 from general import General
 from model import Model
 from actions import Actions
@@ -16,11 +17,11 @@ from segments import Segments
 from integrations import Integrations
 
 
-class Client:
+class Client(object):
     token = None
     expire = None
 
-    def __init__(self, username=None, password=None):
+    def __init__(self, username=None, password=None, url='https://api.optimove.net/v3.0'):
         self.general = General(self)
         self.model = Model(self)
         self.actions = Actions(self)
@@ -28,6 +29,7 @@ class Client:
         self.customers = Customers(self)
         self.segments = Segments(self)
         self.integrations = Integrations(self)
+        self._url = url
 
         if username and password:
             self.general.login(username, password)
@@ -43,14 +45,14 @@ class Client:
 
         return headers
 
-    def refresh_token(self):
+    def _refresh_token(self):
         if not self.expire or (self.expire - datetime.utcnow()).seconds >= 1200:
             self.general.login(self.general.username, self.general.password)
         return
 
     def get(self, url, payload=None, headers=None, check_token=True):
         if check_token:
-            self.refresh_token()
+            self._refresh_token()
 
         headers = headers if headers else self._headers()
         response = requests.get(url, params=payload, headers=headers)
@@ -58,7 +60,7 @@ class Client:
 
     def post(self, url, payload=None, headers=None, check_token=True):
         if check_token:
-            self.refresh_token()
+            self._refresh_token()
 
         headers = headers if headers else self._headers()
         response = requests.post(url, data=json.dumps(payload), headers=headers)
@@ -93,3 +95,14 @@ class Client:
             return self.internal_server_error()
         else:
             return False
+
+    def get_url(self):
+        outer_frames = getouterframes(currentframe(), 2)[1]
+        category_name = outer_frames[1].split('/')[-1].split('.')[0]
+        method_name = outer_frames[3]
+        if '_' in method_name:
+            action_name_list = [part.upper() if part == 'id' else part.capitalize() for part in method_name.split('_')]
+            action_name = ''.join(action_name_list)
+        else:
+            action_name = method_name
+        return '%s/%s/%s' % (self._url, category_name, action_name)

@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from . import constants
 
-from . import URLBuilder
 
-
-class Actions(URLBuilder):
+class Actions(object):
     client = None
 
     def __init__(self, client):
@@ -20,7 +19,7 @@ class Actions(URLBuilder):
             'ActionID': action_id
         }
 
-        response = self.client.get(self._get_url(), data)
+        response = self.client.get(self.client.get_url(), data)
         return response.json()['ActionName'] if response else False
 
     def get_action_id(self, action_name):
@@ -32,12 +31,12 @@ class Actions(URLBuilder):
             'ActionName': action_name
         }
 
-        response = self.client.get(self._get_url(), data)
+        response = self.client.get(self.client.get_url(), data)
         return response.json()['ActionID'] if response else False
 
     def get_all_actions(self):
         """Returns all defined action IDs and corresponding action names."""
-        response = self.client.get(self._get_url())
+        response = self.client.get(self.client.get_url())
 
         results = {}
         for item in response.json():
@@ -56,7 +55,7 @@ class Actions(URLBuilder):
             'Date': date
         }
 
-        response = self.client.get(self._get_url(), data)
+        response = self.client.get(self.client.get_url(), data)
         if not response:
             return False
 
@@ -75,7 +74,7 @@ class Actions(URLBuilder):
             'Date': date
         }
 
-        response = self.client.get(self._get_url(), data)
+        response = self.client.get(self.client.get_url(), data)
         if not response:
             return False
 
@@ -97,7 +96,7 @@ class Actions(URLBuilder):
             'CampaignID': campaign_id
         }
 
-        response = self.client.get(self._get_url(), data)
+        response = self.client.get(self.client.get_url(), data)
         if not response:
             return False
 
@@ -121,7 +120,7 @@ class Actions(URLBuilder):
             'Date': date
         }
 
-        response = self.client.get(self._get_url(), data)
+        response = self.client.get(self.client.get_url(), data)
         if not response:
             return False
 
@@ -145,7 +144,7 @@ class Actions(URLBuilder):
             'Date': date
         }
 
-        response = self.client.get(self._get_url(), data)
+        response = self.client.get(self.client.get_url(), data)
         if not response:
             return False
 
@@ -169,7 +168,7 @@ class Actions(URLBuilder):
             'Date': date
         }
 
-        response = self.client.get(self._get_url(), data)
+        response = self.client.get(self.client.get_url(), data)
         if not response:
             return False
 
@@ -198,7 +197,7 @@ class Actions(URLBuilder):
             'CampaignID': campaign_id
         }
 
-        response = self.client.get(self._get_url(), data)
+        response = self.client.get(self.client.get_url(), data)
         if not response:
             return False
 
@@ -218,7 +217,7 @@ class Actions(URLBuilder):
 
     def get_execution_channels(self):
         """Returns all available execution channels."""
-        response = self.client.get(self._get_url())
+        response = self.client.get(self.client.get_url())
 
         results = {}
         for item in response.json():
@@ -235,7 +234,7 @@ class Actions(URLBuilder):
             'ChannelID': channel_id
         }
 
-        response = self.client.get(self._get_url(), data)
+        response = self.client.get(self.client.get_url(), data)
         if not response:
             return False
 
@@ -263,5 +262,5 @@ class Actions(URLBuilder):
             'Date': date
         }
 
-        response = self.client.get(self._get_url(), data)
+        response = self.client.get(self.client.get_url(), data)
         return [item['CampaignID'] for item in response.json()] if response else False
