@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 
 from datetime import datetime, timedelta
 import json
+import logging
 
 import requests
 
@@ -14,6 +15,9 @@ from groups import Groups
 from customers import Customers
 from segments import Segments
 from integrations import Integrations
+
+
+LOGGER = logging.getLogger(__name__)
 
 
 class Client:
@@ -53,7 +57,9 @@ class Client:
             self.refresh_token()
 
         headers = headers if headers else self._headers()
+        LOGGER.debug("GET request: url=%s, payload=%s, headers=%s", url, payload, headers)
         response = requests.get(url, params=payload, headers=headers)
+        LOGGER.debug("GET response: url=%s, response_data=%s", url, response.text)
         return self.dispatch_response(response)
 
     def post(self, url, payload=None, headers=None, check_token=True):
@@ -61,7 +67,10 @@ class Client:
             self.refresh_token()
 
         headers = headers if headers else self._headers()
-        response = requests.post(url, data=json.dumps(payload), headers=headers)
+        data = json.dumps(payload)
+        LOGGER.debug("POST request: url=%s, data=%s, headers=%s", url, payload, headers)
+        response = requests.post(url, data=data, headers=headers)
+        LOGGER.debug("POST response: url=%s, response_data=%s", url, response.text)
         return self.dispatch_response(response)
 
     @staticmethod
