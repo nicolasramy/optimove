@@ -2,7 +2,6 @@
 from __future__ import unicode_literals
 
 import json
-from urlparse import parse_qs
 
 from constants import TOKEN, HEADERS
 

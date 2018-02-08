@@ -6,9 +6,10 @@ import unittest
 from urlparse import parse_qs, urlparse
 
 from optimove.client import Client
+from optimove.constants import DEFAULT_URL
 import responses
 
-from constants import HEADERS, TOKEN
+from constants import HEADERS
 from helpers import login_callback, token_required
 
 
@@ -68,14 +69,14 @@ class TestGroups(unittest.TestCase):
     def test_get_target_group_name(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/groups/GetTargetGroupName',
+            DEFAULT_URL + '/groups/GetTargetGroupName',
             callback=get_target_group_name_callback,
             content_type='application/json'
         )
@@ -88,14 +89,14 @@ class TestGroups(unittest.TestCase):
     def test_get_target_group_name_with_empty_target_group_id(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/groups/GetTargetGroupName',
+            DEFAULT_URL + '/groups/GetTargetGroupName',
             callback=get_target_group_name_callback,
             content_type='application/json'
         )
@@ -107,14 +108,14 @@ class TestGroups(unittest.TestCase):
     def test_get_target_group_name_with_wrong_name(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/groups/GetTargetGroupName',
+            DEFAULT_URL + '/groups/GetTargetGroupName',
             callback=get_target_group_name_callback,
             content_type='application/json'
         )
@@ -127,14 +128,14 @@ class TestGroups(unittest.TestCase):
     def test_get_target_group_id(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/groups/GetTargetGroupID',
+            DEFAULT_URL + '/groups/GetTargetGroupID',
             callback=get_target_group_id_callback,
             content_type='application/json'
         )
@@ -147,14 +148,14 @@ class TestGroups(unittest.TestCase):
     def test_get_target_group_id_with_empty_name(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/groups/GetTargetGroupID',
+            DEFAULT_URL + '/groups/GetTargetGroupID',
             callback=get_target_group_id_callback,
             content_type='application/json'
         )
@@ -166,14 +167,14 @@ class TestGroups(unittest.TestCase):
     def test_get_target_group_id_with_wrong_name(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/groups/GetTargetGroupID',
+            DEFAULT_URL + '/groups/GetTargetGroupID',
             callback=get_target_group_id_callback,
             content_type='application/json'
         )
@@ -186,14 +187,14 @@ class TestGroups(unittest.TestCase):
     def test_get_target_groups_by_date(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/groups/GetTargetGroupsByDate',
+            DEFAULT_URL + '/groups/GetTargetGroupsByDate',
             callback=get_target_groups_by_date_callback,
             content_type='application/json'
         )
@@ -206,14 +207,14 @@ class TestGroups(unittest.TestCase):
     def test_get_target_groups_by_date_with_empty_date(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/groups/GetTargetGroupsByDate',
+            DEFAULT_URL + '/groups/GetTargetGroupsByDate',
             callback=get_target_groups_by_date_callback,
             content_type='application/json'
         )
@@ -225,14 +226,14 @@ class TestGroups(unittest.TestCase):
     def test_get_target_groups_by_date_with_wrong_date(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/groups/GetTargetGroupsByDate',
+            DEFAULT_URL + '/groups/GetTargetGroupsByDate',
             callback=get_target_groups_by_date_callback,
             content_type='application/json'
         )
@@ -245,14 +246,14 @@ class TestGroups(unittest.TestCase):
     def test_get_target_group_details(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/groups/GetTargetGroupDetails',
+            DEFAULT_URL + '/groups/GetTargetGroupDetails',
             callback=get_target_group_details_callback,
             content_type='application/json'
         )

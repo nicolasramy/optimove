@@ -6,9 +6,10 @@ import unittest
 from urlparse import parse_qs, urlparse
 
 from optimove.client import Client
+from optimove.constants import DEFAULT_URL
 import responses
 
-from constants import HEADERS, TOKEN
+from constants import HEADERS
 from helpers import login_callback, token_required
 
 
@@ -22,8 +23,8 @@ def get_customers_by_action_callback(request):
         if 'CustomerAttributes' in params and 'CustomerAttributesDelimiter' in params:
             if params['CustomerAttributes'][0] == 'Alias;Country' and params['CustomerAttributesDelimiter'][0] == ',':
                 resp_body = [
-                    {'CustomerID': '231342', 'CustomerAttribute': 'BuddyZZ,UK'},
-                    {'CustomerID': '943157', 'CustomerAttribute': 'Pax65,DE'}
+                    {'CustomerID': '231342', 'CustomerAttributes': ['BuddyZZ', 'UK']},
+                    {'CustomerID': '943157', 'CustomerAttributes': ['Pax65', 'DE']}
                 ]
 
             else:
@@ -48,8 +49,8 @@ def get_customer_actions_by_target_group_callback(request):
         if 'CustomerAttributes' in params and 'CustomerAttributesDelimiter' in params:
             if params['CustomerAttributes'][0] == 'Alias;Country' and params['CustomerAttributesDelimiter'][0] == ',':
                 resp_body = [
-                    {'CustomerID': 'A1342', 'ActionID': 49, 'ChannelID': 6, 'CustomerAttribute': 'BuddyZZ,UK'},
-                    {'CustomerID': 'G4650', 'ActionID': 49, 'ChannelID': 6, 'CustomerAttribute': 'Mighty6,ES'}
+                    {'CustomerID': 'A1342', 'ActionID': 49, 'ChannelID': 6, 'CustomerAttributes': ['BuddyZZ', 'UK']},
+                    {'CustomerID': 'G4650', 'ActionID': 49, 'ChannelID': 6, 'CustomerAttributes': ['Mighty6', 'ES']}
                 ]
 
             else:
@@ -74,8 +75,8 @@ def get_customer_one_time_actions_by_date_callback(request):
         if 'CustomerAttributes' in params and 'CustomerAttributesDelimiter' in params:
             if params['CustomerAttributes'][0] == 'Alias;Country' and params['CustomerAttributesDelimiter'][0] == ',':
                 resp_body = [
-                    {'CustomerID': '8D871', 'ActionID': 19, 'ChannelID': 3, 'CustomerAttribute': 'Yo999,UA'},
-                    {'CustomerID': '8U76T', 'ActionID': 19, 'ChannelID': 3, 'CustomerAttribute': 'Neto2,TR'}
+                    {'CustomerID': '8D871', 'ActionID': 19, 'ChannelID': 3, 'CustomerAttributes': ['Yo999', 'UA']},
+                    {'CustomerID': '8U76T', 'ActionID': 19, 'ChannelID': 3, 'CustomerAttributes': ['Neto2', 'TR']}
                 ]
 
             else:
@@ -101,9 +102,9 @@ def get_target_group_changers_callback(request):
             if params['CustomerAttributes'][0] == 'Alias;Country' and params['CustomerAttributesDelimiter'][0] == ',':
                 resp_body = [
                     {'CustomerID': '231342', 'InitialTargetGroupID': 4, 'FinalTargetGroupID': 12,
-                     'CustomerAttribute': 'BuddyZZ,UK'},
+                     'CustomerAttributes': ['BuddyZZ', 'UK']},
                     {'CustomerID': '931342', 'InitialTargetGroupID': -1, 'FinalTargetGroupID': 8,
-                     'CustomerAttribute': 'Pax65,DE'}
+                     'CustomerAttributes': ['Pax65', 'DE']}
                 ]
 
             else:
@@ -130,9 +131,9 @@ def get_customer_attribute_changers_callback(request):
             if params['CustomerAttributes'][0] == 'Alias;Country' and params['CustomerAttributesDelimiter'][0] == ',':
                 resp_body = [
                     {'CustomerID': '231342', 'InitialCustomerAttribute': 'NULL',
-                     'FinalCustomerAttribute': 'SuperBrand', 'CustomerAttribute': 'BuddyZZ,UK'},
+                     'FinalCustomerAttribute': 'SuperBrand', 'CustomerAttributes': ['BuddyZZ', 'UK']},
                     {'CustomerID': '231343', 'InitialCustomerAttribute': 'SuperBrand',
-                     'FinalCustomerAttribute': 'Super Brand, Mega Brand', 'CustomerAttribute': 'Pax65,DE'}
+                     'FinalCustomerAttribute': 'Super Brand, Mega Brand', 'CustomerAttributes': ['Pax65', 'DE']}
                 ]
             else:
                 return 404, HEADERS['text'], 'Not Found'
@@ -259,9 +260,9 @@ def get_customer_send_details_by_channel_callback(request):
             if params['CustomerAttributes'][0] == 'Email;Country' and params['CustomerAttributesDelimiter'][0] == ',':
                 resp_body = [
                     {'CustomerID': '96134', 'TemplateID': 14, 'ScheduledTime': '2016-08-30 10:00:00',
-                     'CustomerAttribute': 'jdavis@aol.com,US'},
+                     'CustomerAttributes': ['jdavis@aol.com', 'US']},
                     {'CustomerID': '13482', 'TemplateID': 14, 'ScheduledTime': '2016-08-30 10:00:00',
-                     'CustomerAttribute': 'plsmits@gmail.com,UK'}
+                     'CustomerAttributes': ['plsmits@gmail.com', 'UK']}
                 ]
 
             else:
@@ -311,14 +312,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customers_by_action(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/customers/GetCustomersByAction',
+            DEFAULT_URL + '/customers/GetCustomersByAction',
             callback=get_customers_by_action_callback,
             content_type='application/json'
         )
@@ -331,14 +332,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customers_by_action_with_empty_date(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/customers/GetCustomersByAction',
+            DEFAULT_URL + '/customers/GetCustomersByAction',
             callback=get_customers_by_action_callback,
             content_type='application/json'
         )
@@ -350,14 +351,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customers_by_action_with_wrong_date(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/customers/GetCustomersByAction',
+            DEFAULT_URL + '/customers/GetCustomersByAction',
             callback=get_customers_by_action_callback,
             content_type='application/json'
         )
@@ -370,14 +371,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customers_by_action_with_attributes(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/customers/GetCustomersByAction',
+            DEFAULT_URL + '/customers/GetCustomersByAction',
             callback=get_customers_by_action_callback,
             content_type='application/json'
         )
@@ -405,14 +406,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customers_by_action_with_wrong_delimiter(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/customers/GetCustomersByAction',
+            DEFAULT_URL + '/customers/GetCustomersByAction',
             callback=get_customers_by_action_callback,
             content_type='application/json'
         )
@@ -425,14 +426,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_actions_by_target_group(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/customers/GetCustomerActionsByTargetGroup',
+            DEFAULT_URL + '/customers/GetCustomerActionsByTargetGroup',
             callback=get_customer_actions_by_target_group_callback,
             content_type='application/json'
         )
@@ -456,14 +457,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_actions_by_target_group_with_empty_date(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/customers/GetCustomerActionsByTargetGroup',
+            DEFAULT_URL + '/customers/GetCustomerActionsByTargetGroup',
             callback=get_customer_actions_by_target_group_callback,
             content_type='application/json'
         )
@@ -475,14 +476,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_actions_by_target_group_with_wrong_date(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/customers/GetCustomerActionsByTargetGroup',
+            DEFAULT_URL + '/customers/GetCustomerActionsByTargetGroup',
             callback=get_customer_actions_by_target_group_callback,
             content_type='application/json'
         )
@@ -495,20 +496,23 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_actions_by_target_group_with_attributes(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/customers/GetCustomerActionsByTargetGroup',
+            DEFAULT_URL + '/customers/GetCustomerActionsByTargetGroup',
             callback=get_customer_actions_by_target_group_callback,
             content_type='application/json'
         )
 
         client = Client('username', 'password')
-        data = client.customers.get_customer_actions_by_target_group(2, '2015-12-24', True, ['Alias', 'Country'], ',')
+        data = client.customers.get_customer_actions_by_target_group(2, '2015-12-24',
+                                                                     include_control_group=True,
+                                                                     attributes=['Alias', 'Country'],
+                                                                     delimiter=',')
         self.assertEqual(data, [
             {
                 'customer_id': 'A1342',
@@ -534,14 +538,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_actions_by_target_group_with_wrong_delimiter(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/customers/GetCustomerActionsByTargetGroup',
+            DEFAULT_URL + '/customers/GetCustomerActionsByTargetGroup',
             callback=get_customer_actions_by_target_group_callback,
             content_type='application/json'
         )
@@ -554,14 +558,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_one_time_actions_by_date(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/customers/GetCustomerOneTimeActionsByDate',
+            DEFAULT_URL + '/customers/GetCustomerOneTimeActionsByDate',
             callback=get_customer_one_time_actions_by_date_callback,
             content_type='application/json'
         )
@@ -585,14 +589,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_one_time_actions_by_date_with_empty_date(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/customers/GetCustomerOneTimeActionsByDate',
+            DEFAULT_URL + '/customers/GetCustomerOneTimeActionsByDate',
             callback=get_customer_one_time_actions_by_date_callback,
             content_type='application/json'
         )
@@ -604,14 +608,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_one_time_actions_by_date_with_wrong_date(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/customers/GetCustomerOneTimeActionsByDate',
+            DEFAULT_URL + '/customers/GetCustomerOneTimeActionsByDate',
             callback=get_customer_one_time_actions_by_date_callback,
             content_type='application/json'
         )
@@ -624,14 +628,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_one_time_actions_by_date_with_attributes(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/customers/GetCustomerOneTimeActionsByDate',
+            DEFAULT_URL + '/customers/GetCustomerOneTimeActionsByDate',
             callback=get_customer_one_time_actions_by_date_callback,
             content_type='application/json'
         )
@@ -663,14 +667,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_one_time_actions_by_date_with_wrong_delimiter(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/customers/GetCustomerOneTimeActionsByDate',
+            DEFAULT_URL + '/customers/GetCustomerOneTimeActionsByDate',
             callback=get_customer_one_time_actions_by_date_callback,
             content_type='application/json'
         )
@@ -683,14 +687,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_target_group_changers(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/customers/GetTargetGroupChangers',
+            DEFAULT_URL + '/customers/GetTargetGroupChangers',
             callback=get_target_group_changers_callback,
             content_type='application/json'
         )
@@ -714,14 +718,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_target_group_changers_with_empty_date(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/customers/GetTargetGroupChangers',
+            DEFAULT_URL + '/customers/GetTargetGroupChangers',
             callback=get_target_group_changers_callback,
             content_type='application/json'
         )
@@ -733,14 +737,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_target_group_changers_with_wrong_date(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/customers/GetTargetGroupChangers',
+            DEFAULT_URL + '/customers/GetTargetGroupChangers',
             callback=get_target_group_changers_callback,
             content_type='application/json'
         )
@@ -753,14 +757,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_target_group_changers_with_attributes(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/customers/GetTargetGroupChangers',
+            DEFAULT_URL + '/customers/GetTargetGroupChangers',
             callback=get_target_group_changers_callback,
             content_type='application/json'
         )
@@ -792,14 +796,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_target_group_changers_with_wrong_delimiter(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/customers/GetTargetGroupChangers',
+            DEFAULT_URL + '/customers/GetTargetGroupChangers',
             callback=get_target_group_changers_callback,
             content_type='application/json'
         )
@@ -812,14 +816,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_attribute_changers(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/customers/GetCustomerAttributeChangers',
+            DEFAULT_URL + '/customers/GetCustomerAttributeChangers',
             callback=get_customer_attribute_changers_callback,
             content_type='application/json'
         )
@@ -843,14 +847,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_attribute_changers_with_empty_date(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/customers/GetCustomerAttributeChangers',
+            DEFAULT_URL + '/customers/GetCustomerAttributeChangers',
             callback=get_customer_attribute_changers_callback,
             content_type='application/json'
         )
@@ -863,14 +867,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_attribute_changers_with_wrong_date(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/customers/GetCustomerAttributeChangers',
+            DEFAULT_URL + '/customers/GetCustomerAttributeChangers',
             callback=get_customer_attribute_changers_callback,
             content_type='application/json'
         )
@@ -883,14 +887,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_attribute_changers_with_attributes(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/customers/GetCustomerAttributeChangers',
+            DEFAULT_URL + '/customers/GetCustomerAttributeChangers',
             callback=get_customer_attribute_changers_callback,
             content_type='application/json'
         )
@@ -923,14 +927,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_attribute_changers_with_wrong_delimiter(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/customers/GetCustomerAttributeChangers',
+            DEFAULT_URL + '/customers/GetCustomerAttributeChangers',
             callback=get_customer_attribute_changers_callback,
             content_type='application/json'
         )
@@ -943,14 +947,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_future_values(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/customers/GetCustomerFutureValues',
+            DEFAULT_URL + '/customers/GetCustomerFutureValues',
             callback=get_customer_future_values_callback,
             content_type='application/json'
         )
@@ -966,14 +970,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_future_values_alt(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/customers/GetCustomerFutureValues',
+            DEFAULT_URL + '/customers/GetCustomerFutureValues',
             callback=get_customer_future_values_callback,
             content_type='application/json'
         )
@@ -989,14 +993,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_future_values_without_params(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/customers/GetCustomerFutureValues',
+            DEFAULT_URL + '/customers/GetCustomerFutureValues',
             callback=get_customer_future_values_callback,
             content_type='application/json'
         )
@@ -1008,14 +1012,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_future_values_with_wrong_params_combination(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/customers/GetCustomerFutureValues',
+            DEFAULT_URL + '/customers/GetCustomerFutureValues',
             callback=get_customer_future_values_callback,
             content_type='application/json'
         )
@@ -1027,14 +1031,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_future_values_with_wrong_customer_attribute(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/customers/GetCustomerFutureValues',
+            DEFAULT_URL + '/customers/GetCustomerFutureValues',
             callback=get_customer_future_values_callback,
             content_type='application/json'
         )
@@ -1047,14 +1051,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_last_action_executed(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/customers/GetCustomerLastActionExecuted',
+            DEFAULT_URL + '/customers/GetCustomerLastActionExecuted',
             callback=get_customer_last_action_executed_callback,
             content_type='application/json'
         )
@@ -1073,14 +1077,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_last_action_executed_with_empty_customer_id(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/customers/GetCustomerLastActionExecuted',
+            DEFAULT_URL + '/customers/GetCustomerLastActionExecuted',
             callback=get_customer_last_action_executed_callback,
             content_type='application/json'
         )
@@ -1092,14 +1096,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_last_action_executed_with_wrong_customer_id(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/customers/GetCustomerLastActionExecuted',
+            DEFAULT_URL + '/customers/GetCustomerLastActionExecuted',
             callback=get_customer_last_action_executed_callback,
             content_type='application/json'
         )
@@ -1112,14 +1116,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_action_details_by_date(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/customers/GetCustomerActionDetailsByDate',
+            DEFAULT_URL + '/customers/GetCustomerActionDetailsByDate',
             callback=get_customer_action_details_by_date_callback,
             content_type='application/json'
         )
@@ -1145,14 +1149,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_action_details_by_date_with_empty_date(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/customers/GetCustomerActionDetailsByDate',
+            DEFAULT_URL + '/customers/GetCustomerActionDetailsByDate',
             callback=get_customer_action_details_by_date_callback,
             content_type='application/json'
         )
@@ -1164,14 +1168,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_action_details_by_date_with_wrong_date(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/customers/GetCustomerActionDetailsByDate',
+            DEFAULT_URL + '/customers/GetCustomerActionDetailsByDate',
             callback=get_customer_action_details_by_date_callback,
             content_type='application/json'
         )
@@ -1184,14 +1188,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_action_details_by_date(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/customers/GetCustomerActionDetailsByDate',
+            DEFAULT_URL + '/customers/GetCustomerActionDetailsByDate',
             callback=get_customer_action_details_by_date_callback,
             content_type='application/json'
         )
@@ -1217,14 +1221,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_action_details_by_date_with_empty_date(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/customers/GetCustomerActionDetailsByDate',
+            DEFAULT_URL + '/customers/GetCustomerActionDetailsByDate',
             callback=get_customer_action_details_by_date_callback,
             content_type='application/json'
         )
@@ -1236,14 +1240,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_action_details_by_date_with_wrong_date(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/customers/GetCustomerActionDetailsByDate',
+            DEFAULT_URL + '/customers/GetCustomerActionDetailsByDate',
             callback=get_customer_action_details_by_date_callback,
             content_type='application/json'
         )
@@ -1256,14 +1260,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customers_action_ended_by_date(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/customers/GetCustomersActionEndedByDate',
+            DEFAULT_URL + '/customers/GetCustomersActionEndedByDate',
             callback=get_customers_action_ended_by_date_callback,
             content_type='application/json'
         )
@@ -1293,14 +1297,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customers_action_ended_by_date_with_empty_date(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/customers/GetCustomersActionEndedByDate',
+            DEFAULT_URL + '/customers/GetCustomersActionEndedByDate',
             callback=get_customers_action_ended_by_date_callback,
             content_type='application/json'
         )
@@ -1312,14 +1316,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customers_action_ended_by_date_with_wrong_date(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/customers/GetCustomersActionEndedByDate',
+            DEFAULT_URL + '/customers/GetCustomersActionEndedByDate',
             callback=get_customers_action_ended_by_date_callback,
             content_type='application/json'
         )
@@ -1332,14 +1336,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_send_details_by_campaign(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/customers/GetCustomerSendDetailsByCampaign',
+            DEFAULT_URL + '/customers/GetCustomerSendDetailsByCampaign',
             callback=get_customer_send_details_by_campaign_callback,
             content_type='application/json'
         )
@@ -1365,14 +1369,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_send_details_by_campaign_with_empty_campaign_id(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/customers/GetCustomerSendDetailsByCampaign',
+            DEFAULT_URL + '/customers/GetCustomerSendDetailsByCampaign',
             callback=get_customer_send_details_by_campaign_callback,
             content_type='application/json'
         )
@@ -1384,14 +1388,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_send_details_by_campaign_with_templates(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/customers/GetCustomerSendDetailsByCampaign',
+            DEFAULT_URL + '/customers/GetCustomerSendDetailsByCampaign',
             callback=get_customer_send_details_by_campaign_callback,
             content_type='application/json'
         )
@@ -1419,14 +1423,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_send_details_by_campaign_with_wrong_campaign_id(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/customers/GetCustomerSendDetailsByCampaign',
+            DEFAULT_URL + '/customers/GetCustomerSendDetailsByCampaign',
             callback=get_customer_send_details_by_campaign_callback,
             content_type='application/json'
         )
@@ -1439,14 +1443,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_send_details_by_channel(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/customers/GetCustomerSendDetailsByChannel',
+            DEFAULT_URL + '/customers/GetCustomerSendDetailsByChannel',
             callback=get_customer_send_details_by_channel_callback,
             content_type='application/json'
         )
@@ -1470,14 +1474,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_send_details_by_channel_with_empty_campaign_id(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/customers/GetCustomerSendDetailsByChannel',
+            DEFAULT_URL + '/customers/GetCustomerSendDetailsByChannel',
             callback=get_customer_send_details_by_channel_callback,
             content_type='application/json'
         )
@@ -1489,14 +1493,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_send_details_by_channel_with_attributes(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/customers/GetCustomerSendDetailsByChannel',
+            DEFAULT_URL + '/customers/GetCustomerSendDetailsByChannel',
             callback=get_customer_send_details_by_channel_callback,
             content_type='application/json'
         )
@@ -1528,14 +1532,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_send_details_by_channel_with_wrong_delimiter(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/customers/GetCustomerSendDetailsByChannel',
+            DEFAULT_URL + '/customers/GetCustomerSendDetailsByChannel',
             callback=get_customer_send_details_by_channel_callback,
             content_type='application/json'
         )
@@ -1548,14 +1552,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_send_details_by_channel_with_wrong_campaign_id(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/customers/GetCustomerSendDetailsByChannel',
+            DEFAULT_URL + '/customers/GetCustomerSendDetailsByChannel',
             callback=get_customer_send_details_by_channel_callback,
             content_type='application/json'
         )
@@ -1568,14 +1572,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_currently_targeted_customers(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/customers/GetCurrentlyTargetedCustomers',
+            DEFAULT_URL + '/customers/GetCurrentlyTargetedCustomers',
             callback=get_currently_targeted_customers_callback,
             content_type='application/json'
         )
@@ -1603,14 +1607,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_canceled_campaign_customers(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/customers/GetCanceledCampaignCustomers',
+            DEFAULT_URL + '/customers/GetCanceledCampaignCustomers',
             callback=get_canceled_campaign_customers_callback,
             content_type='application/json'
         )
@@ -1634,14 +1638,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_canceled_campaign_customers_with_empty_campaign_id(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/customers/GetCanceledCampaignCustomers',
+            DEFAULT_URL + '/customers/GetCanceledCampaignCustomers',
             callback=get_canceled_campaign_customers_callback,
             content_type='application/json'
         )
@@ -1653,14 +1657,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_canceled_campaign_customers_with_wrong_campaign_id(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/customers/GetCanceledCampaignCustomers',
+            DEFAULT_URL + '/customers/GetCanceledCampaignCustomers',
             callback=get_canceled_campaign_customers_callback,
             content_type='application/json'
         )
