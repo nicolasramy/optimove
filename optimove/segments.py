@@ -70,10 +70,9 @@ class Segments(object):
         if attributes and type(attributes) == list:
             results = {}
             for item in response.json():
-                results[item['CustomerID']] = {}
-                customer_attributes = item['CustomerAttributes'].split(delimiter)
-                for index, attribute in enumerate(attributes):
-                    results[item['CustomerID']][attribute] = customer_attributes[index]
+                results[item['CustomerID']] = {
+                    key: value for key, value in zip(attributes, item['CustomerAttributes'])
+                }
 
         else:
             results = [item['CustomerID'] for item in response.json()]
@@ -112,10 +111,9 @@ class Segments(object):
                 'final_value_segment': item['FinalValueSegmentID']
             }
             if attributes and type(attributes) == list:
-                result['attributes'] = {}
-                customer_attributes = item['CustomerAttributes'].split(delimiter)
-                for index, attribute in enumerate(attributes):
-                    result['attributes'][attribute] = customer_attributes[index]
+                result['attributes'] = {
+                    key: value for key, value in zip(attributes, item['CustomerAttributes'])
+                }
             results.append(result)
 
         return results

@@ -8,10 +8,11 @@ import unittest
 from urlparse import parse_qs, urlparse
 
 from optimove.client import Client
+from optimove.constants import DEFAULT_URL
 from optimove.integrations import Integrations
 import responses
 
-from constants import HEADERS, TOKEN
+from constants import HEADERS
 from helpers import login_callback, token_required
 
 
@@ -122,14 +123,14 @@ class TestIntegrations(unittest.TestCase):
     def test_add_promotions(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/integrations/AddPromotions',
+            DEFAULT_URL + '/integrations/AddPromotions',
             callback=add_promotions_callback,
             content_type='application/json'
         )
@@ -145,14 +146,14 @@ class TestIntegrations(unittest.TestCase):
     def test_add_promotions_with_empty_promotions(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/integrations/AddPromotions',
+            DEFAULT_URL + '/integrations/AddPromotions',
             callback=add_promotions_callback,
             content_type='application/json'
         )
@@ -164,14 +165,14 @@ class TestIntegrations(unittest.TestCase):
     def test_add_promotions_overflow(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/integrations/AddPromotions',
+            DEFAULT_URL + '/integrations/AddPromotions',
             callback=add_promotions_callback,
             content_type='application/json'
         )
@@ -188,14 +189,14 @@ class TestIntegrations(unittest.TestCase):
     def test_get_promotions(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/integrations/GetPromotions',
+            DEFAULT_URL + '/integrations/GetPromotions',
             callback=get_promotions_callback,
             content_type='application/json'
         )
@@ -211,14 +212,14 @@ class TestIntegrations(unittest.TestCase):
     def test_delete_promotions(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/integrations/DeletePromotions',
+            DEFAULT_URL + '/integrations/DeletePromotions',
             callback=delete_promotions_callback,
             content_type='application/json'
         )
@@ -231,14 +232,14 @@ class TestIntegrations(unittest.TestCase):
     def test_delete_promotions_with_empty_promotions(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/integrations/DeletePromotions',
+            DEFAULT_URL + '/integrations/DeletePromotions',
             callback=delete_promotions_callback,
             content_type='application/json'
         )
@@ -250,14 +251,14 @@ class TestIntegrations(unittest.TestCase):
     def test_delete_promotions_overflow(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/integrations/DeletePromotions',
+            DEFAULT_URL + '/integrations/DeletePromotions',
             callback=delete_promotions_callback,
             content_type='application/json'
         )
@@ -274,14 +275,14 @@ class TestIntegrations(unittest.TestCase):
     def test_add_channel_templates(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/integrations/AddChannelTemplates',
+            DEFAULT_URL + '/integrations/AddChannelTemplates',
             callback=add_channel_templates_callback,
             content_type='application/json'
         )
@@ -297,14 +298,14 @@ class TestIntegrations(unittest.TestCase):
     def test_add_channel_templates_with_empty_channel_id(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/integrations/AddChannelTemplates',
+            DEFAULT_URL + '/integrations/AddChannelTemplates',
             callback=add_channel_templates_callback,
             content_type='application/json'
         )
@@ -319,14 +320,14 @@ class TestIntegrations(unittest.TestCase):
     def test_add_channel_templates_overflow(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/integrations/AddChannelTemplates',
+            DEFAULT_URL + '/integrations/AddChannelTemplates',
             callback=add_channel_templates_callback,
             content_type='application/json'
         )
@@ -351,14 +352,14 @@ class TestIntegrations(unittest.TestCase):
     def test_get_channels_templates(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/integrations/GetChannelTemplates',
+            DEFAULT_URL + '/integrations/GetChannelTemplates',
             callback=get_channel_templates_callback,
             content_type='application/json'
         )
@@ -374,14 +375,14 @@ class TestIntegrations(unittest.TestCase):
     def test_get_channels_templates_with_empty_channel_id(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/integrations/GetChannelTemplates',
+            DEFAULT_URL + '/integrations/GetChannelTemplates',
             callback=get_channel_templates_callback,
             content_type='application/json'
         )
@@ -393,14 +394,14 @@ class TestIntegrations(unittest.TestCase):
     def test_get_channels_templates_with_wrong_channel_id(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/integrations/GetChannelTemplates',
+            DEFAULT_URL + '/integrations/GetChannelTemplates',
             callback=get_channel_templates_callback,
             content_type='application/json'
         )
@@ -413,14 +414,14 @@ class TestIntegrations(unittest.TestCase):
     def test_delete_channel_templates(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/integrations/DeleteChannelTemplates',
+            DEFAULT_URL + '/integrations/DeleteChannelTemplates',
             callback=delete_channel_templates_callback,
             content_type='application/json'
         )
@@ -436,14 +437,14 @@ class TestIntegrations(unittest.TestCase):
     def test_delete_channel_templates_with_empty_channel_templates(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/integrations/DeleteChannelTemplates',
+            DEFAULT_URL + '/integrations/DeleteChannelTemplates',
             callback=delete_channel_templates_callback,
             content_type='application/json'
         )
@@ -455,14 +456,14 @@ class TestIntegrations(unittest.TestCase):
     def test_delete_channel_templates_overflow(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/integrations/DeleteChannelTemplates',
+            DEFAULT_URL + '/integrations/DeleteChannelTemplates',
             callback=delete_channel_templates_callback,
             content_type='application/json'
         )
@@ -482,14 +483,14 @@ class TestIntegrations(unittest.TestCase):
     def test_add_channel_apps(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/integrations/AddChannelApps',
+            DEFAULT_URL + '/integrations/AddChannelApps',
             callback=add_channel_apps_callback,
             content_type='application/json'
         )
@@ -505,14 +506,14 @@ class TestIntegrations(unittest.TestCase):
     def test_add_channel_apps_with_empty_channel_id(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/integrations/AddChannelApps',
+            DEFAULT_URL + '/integrations/AddChannelApps',
             callback=add_channel_apps_callback,
             content_type='application/json'
         )
@@ -527,14 +528,14 @@ class TestIntegrations(unittest.TestCase):
     def test_add_channel_apps_overflow(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/integrations/AddChannelApps',
+            DEFAULT_URL + '/integrations/AddChannelApps',
             callback=add_channel_apps_callback,
             content_type='application/json'
         )
@@ -551,14 +552,14 @@ class TestIntegrations(unittest.TestCase):
     def test_delete_channel_apps(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/integrations/DeleteChannelApps',
+            DEFAULT_URL + '/integrations/DeleteChannelApps',
             callback=delete_channel_apps_callback,
             content_type='application/json'
         )
@@ -574,14 +575,14 @@ class TestIntegrations(unittest.TestCase):
     def test_delete_channel_apps_with_empty_channel_apps(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/integrations/DeleteChannelApps',
+            DEFAULT_URL + '/integrations/DeleteChannelApps',
             callback=delete_channel_apps_callback,
             content_type='application/json'
         )
@@ -593,14 +594,14 @@ class TestIntegrations(unittest.TestCase):
     def test_delete_channel_apps_overflow(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/integrations/DeleteChannelApps',
+            DEFAULT_URL + '/integrations/DeleteChannelApps',
             callback=delete_channel_apps_callback,
             content_type='application/json'
         )
@@ -620,14 +621,14 @@ class TestIntegrations(unittest.TestCase):
     def test_update_campaign_metrics(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/integrations/UpdateCampaignMetrics',
+            DEFAULT_URL + '/integrations/UpdateCampaignMetrics',
             callback=update_campaign_metrics_callback,
             content_type='application/json'
         )
@@ -651,14 +652,14 @@ class TestIntegrations(unittest.TestCase):
     def test_update_campaign_metrics_with_empty_metrics(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/integrations/UpdateCampaignMetrics',
+            DEFAULT_URL + '/integrations/UpdateCampaignMetrics',
             callback=update_campaign_metrics_callback,
             content_type='application/json'
         )
@@ -670,14 +671,14 @@ class TestIntegrations(unittest.TestCase):
     def test_update_campaign_metrics_overflow(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/integrations/UpdateCampaignMetrics',
+            DEFAULT_URL + '/integrations/UpdateCampaignMetrics',
             callback=update_campaign_metrics_callback,
             content_type='application/json'
         )
