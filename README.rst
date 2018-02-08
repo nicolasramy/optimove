@@ -4,9 +4,9 @@ Optimove
 +---------------------+-------------------------+----------------------------+
 | Version             | Build Status            | Coverage                   |
 +=====================+=========================+============================+
-| **1.0.4** (current) | |Build Status|          | |Coverage Status|          |
+| **1.1.0** (current) | |Build Status|          | |Coverage Status|          |
 +---------------------+-------------------------+----------------------------+
-| 1.1.0               | |Build Status Develop|  | |Coverage Status Develop|  |
+| 1.2.0               | |Build Status Develop|  | |Coverage Status Develop|  |
 +---------------------+-------------------------+----------------------------+
 
 
