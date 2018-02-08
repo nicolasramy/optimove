@@ -38,19 +38,11 @@ Or
 Test
 ----
 
-Tests are available in ``tests/`` folder, before to run them, you should
-install `responses <https://github.com/getsentry/responses>`__. This
-package is used to bind the HTTP call to Optimove API.
+Tests are available in ``tests/`` folder.
 
 The fixture used for the tests are from the documentation provided by
-Optimove
+Optimove.
 
-Requirements
-~~~~~~~~~~~~
-
--  `responses <https://github.com/getsentry/responses>`__
-
-::
 
     python setup.py test
 
