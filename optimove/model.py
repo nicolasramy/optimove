@@ -78,10 +78,9 @@ class Model(object):
                 'final': item['FinalMicrosegmentID']
             }
             if attributes and type(attributes) == list:
-                result['attributes'] = {}
-                customer_attributes = item['CustomerAttributes'].split(delimiter)
-                for index, attribute in enumerate(attributes):
-                    result['attributes'][attribute] = customer_attributes[index]
+                result['attributes'] = {
+                    key: value for key, value in zip(attributes, item['CustomerAttributes'])
+                }
             results.append(result)
 
         return results
