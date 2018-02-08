@@ -2,10 +2,7 @@
 from __future__ import unicode_literals
 
 
-from . import URLBuilder
-
-
-class Groups(URLBuilder):
+class Groups(object):
     client = None
 
     def __init__(self, client):
@@ -20,7 +17,7 @@ class Groups(URLBuilder):
             'TargetGroupID': target_group_id
         }
 
-        response = self.client.get(self._get_url(), data)
+        response = self.client.get(self.client.get_url(), data)
         return response.json()['TargetGroupName'] if response else False
 
     def get_target_group_id(self, target_group_name):
@@ -32,7 +29,7 @@ class Groups(URLBuilder):
             'TargetGroupName': target_group_name
         }
 
-        response = self.client.get(self._get_url(), data)
+        response = self.client.get(self.client.get_url(), data)
         return response.json()['TargetGroupID'] if response else False
 
     def get_target_groups_by_date(self, date):
@@ -44,12 +41,12 @@ class Groups(URLBuilder):
             'Date': date
         }
 
-        response = self.client.get(self._get_url(), data)
+        response = self.client.get(self.client.get_url(), data)
         return [item['TargetGroupID'] for item in response.json()] if response else False
 
     def get_target_group_details(self):
         """Returns an array of IDs, names and priorities for all defined target groups."""
-        response = self.client.get(self._get_url())
+        response = self.client.get(self.client.get_url())
 
         results = {}
         for item in response.json():

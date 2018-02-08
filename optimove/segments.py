@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from . import constants
 
-from . import URLBuilder
 
-
-class Segments(URLBuilder):
+class Segments(object):
     client = None
 
     def __init__(self, client):
@@ -20,7 +19,7 @@ class Segments(URLBuilder):
             'ValueSegmentID': segment_id
         }
 
-        response = self.client.get(self._get_url(), data)
+        response = self.client.get(self.client.get_url(), data)
         return response.json()['ValueSegmentName'] if response else False
 
     def get_value_segment_id(self, segment_name):
@@ -32,12 +31,12 @@ class Segments(URLBuilder):
             'ValueSegmentName': segment_name
         }
 
-        response = self.client.get(self._get_url(), data)
+        response = self.client.get(self.client.get_url(), data)
         return response.json()['ValueSegmentID'] if response else False
 
     def get_value_segments(self):
         """Returns all defined value segment names and IDs."""
-        response = self.client.get(self._get_url())
+        response = self.client.get(self.client.get_url())
 
         results = {}
         for item in response.json():
@@ -59,22 +58,21 @@ class Segments(URLBuilder):
             data['CustomerAttributes'] = ';'.join(attributes)
 
             if delimiter:
-                if delimiter in self.AUTHORIZED_DELIMITERS and delimiter not in self.UNAUTHORIZED_DELIMITERS:
+                if delimiter in constants.AUTHORIZED_DELIMITERS and delimiter not in constants.UNAUTHORIZED_DELIMITERS:
                     data['CustomerAttributesDelimiter'] = delimiter
                 else:
                     raise Exception('Invalid delimiter')
 
-        response = self.client.get(self._get_url(), data)
+        response = self.client.get(self.client.get_url(), data)
         if not response:
             return False
 
         if attributes and type(attributes) == list:
             results = {}
             for item in response.json():
-                results[item['CustomerID']] = {}
-                customer_attributes = item['CustomerAttributes'].split(delimiter)
-                for index, attribute in enumerate(attributes):
-                    results[item['CustomerID']][attribute] = customer_attributes[index]
+                results[item['CustomerID']] = {
+                    key: value for key, value in zip(attributes, item['CustomerAttributes'])
+                }
 
         else:
             results = [item['CustomerID'] for item in response.json()]
@@ -96,12 +94,12 @@ class Segments(URLBuilder):
             data['CustomerAttributes'] = ';'.join(attributes)
 
             if delimiter:
-                if delimiter in self.AUTHORIZED_DELIMITERS and delimiter not in self.UNAUTHORIZED_DELIMITERS:
+                if delimiter in constants.AUTHORIZED_DELIMITERS and delimiter not in constants.UNAUTHORIZED_DELIMITERS:
                     data['CustomerAttributesDelimiter'] = delimiter
                 else:
                     raise Exception('Invalid delimiter')
 
-        response = self.client.get(self._get_url(), data)
+        response = self.client.get(self.client.get_url(), data)
         if not response:
             return False
 
@@ -113,10 +111,9 @@ class Segments(URLBuilder):
                 'final_value_segment': item['FinalValueSegmentID']
             }
             if attributes and type(attributes) == list:
-                result['attributes'] = {}
-                customer_attributes = item['CustomerAttributes'].split(delimiter)
-                for index, attribute in enumerate(attributes):
-                    result['attributes'][attribute] = customer_attributes[index]
+                result['attributes'] = {
+                    key: value for key, value in zip(attributes, item['CustomerAttributes'])
+                }
             results.append(result)
 
         return results

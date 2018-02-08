@@ -2,13 +2,11 @@
 from __future__ import unicode_literals
 
 
-from datetime import datetime, timedelta
+from datetime import datetime
 from urllib import quote_plus
 
-from . import URLBuilder
 
-
-class General(URLBuilder):
+class General(object):
     client = None
     username = None
     password = None
@@ -33,15 +31,15 @@ class General(URLBuilder):
             'Username': self.username,
             'Password': self.password
         }
-
-        response = self.client.post(self._get_url(), data, check_token=False)
+        url = self.client.get_url()
+        response = self.client.post(url, data, check_token=False)
         self.client.token = response.json() if response else False
         self.client.expire = datetime.utcnow() if self.client.token else None
         return self.client.token
 
     def get_last_data_update(self):
         """Returns the date of the most recently available customer data"""
-        response = self.client.get(self._get_url())
+        response = self.client.get(self.client.get_url())
         return response.json()['Date'] if response else False
 
     def register_event_listener(self, event_type_id, listener_url):
@@ -55,7 +53,7 @@ class General(URLBuilder):
             'ListenerURL': quote_plus(listener_url)
         }
 
-        response = self.client.post(self._get_url(), data)
+        response = self.client.post(self.client.get_url(), data)
         return bool(response)
 
     def unregister_event_listener(self, event_type_id):
@@ -68,5 +66,5 @@ class General(URLBuilder):
             'EventTypeID': event_type_id
         }
 
-        response = self.client.post(self._get_url(), data)
+        response = self.client.post(self.client.get_url(), data)
         return bool(response)

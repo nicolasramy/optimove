@@ -6,9 +6,10 @@ import unittest
 from urlparse import parse_qs, urlparse
 
 from optimove.client import Client
+from optimove.constants import DEFAULT_URL
 import responses
 
-from constants import HEADERS, TOKEN
+from constants import HEADERS
 from helpers import login_callback, token_required
 
 
@@ -58,8 +59,8 @@ def get_customers_by_value_segment_callback(request):
         if 'CustomerAttributes' in params and 'CustomerAttributesDelimiter' in params:
             if params['CustomerAttributes'][0] == 'Alias;Country' and params['CustomerAttributesDelimiter'][0] == ',':
                 resp_body = [
-                    {'CustomerID': 'AC7615', 'CustomerAttributes': 'Robin777,ES'},
-                    {'CustomerID': 'FP8721', 'CustomerAttributes': 'JollyPop,UK'}
+                    {'CustomerID': 'AC7615', 'CustomerAttributes': ['Robin777', 'ES']},
+                    {'CustomerID': 'FP8721', 'CustomerAttributes': ['JollyPop', 'UK']}
                 ]
 
             else:
@@ -86,9 +87,9 @@ def get_value_segment_changers_callback(request):
             if params['CustomerAttributes'][0] == 'Alias;Country' and params['CustomerAttributesDelimiter'][0] == ',':
                 resp_body = [
                     {'CustomerID': '231342', 'InitialValueSegmentID': 2, 'FinalValueSegmentID': 3,
-                     'CustomerAttributes': 'BuddyZZ,UK'},
+                     'CustomerAttributes': ['BuddyZZ', 'UK']},
                     {'CustomerID': '931342', 'InitialValueSegmentID': 1, 'FinalValueSegmentID': 2,
-                     'CustomerAttributes': 'Pax65,DE'}
+                     'CustomerAttributes': ['Pax65', 'DE']}
                 ]
 
             else:
@@ -115,14 +116,14 @@ class TestSegments(unittest.TestCase):
     def test_get_value_segment_name(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/segments/GetValueSegmentName',
+            DEFAULT_URL + '/segments/GetValueSegmentName',
             callback=get_value_segment_name_callback,
             content_type='application/json'
         )
@@ -135,14 +136,14 @@ class TestSegments(unittest.TestCase):
     def test_get_value_segment_name_with_empty_segment_id(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/segments/GetValueSegmentName',
+            DEFAULT_URL + '/segments/GetValueSegmentName',
             callback=get_value_segment_name_callback,
             content_type='application/json'
         )
@@ -154,14 +155,14 @@ class TestSegments(unittest.TestCase):
     def test_get_value_segment_name_with_wrong_segment_id(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/segments/GetValueSegmentName',
+            DEFAULT_URL + '/segments/GetValueSegmentName',
             callback=get_value_segment_name_callback,
             content_type='application/json'
         )
@@ -174,14 +175,14 @@ class TestSegments(unittest.TestCase):
     def test_get_value_segment_id(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/segments/GetValueSegmentID',
+            DEFAULT_URL + '/segments/GetValueSegmentID',
             callback=get_value_segment_id_callback,
             content_type='application/json'
         )
@@ -194,14 +195,14 @@ class TestSegments(unittest.TestCase):
     def test_get_value_segment_id_with_empty_segment_name(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/segments/GetValueSegmentID',
+            DEFAULT_URL + '/segments/GetValueSegmentID',
             callback=get_value_segment_id_callback,
             content_type='application/json'
         )
@@ -213,14 +214,14 @@ class TestSegments(unittest.TestCase):
     def test_get_value_segment_id_with_wrong_segment_name(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/segments/GetValueSegmentID',
+            DEFAULT_URL + '/segments/GetValueSegmentID',
             callback=get_value_segment_id_callback,
             content_type='application/json'
         )
@@ -233,14 +234,14 @@ class TestSegments(unittest.TestCase):
     def test_get_value_segments(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/segments/GetValueSegments',
+            DEFAULT_URL + '/segments/GetValueSegments',
             callback=get_value_segments_callback,
             content_type='application/json'
         )
@@ -258,14 +259,14 @@ class TestSegments(unittest.TestCase):
     def test_get_customers_by_value_segment(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/segments/GetCustomersByValueSegment',
+            DEFAULT_URL + '/segments/GetCustomersByValueSegment',
             callback=get_customers_by_value_segment_callback,
             content_type='application/json'
         )
@@ -278,14 +279,14 @@ class TestSegments(unittest.TestCase):
     def test_get_customers_by_value_segment_with_attributes(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/segments/GetCustomersByValueSegment',
+            DEFAULT_URL + '/segments/GetCustomersByValueSegment',
             callback=get_customers_by_value_segment_callback,
             content_type='application/json'
         )
@@ -307,14 +308,14 @@ class TestSegments(unittest.TestCase):
     def test_get_customers_by_value_segment_with_wrong_delimiter(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/segments/GetCustomersByValueSegment',
+            DEFAULT_URL + '/segments/GetCustomersByValueSegment',
             callback=get_customers_by_value_segment_callback,
             content_type='application/json'
         )
@@ -327,14 +328,14 @@ class TestSegments(unittest.TestCase):
     def test_get_customers_by_value_segment_with_empty_date(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/segments/GetCustomersByValueSegment',
+            DEFAULT_URL + '/segments/GetCustomersByValueSegment',
             callback=get_customers_by_value_segment_callback,
             content_type='application/json'
         )
@@ -346,14 +347,14 @@ class TestSegments(unittest.TestCase):
     def test_get_customers_by_value_segment_with_wrong_date(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/segments/GetCustomersByValueSegment',
+            DEFAULT_URL + '/segments/GetCustomersByValueSegment',
             callback=get_customers_by_value_segment_callback,
             content_type='application/json'
         )
@@ -366,14 +367,14 @@ class TestSegments(unittest.TestCase):
     def test_get_value_segment_changers(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/segments/GetValueSegmentChangers',
+            DEFAULT_URL + '/segments/GetValueSegmentChangers',
             callback=get_value_segment_changers_callback,
             content_type='application/json'
         )
@@ -397,14 +398,14 @@ class TestSegments(unittest.TestCase):
     def test_get_value_segment_changers_with_delimiter(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/segments/GetValueSegmentChangers',
+            DEFAULT_URL + '/segments/GetValueSegmentChangers',
             callback=get_value_segment_changers_callback,
             content_type='application/json'
         )
@@ -436,14 +437,14 @@ class TestSegments(unittest.TestCase):
     def test_get_value_segment_changers_with_empty_date(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/segments/GetValueSegmentChangers',
+            DEFAULT_URL + '/segments/GetValueSegmentChangers',
             callback=get_value_segment_changers_callback,
             content_type='application/json'
         )
@@ -455,14 +456,14 @@ class TestSegments(unittest.TestCase):
     def test_get_value_segment_changers_with_wrong_delimiter(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/segments/GetValueSegmentChangers',
+            DEFAULT_URL + '/segments/GetValueSegmentChangers',
             callback=get_value_segment_changers_callback,
             content_type='application/json'
         )
@@ -475,14 +476,14 @@ class TestSegments(unittest.TestCase):
     def test_get_value_segment_changers_with_wrong_start_date(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/segments/GetValueSegmentChangers',
+            DEFAULT_URL + '/segments/GetValueSegmentChangers',
             callback=get_value_segment_changers_callback,
             content_type='application/json'
         )

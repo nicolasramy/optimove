@@ -17,6 +17,7 @@ setup(
     long_description=open('README.rst').read(),
     include_package_data=True,
     install_requires=['requests', 'urllib3[secure]'],
+    tests_require=['mock', 'responses'],
     test_suite='tests',
     url='https://github.com/nicolasramy/optimove',
     classifiers=[

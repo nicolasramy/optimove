@@ -6,9 +6,10 @@ import unittest
 from urlparse import urlparse, parse_qs
 
 from optimove.client import Client
+from optimove.constants import DEFAULT_URL
 import responses
 
-from constants import HEADERS, TOKEN
+from constants import HEADERS
 from helpers import login_callback, token_required
 
 
@@ -67,9 +68,9 @@ def get_microsegment_changers_with_attributes_callback(request):
             and params['CustomerAttributesDelimiter'][0] == ',':
         resp_body = [
             {'CustomerID': '231342', 'InitialMicrosegmentID': 4, 'FinalMicrosegmentID': 12,
-             'CustomerAttributes': 'BuddyZZ,UK'},
+             'CustomerAttributes': ['BuddyZZ', 'UK']},
             {'CustomerID': '231342', 'InitialMicrosegmentID': 3, 'FinalMicrosegmentID': 67,
-             'CustomerAttributes': 'Player99,US'}
+             'CustomerAttributes': ['Player99', 'US']}
         ]
         return 200, HEADERS['json'], json.dumps(resp_body)
 
@@ -86,14 +87,14 @@ class TestModel(unittest.TestCase):
     def test_get_customer_attribute_list(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/model/GetCustomerAttributeList',
+            DEFAULT_URL + '/model/GetCustomerAttributeList',
             callback=get_customer_attribute_list_callback,
             content_type='application/json'
         )
@@ -110,14 +111,14 @@ class TestModel(unittest.TestCase):
     def test_get_lifecycle_stage_list(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/model/GetLifecycleStageList',
+            DEFAULT_URL + '/model/GetLifecycleStageList',
             callback=get_lifecycle_stage_list_callback,
             content_type='application/json'
         )
@@ -135,14 +136,14 @@ class TestModel(unittest.TestCase):
     def test_get_microsegment_list(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/model/GetMicrosegmentList',
+            DEFAULT_URL + '/model/GetMicrosegmentList',
             callback=get_microsegment_list_callback,
             content_type='application/json'
         )
@@ -174,14 +175,14 @@ class TestModel(unittest.TestCase):
     def test_get_microsegment_changers(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/model/GetMicrosegmentChangers',
+            DEFAULT_URL + '/model/GetMicrosegmentChangers',
             callback=get_microsegment_changers_callback,
             content_type='application/json'
         )
@@ -205,14 +206,14 @@ class TestModel(unittest.TestCase):
     def test_get_microsegment_changers_with_attributes(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/model/GetMicrosegmentChangers',
+            DEFAULT_URL + '/model/GetMicrosegmentChangers',
             callback=get_microsegment_changers_with_attributes_callback,
             content_type='application/json'
         )
@@ -244,14 +245,14 @@ class TestModel(unittest.TestCase):
     def test_get_microsegment_changers_with_wrong_delimiter(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/model/GetMicrosegmentChangers',
+            DEFAULT_URL + '/model/GetMicrosegmentChangers',
             callback=get_microsegment_changers_with_attributes_callback,
             content_type='application/json'
         )
@@ -264,14 +265,14 @@ class TestModel(unittest.TestCase):
     def test_get_microsegment_changers_with_empty_dates(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/model/GetMicrosegmentChangers',
+            DEFAULT_URL + '/model/GetMicrosegmentChangers',
             callback=get_microsegment_changers_with_attributes_callback,
             content_type='application/json'
         )
@@ -284,14 +285,14 @@ class TestModel(unittest.TestCase):
     def test_get_microsegment_changers_with_wrong_dates(self):
         responses.add_callback(
             responses.POST,
-            'https://api.optimove.net/v3.0/general/login',
+            DEFAULT_URL + '/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            'https://api.optimove.net/v3.0/model/GetMicrosegmentChangers',
+            DEFAULT_URL + '/model/GetMicrosegmentChangers',
             callback=get_microsegment_changers_with_attributes_callback,
             content_type='application/json'
         )

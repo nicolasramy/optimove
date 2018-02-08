@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from constants import AUTHORIZED_DELIMITERS, UNAUTHORIZED_DELIMITERS
 
-from . import URLBuilder
 
-
-class Customers(URLBuilder):
+class Customers(object):
     client = None
 
     def __init__(self, client):
@@ -28,7 +27,7 @@ class Customers(URLBuilder):
             data['CustomerAttributes'] = ';'.join(attributes)
 
             if delimiter:
-                if delimiter in self.AUTHORIZED_DELIMITERS and delimiter not in self.UNAUTHORIZED_DELIMITERS:
+                if delimiter in AUTHORIZED_DELIMITERS and delimiter not in UNAUTHORIZED_DELIMITERS:
                     data['CustomerAttributesDelimiter'] = delimiter
                 else:
                     raise Exception('Invalid delimiter')
@@ -39,17 +38,19 @@ class Customers(URLBuilder):
         if skip and type(skip) == int:
             data['$skip'] = skip
 
-        response = self.client.get(self._get_url(), data)
+        response = self.client.get(self.client.get_url(), data)
         if not response:
             return False
 
         if attributes and type(attributes) == list:
             results = list()
             for item in response.json():
-                result = {'customer_id': item['CustomerID'], 'attributes': {}}
-                customer_attributes = item['CustomerAttribute'].split(delimiter)
-                for index, attribute in enumerate(attributes):
-                    result['attributes'][attribute] = customer_attributes[index]
+                result = {
+                    'customer_id': item['CustomerID'],
+                    'attributes': {
+                        key: value for key, value in zip(attributes, item['CustomerAttributes'])
+                    }
+                }
                 results.append(result)
 
         else:
@@ -58,7 +59,9 @@ class Customers(URLBuilder):
         return results
 
     def get_customer_actions_by_target_group(self, target_group_id, date,
-                                             include_control_group=False, attributes=None, delimiter=';',
+                                             channel_id=None,
+                                             include_control_group=False, include_recipient_group_id=False,
+                                             attributes=None, delimiter=';',
                                              top=None, skip=None):
         """Returns a list of customers and the details of the marketing actions they received, for a
         particular target group ID on a particular date."""
@@ -70,6 +73,12 @@ class Customers(URLBuilder):
             'Date': date
         }
 
+        if channel_id:
+            data['ChannelID'] = channel_id
+
+        if include_recipient_group_id:
+            data['IncludeRecipientGroupID'] = True
+
         if include_control_group:
             data['IncludeControlGroup'] = True
 
@@ -77,7 +86,7 @@ class Customers(URLBuilder):
             data['CustomerAttributes'] = ';'.join(attributes)
 
             if delimiter:
-                if delimiter in self.AUTHORIZED_DELIMITERS and delimiter not in self.UNAUTHORIZED_DELIMITERS:
+                if delimiter in AUTHORIZED_DELIMITERS and delimiter not in UNAUTHORIZED_DELIMITERS:
                     data['CustomerAttributesDelimiter'] = delimiter
                 else:
                     raise Exception('Invalid delimiter')
@@ -88,7 +97,7 @@ class Customers(URLBuilder):
         if skip and type(skip) == int:
             data['$skip'] = skip
 
-        response = self.client.get(self._get_url(), data)
+        response = self.client.get(self.client.get_url(), data)
         if not response:
             return False
 
@@ -100,10 +109,13 @@ class Customers(URLBuilder):
                 'channel_id': item['ChannelID']
             }
             if attributes and type(attributes) == list:
-                result['attributes'] = {}
-                customer_attributes = item['CustomerAttribute'].split(delimiter)
-                for index, attribute in enumerate(attributes):
-                    result['attributes'][attribute] = customer_attributes[index]
+                result['attributes'] = {
+                    key: value for key, value in zip(attributes, item['CustomerAttributes'])
+                }
+
+            if include_recipient_group_id:
+                result['recipient_group_id'] = item['RecipientGroupID']
+
             results.append(result)
 
         return results
@@ -126,7 +138,7 @@ class Customers(URLBuilder):
             data['CustomerAttributes'] = ';'.join(attributes)
 
             if delimiter:
-                if delimiter in self.AUTHORIZED_DELIMITERS and delimiter not in self.UNAUTHORIZED_DELIMITERS:
+                if delimiter in AUTHORIZED_DELIMITERS and delimiter not in UNAUTHORIZED_DELIMITERS:
                     data['CustomerAttributesDelimiter'] = delimiter
                 else:
                     raise Exception('Invalid delimiter')
@@ -137,7 +149,7 @@ class Customers(URLBuilder):
         if skip and type(skip) == int:
             data['$skip'] = skip
 
-        response = self.client.get(self._get_url(), data)
+        response = self.client.get(self.client.get_url(), data)
         if not response:
             return False
 
@@ -149,10 +161,57 @@ class Customers(URLBuilder):
                 'channel_id': item['ChannelID']
             }
             if attributes and type(attributes) == list:
-                result['attributes'] = {}
-                customer_attributes = item['CustomerAttribute'].split(delimiter)
-                for index, attribute in enumerate(attributes):
-                    result['attributes'][attribute] = customer_attributes[index]
+                result['attributes'] = {
+                    key: value for key, value in zip(attributes, item['CustomerAttributes'])
+                }
+            results.append(result)
+
+        return results
+
+    def get_customer_one_time_actions_by_campaign(self, campaign_id, include_control_group=False,
+                                                  attributes=None, delimiter=';',
+                                                  top=None, skip=None):
+        """Returns a list of customers and the details associated with a particular one-time campaign."""
+        if not campaign_id:
+            raise Exception('No CampaignID provided')
+
+        data = {
+            'CampaignID': campaign_id
+        }
+
+        if include_control_group:
+            data['IncludeControlGroup'] = True
+
+        if attributes and type(attributes) == list:
+            data['CustomerAttributes'] = ';'.join(attributes)
+
+            if delimiter:
+                if delimiter in AUTHORIZED_DELIMITERS and delimiter not in UNAUTHORIZED_DELIMITERS:
+                    data['CustomerAttributesDelimiter'] = delimiter
+                else:
+                    raise Exception('Invalid delimiter')
+
+        if top and type(top) == int:
+            data['$top'] = top
+
+        if skip and type(skip) == int:
+            data['$skip'] = skip
+
+        response = self.client.get(self.client.get_url(), data)
+        if not response:
+            return False
+
+        results = list()
+        for item in response.json():
+            result = {
+                'customer_id': item['CustomerID'],
+                'action_id': item['ActionID'],
+                'channel_id': item['ChannelID']
+            }
+            if attributes and type(attributes) == list:
+                result['attributes'] = {
+                    key: value for key, value in zip(attributes, item['CustomerAttributes'])
+                }
             results.append(result)
 
         return results
@@ -172,7 +231,7 @@ class Customers(URLBuilder):
             data['CustomerAttributes'] = ';'.join(attributes)
 
             if delimiter:
-                if delimiter in self.AUTHORIZED_DELIMITERS and delimiter not in self.UNAUTHORIZED_DELIMITERS:
+                if delimiter in AUTHORIZED_DELIMITERS and delimiter not in UNAUTHORIZED_DELIMITERS:
                     data['CustomerAttributesDelimiter'] = delimiter
                 else:
                     raise Exception('Invalid delimiter')
@@ -183,7 +242,7 @@ class Customers(URLBuilder):
         if skip and type(skip) == int:
             data['$skip'] = skip
 
-        response = self.client.get(self._get_url(), data)
+        response = self.client.get(self.client.get_url(), data)
         if not response:
             return False
 
@@ -195,10 +254,9 @@ class Customers(URLBuilder):
                 'final_target_group_id': item['FinalTargetGroupID']
             }
             if attributes and type(attributes) == list:
-                result['attributes'] = {}
-                customer_attributes = item['CustomerAttribute'].split(delimiter)
-                for index, attribute in enumerate(attributes):
-                    result['attributes'][attribute] = customer_attributes[index]
+                result['attributes'] = {
+                    key: value for key, value in zip(attributes, item['CustomerAttributes'])
+                }
             results.append(result)
 
         return results
@@ -220,7 +278,7 @@ class Customers(URLBuilder):
             data['CustomerAttributes'] = ';'.join(attributes)
 
             if delimiter:
-                if delimiter in self.AUTHORIZED_DELIMITERS and delimiter not in self.UNAUTHORIZED_DELIMITERS:
+                if delimiter in AUTHORIZED_DELIMITERS and delimiter not in UNAUTHORIZED_DELIMITERS:
                     data['CustomerAttributesDelimiter'] = delimiter
                 else:
                     raise Exception('Invalid delimiter')
@@ -231,7 +289,7 @@ class Customers(URLBuilder):
         if skip and type(skip) == int:
             data['$skip'] = skip
 
-        response = self.client.get(self._get_url(), data)
+        response = self.client.get(self.client.get_url(), data)
         if not response:
             return False
 
@@ -245,10 +303,9 @@ class Customers(URLBuilder):
                 else item['FinalCustomerAttribute']
             }
             if attributes and type(attributes) == list:
-                result['attributes'] = {}
-                customer_attributes = item['CustomerAttribute'].split(delimiter)
-                for index, attribute in enumerate(attributes):
-                    result['attributes'][attribute] = customer_attributes[index]
+                result['attributes'] = {
+                    key: value for key, value in zip(attributes, item['CustomerAttributes'])
+                }
             results.append(result)
 
         return results
@@ -277,7 +334,7 @@ class Customers(URLBuilder):
         if skip and type(skip) == int:
             data['$skip'] = skip
 
-        response = self.client.get(self._get_url(), data)
+        response = self.client.get(self.client.get_url(), data)
         if not response:
             return False
 
@@ -296,7 +353,7 @@ class Customers(URLBuilder):
             'CustomerID': customer_id
         }
 
-        response = self.client.get(self._get_url(), data)
+        response = self.client.get(self.client.get_url(), data)
         if not response:
             return False
 
@@ -324,7 +381,7 @@ class Customers(URLBuilder):
         if skip and type(skip) == int:
             data['$skip'] = skip
 
-        response = self.client.get(self._get_url(), data)
+        response = self.client.get(self.client.get_url(), data)
         if not response:
             return False
 
@@ -356,7 +413,7 @@ class Customers(URLBuilder):
         if skip and type(skip) == int:
             data['$skip'] = skip
 
-        response = self.client.get(self._get_url(), data)
+        response = self.client.get(self.client.get_url(), data)
         if not response:
             return False
 
@@ -393,7 +450,7 @@ class Customers(URLBuilder):
         if skip and type(skip) == int:
             data['$skip'] = skip
 
-        response = self.client.get(self._get_url(), data)
+        response = self.client.get(self.client.get_url(), data)
         if not response:
             return False
 
@@ -427,7 +484,7 @@ class Customers(URLBuilder):
             data['CustomerAttributes'] = ';'.join(attributes)
 
             if delimiter:
-                if delimiter in self.AUTHORIZED_DELIMITERS and delimiter not in self.UNAUTHORIZED_DELIMITERS:
+                if delimiter in AUTHORIZED_DELIMITERS and delimiter not in UNAUTHORIZED_DELIMITERS:
                     data['CustomerAttributesDelimiter'] = delimiter
                 else:
                     raise Exception('Invalid delimiter')
@@ -438,7 +495,7 @@ class Customers(URLBuilder):
         if skip and type(skip) == int:
             data['$skip'] = skip
 
-        response = self.client.get(self._get_url(), data)
+        response = self.client.get(self.client.get_url(), data)
         if not response:
             return False
 
@@ -450,10 +507,9 @@ class Customers(URLBuilder):
                 'scheduled_time': item['ScheduledTime']
             }
             if attributes and type(attributes) == list:
-                result['attributes'] = {}
-                customer_attributes = item['CustomerAttribute'].split(delimiter)
-                for index, attribute in enumerate(attributes):
-                    result['attributes'][attribute] = customer_attributes[index]
+                result['attributes'] = {
+                    key: value for key, value in zip(attributes, item['CustomerAttributes'])
+                }
             results.append(result)
 
         return results
@@ -468,7 +524,7 @@ class Customers(URLBuilder):
         if skip and type(skip) == int:
             data['$skip'] = skip
 
-        response = self.client.get(self._get_url()) if not data else self.client.get(self._get_url(), data)
+        response = self.client.get(self.client.get_url()) if not data else self.client.get(self.client.get_url(), data)
 
         results = list()
         for item in response.json():
@@ -497,7 +553,7 @@ class Customers(URLBuilder):
         if skip and type(skip) == int:
             data['$skip'] = skip
 
-        response = self.client.get(self._get_url(), data)
+        response = self.client.get(self.client.get_url(), data)
         if not response:
             return False
 
