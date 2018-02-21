@@ -68,9 +68,9 @@ def get_microsegment_changers_with_attributes_callback(request):
             and params['CustomerAttributesDelimiter'][0] == ',':
         resp_body = [
             {'CustomerID': '231342', 'InitialMicrosegmentID': 4, 'FinalMicrosegmentID': 12,
-             'CustomerAttributes': ['BuddyZZ', 'UK']},
+             'CustomerAttributes': 'BuddyZZ,UK'},
             {'CustomerID': '231342', 'InitialMicrosegmentID': 3, 'FinalMicrosegmentID': 67,
-             'CustomerAttributes': ['Player99', 'US']}
+             'CustomerAttributes': 'Player99,US'}
         ]
         return 200, HEADERS['json'], json.dumps(resp_body)
 
