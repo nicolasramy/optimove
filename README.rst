@@ -19,7 +19,7 @@ Install package
 
 .. code:: bash
 
-    pip install optimove
+        pip install optimove
 
 Or
 
@@ -122,20 +122,6 @@ issue <https://github.com/nicolasramy/optimove/issues/new>`__
 
 About
 -----
-
-.. \|PyPI version\| image:: https://badge.fury.io/py/optimove.svg
-:target: https://badge.fury.io/py/optimove .. \|Build Status\| image::
-https://travis-ci.org/nicolasramy/optimove.svg?branch=master :target:
-https://travis-ci.org/nicolasramy/optimove .. \|Coverage Status\|
-image::
-https://coveralls.io/repos/github/nicolasramy/optimove/badge.svg?branch=master
-:target: https://coveralls.io/github/nicolasramy/optimove?branch=master
-.. \|Build Status Develop\| image::
-https://travis-ci.org/nicolasramy/optimove.svg?branch=develop :target:
-https://travis-ci.org/nicolasramy/optimove .. \|Coverage Status
-Develop\| image::
-https://coveralls.io/repos/github/nicolasramy/optimove/badge.svg?branch=develop
-:target: https://coveralls.io/github/nicolasramy/optimove?branch=develop
 
 .. |Travis CI| image:: https://travis-ci.org/nicolasramy/optimove.svg?branch=master
    :target: https://travis-ci.org/nicolasramy/optimove
