@@ -24,7 +24,7 @@ class Customers(object):
         }
 
         if attributes and type(attributes) == list:
-            data['CustomerAttributes'] = ';'.join(attributes)
+            data['CustomerAttribute'] = ';'.join(attributes)
 
             if delimiter:
                 if delimiter in AUTHORIZED_DELIMITERS and delimiter not in UNAUTHORIZED_DELIMITERS:
@@ -422,7 +422,7 @@ class Customers(object):
         }
 
         if attributes and type(attributes) == list:
-            data['CustomerAttributes'] = ';'.join(attributes)
+            data['CustomerAttribute'] = ';'.join(attributes)
 
             if delimiter:
                 if delimiter in AUTHORIZED_DELIMITERS and delimiter not in UNAUTHORIZED_DELIMITERS:
