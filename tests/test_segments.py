@@ -59,8 +59,8 @@ def get_customers_by_value_segment_callback(request):
         if 'CustomerAttributes' in params and 'CustomerAttributesDelimiter' in params:
             if params['CustomerAttributes'][0] == 'Alias;Country' and params['CustomerAttributesDelimiter'][0] == ',':
                 resp_body = [
-                    {'CustomerID': 'AC7615', 'CustomerAttributes': ['Robin777', 'ES']},
-                    {'CustomerID': 'FP8721', 'CustomerAttributes': ['JollyPop', 'UK']}
+                    {'CustomerID': 'AC7615', 'CustomerAttributes': 'Robin777,ES'},
+                    {'CustomerID': 'FP8721', 'CustomerAttributes': 'JollyPop,UK'}
                 ]
 
             else:
@@ -87,9 +87,9 @@ def get_value_segment_changers_callback(request):
             if params['CustomerAttributes'][0] == 'Alias;Country' and params['CustomerAttributesDelimiter'][0] == ',':
                 resp_body = [
                     {'CustomerID': '231342', 'InitialValueSegmentID': 2, 'FinalValueSegmentID': 3,
-                     'CustomerAttributes': ['BuddyZZ', 'UK']},
+                     'CustomerAttributes': 'BuddyZZ,UK'},
                     {'CustomerID': '931342', 'InitialValueSegmentID': 1, 'FinalValueSegmentID': 2,
-                     'CustomerAttributes': ['Pax65', 'DE']}
+                     'CustomerAttributes': 'Pax65,DE'}
                 ]
 
             else:

@@ -48,7 +48,7 @@ class Customers(object):
                 result = {
                     'customer_id': item['CustomerID'],
                     'attributes': {
-                        key: value for key, value in zip(attributes, item['CustomerAttributes'])
+                        key: value for key, value in zip(attributes, item['CustomerAttribute'].split(delimiter))
                     }
                 }
                 results.append(result)
@@ -59,9 +59,7 @@ class Customers(object):
         return results
 
     def get_customer_actions_by_target_group(self, target_group_id, date,
-                                             channel_id=None,
-                                             include_control_group=False, include_recipient_group_id=False,
-                                             attributes=None, delimiter=';',
+                                             include_control_group=False, attributes=None, delimiter=';',
                                              top=None, skip=None):
         """Returns a list of customers and the details of the marketing actions they received, for a
         particular target group ID on a particular date."""
@@ -73,17 +71,11 @@ class Customers(object):
             'Date': date
         }
 
-        if channel_id:
-            data['ChannelID'] = channel_id
-
-        if include_recipient_group_id:
-            data['IncludeRecipientGroupID'] = True
-
         if include_control_group:
             data['IncludeControlGroup'] = True
 
         if attributes and type(attributes) == list:
-            data['CustomerAttributes'] = ';'.join(attributes)
+            data['CustomerAttribute'] = ';'.join(attributes)
 
             if delimiter:
                 if delimiter in AUTHORIZED_DELIMITERS and delimiter not in UNAUTHORIZED_DELIMITERS:
@@ -110,11 +102,8 @@ class Customers(object):
             }
             if attributes and type(attributes) == list:
                 result['attributes'] = {
-                    key: value for key, value in zip(attributes, item['CustomerAttributes'])
+                    key: value for key, value in zip(attributes, item['CustomerAttribute'].split(delimiter))
                 }
-
-            if include_recipient_group_id:
-                result['recipient_group_id'] = item['RecipientGroupID']
 
             results.append(result)
 
@@ -135,7 +124,7 @@ class Customers(object):
             data['IncludeControlGroup'] = True
 
         if attributes and type(attributes) == list:
-            data['CustomerAttributes'] = ';'.join(attributes)
+            data['CustomerAttribute'] = ';'.join(attributes)
 
             if delimiter:
                 if delimiter in AUTHORIZED_DELIMITERS and delimiter not in UNAUTHORIZED_DELIMITERS:
@@ -162,55 +151,7 @@ class Customers(object):
             }
             if attributes and type(attributes) == list:
                 result['attributes'] = {
-                    key: value for key, value in zip(attributes, item['CustomerAttributes'])
-                }
-            results.append(result)
-
-        return results
-
-    def get_customer_one_time_actions_by_campaign(self, campaign_id, include_control_group=False,
-                                                  attributes=None, delimiter=';',
-                                                  top=None, skip=None):
-        """Returns a list of customers and the details associated with a particular one-time campaign."""
-        if not campaign_id:
-            raise Exception('No CampaignID provided')
-
-        data = {
-            'CampaignID': campaign_id
-        }
-
-        if include_control_group:
-            data['IncludeControlGroup'] = True
-
-        if attributes and type(attributes) == list:
-            data['CustomerAttributes'] = ';'.join(attributes)
-
-            if delimiter:
-                if delimiter in AUTHORIZED_DELIMITERS and delimiter not in UNAUTHORIZED_DELIMITERS:
-                    data['CustomerAttributesDelimiter'] = delimiter
-                else:
-                    raise Exception('Invalid delimiter')
-
-        if top and type(top) == int:
-            data['$top'] = top
-
-        if skip and type(skip) == int:
-            data['$skip'] = skip
-
-        response = self.client.get(self.client.get_url(), data)
-        if not response:
-            return False
-
-        results = list()
-        for item in response.json():
-            result = {
-                'customer_id': item['CustomerID'],
-                'action_id': item['ActionID'],
-                'channel_id': item['ChannelID']
-            }
-            if attributes and type(attributes) == list:
-                result['attributes'] = {
-                    key: value for key, value in zip(attributes, item['CustomerAttributes'])
+                    key: value for key, value in zip(attributes, item['CustomerAttribute'].split(delimiter))
                 }
             results.append(result)
 
@@ -228,7 +169,7 @@ class Customers(object):
         }
 
         if attributes and type(attributes) == list:
-            data['CustomerAttributes'] = ';'.join(attributes)
+            data['CustomerAttribute'] = ';'.join(attributes)
 
             if delimiter:
                 if delimiter in AUTHORIZED_DELIMITERS and delimiter not in UNAUTHORIZED_DELIMITERS:
@@ -255,7 +196,7 @@ class Customers(object):
             }
             if attributes and type(attributes) == list:
                 result['attributes'] = {
-                    key: value for key, value in zip(attributes, item['CustomerAttributes'])
+                    key: value for key, value in zip(attributes, item['CustomerAttribute'].split(delimiter))
                 }
             results.append(result)
 
@@ -304,7 +245,7 @@ class Customers(object):
             }
             if attributes and type(attributes) == list:
                 result['attributes'] = {
-                    key: value for key, value in zip(attributes, item['CustomerAttributes'])
+                    key: value for key, value in zip(attributes, item['CustomerAttribute'].split(delimiter))
                 }
             results.append(result)
 
@@ -508,7 +449,7 @@ class Customers(object):
             }
             if attributes and type(attributes) == list:
                 result['attributes'] = {
-                    key: value for key, value in zip(attributes, item['CustomerAttributes'])
+                    key: value for key, value in zip(attributes, item['CustomerAttribute'].split(delimiter))
                 }
             results.append(result)
 
