@@ -79,7 +79,7 @@ class Model(object):
             }
             if attributes and type(attributes) == list:
                 result['attributes'] = {
-                    key: value for key, value in zip(attributes, item['CustomerAttributes'])
+                    key: value for key, value in zip(attributes, item['CustomerAttributes'].split(delimiter))
                 }
             results.append(result)
 
