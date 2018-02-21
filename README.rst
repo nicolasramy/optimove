@@ -1,9 +1,7 @@
 Optimove
 ========
 
--  **Current Version:** 1.1.2
--  **Build Status:** |Travis CI|
--  **Coverage:** |Coveralls|
+|PyPI version| |Travis CI| |Coveralls|
 
 This library allows you to quickly and easily use the Optimove Web API
 via Python based on `Optimove
@@ -12,16 +10,15 @@ documentation <https://docs.optimove.com/api-usage-guide/>`__
 Installation
 ------------
 
-This package is available on pypi |PyPI version|
-
-Install package
-~~~~~~~~~~~~~~~
+From Pypi
+~~~~~~~~~
 
 .. code:: bash
 
         pip install optimove
 
-Or
+From source
+~~~~~~~~~~~
 
 .. code:: bash
 
@@ -123,9 +120,9 @@ issue <https://github.com/nicolasramy/optimove/issues/new>`__
 About
 -----
 
+.. |PyPI version| image:: https://badge.fury.io/py/optimove.svg
+   :target: https://badge.fury.io/py/optimove
 .. |Travis CI| image:: https://travis-ci.org/nicolasramy/optimove.svg?branch=master
    :target: https://travis-ci.org/nicolasramy/optimove
 .. |Coveralls| image:: https://coveralls.io/repos/github/nicolasramy/optimove/badge.svg?branch=master
    :target: https://coveralls.io/github/nicolasramy/optimove?branch=master
-.. |PyPI version| image:: https://badge.fury.io/py/optimove.svg
-   :target: https://badge.fury.io/py/optimove
