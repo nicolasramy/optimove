@@ -20,8 +20,8 @@ from helpers import login_callback, token_required
 def get_customers_by_action_callback(request):
     params = parse_qs(urlparse(request.url).query)
     if params['RecipientGroupID'][0] == '1' and params['ActionID'][0] == '2' and params['Date'][0] == '2015-06-24':
-        if 'CustomerAttributes' in params and 'CustomerAttributesDelimiter' in params:
-            if params['CustomerAttributes'][0] == 'Alias;Country' and params['CustomerAttributesDelimiter'][0] == ',':
+        if 'CustomerAttribute' in params and 'CustomerAttributesDelimiter' in params:
+            if params['CustomerAttribute'][0] == 'Alias;Country' and params['CustomerAttributesDelimiter'][0] == ',':
                 resp_body = [
                     {'CustomerID': '231342', 'CustomerAttribute': 'BuddyZZ,UK'},
                     {'CustomerID': '943157', 'CustomerAttribute': 'Pax65,DE'}
@@ -256,8 +256,8 @@ def get_customer_send_details_by_campaign_callback(request):
 def get_customer_send_details_by_channel_callback(request):
     params = parse_qs(urlparse(request.url).query)
     if params['ChannelID'][0] == '5' and params['CampaignID'][0] == '65874':
-        if 'CustomerAttributes' in params and 'CustomerAttributesDelimiter' in params:
-            if params['CustomerAttributes'][0] == 'Email;Country' and params['CustomerAttributesDelimiter'][0] == ',':
+        if 'CustomerAttribute' in params and 'CustomerAttributesDelimiter' in params:
+            if params['CustomerAttribute'][0] == 'Email;Country' and params['CustomerAttributesDelimiter'][0] == ',':
                 resp_body = [
                     {'CustomerID': '96134', 'TemplateID': 14, 'ScheduledTime': '2016-08-30 10:00:00',
                      'CustomerAttribute': 'jdavis@aol.com,US'},
