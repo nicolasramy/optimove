@@ -206,14 +206,14 @@ class TestActions(unittest.TestCase):
     def test_get_action_name(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/actions/GetActionName',
+            DEFAULT_URL + '/current/actions/GetActionName',
             callback=get_action_name_callback,
             content_type='application/json'
         )
@@ -226,14 +226,14 @@ class TestActions(unittest.TestCase):
     def test_get_action_name_with_empty_action_id(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/actions/GetActionName',
+            DEFAULT_URL + '/current/actions/GetActionName',
             callback=get_action_name_callback,
             content_type='application/json'
         )
@@ -245,14 +245,14 @@ class TestActions(unittest.TestCase):
     def test_get_action_id(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/actions/GetActionID',
+            DEFAULT_URL + '/current/actions/GetActionID',
             callback=get_action_id_callback,
             content_type='application/json'
         )
@@ -265,14 +265,14 @@ class TestActions(unittest.TestCase):
     def test_get_action_id_with_empty_action_name(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/actions/GetActionID',
+            DEFAULT_URL + '/current/actions/GetActionID',
             callback=get_action_id_callback,
             content_type='application/json'
         )
@@ -284,14 +284,14 @@ class TestActions(unittest.TestCase):
     def test_get_all_actions(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/actions/GetAllActions',
+            DEFAULT_URL + '/current/actions/GetAllActions',
             callback=get_all_actions_callback,
             content_type='application/json'
         )
@@ -308,14 +308,14 @@ class TestActions(unittest.TestCase):
     def test_get_actions_by_target_group(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/actions/GetActionsByTargetGroup',
+            DEFAULT_URL + '/current/actions/GetActionsByTargetGroup',
             callback=get_actions_by_target_group_callback,
             content_type='application/json'
         )
@@ -331,14 +331,14 @@ class TestActions(unittest.TestCase):
     def test_get_actions_by_target_group_with_empty_date(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/actions/GetActionsByTargetGroup',
+            DEFAULT_URL + '/current/actions/GetActionsByTargetGroup',
             callback=get_actions_by_target_group_callback,
             content_type='application/json'
         )
@@ -350,14 +350,14 @@ class TestActions(unittest.TestCase):
     def test_get_actions_by_target_group_with_wrong_date(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/actions/GetActionsByTargetGroup',
+            DEFAULT_URL + '/current/actions/GetActionsByTargetGroup',
             callback=get_actions_by_target_group_callback,
             content_type='application/json'
         )
@@ -370,14 +370,14 @@ class TestActions(unittest.TestCase):
     def test_get_promo_codes(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/actions/GetPromoCodes',
+            DEFAULT_URL + '/current/actions/GetPromoCodes',
             callback=get_promo_codes_callback,
             content_type='application/json'
         )
@@ -394,14 +394,14 @@ class TestActions(unittest.TestCase):
     def test_get_promo_codes_with_empty_date(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/actions/GetPromoCodes',
+            DEFAULT_URL + '/current/actions/GetPromoCodes',
             callback=get_promo_codes_callback,
             content_type='application/json'
         )
@@ -413,14 +413,14 @@ class TestActions(unittest.TestCase):
     def test_get_promo_codes_with_wrong_date(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/actions/GetPromoCodes',
+            DEFAULT_URL + '/current/actions/GetPromoCodes',
             callback=get_promo_codes_callback,
             content_type='application/json'
         )
@@ -433,14 +433,14 @@ class TestActions(unittest.TestCase):
     def test_get_promo_codes_by_campaign(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/actions/GetPromoCodesByCampaign',
+            DEFAULT_URL + '/current/actions/GetPromoCodesByCampaign',
             callback=get_promo_codes_by_campaign_callback,
             content_type='application/json'
         )
@@ -456,14 +456,14 @@ class TestActions(unittest.TestCase):
     def test_get_promo_codes_by_campaign_with_empty_campaign_id(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/actions/GetPromoCodesByCampaign',
+            DEFAULT_URL + '/current/actions/GetPromoCodesByCampaign',
             callback=get_promo_codes_by_campaign_callback,
             content_type='application/json'
         )
@@ -475,14 +475,14 @@ class TestActions(unittest.TestCase):
     def test_get_promo_codes_by_campaign_with_wrong_campaign_id(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/actions/GetPromoCodesByCampaign',
+            DEFAULT_URL + '/current/actions/GetPromoCodesByCampaign',
             callback=get_promo_codes_by_campaign_callback,
             content_type='application/json'
         )
@@ -495,14 +495,14 @@ class TestActions(unittest.TestCase):
     def test_get_promo_codes_by_target_group(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/actions/GetPromoCodesByTargetGroup',
+            DEFAULT_URL + '/current/actions/GetPromoCodesByTargetGroup',
             callback=get_promo_codes_by_target_group_callback,
             content_type='application/json'
         )
@@ -519,14 +519,14 @@ class TestActions(unittest.TestCase):
     def test_get_promo_codes_by_target_group_with_empty_date(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/actions/GetPromoCodesByTargetGroup',
+            DEFAULT_URL + '/current/actions/GetPromoCodesByTargetGroup',
             callback=get_promo_codes_by_target_group_callback,
             content_type='application/json'
         )
@@ -538,14 +538,14 @@ class TestActions(unittest.TestCase):
     def test_get_promo_codes_by_target_group_with_wrong_date(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/actions/GetPromoCodesByTargetGroup',
+            DEFAULT_URL + '/current/actions/GetPromoCodesByTargetGroup',
             callback=get_promo_codes_by_target_group_callback,
             content_type='application/json'
         )
@@ -558,14 +558,14 @@ class TestActions(unittest.TestCase):
     def test_get_action_details_by_target_group(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/actions/GetActionDetailsByTargetGroup',
+            DEFAULT_URL + '/current/actions/GetActionDetailsByTargetGroup',
             callback=get_action_details_by_target_group_callback,
             content_type='application/json'
         )
@@ -583,14 +583,14 @@ class TestActions(unittest.TestCase):
     def test_get_action_details_by_target_group_with_empty_date(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/actions/GetActionDetailsByTargetGroup',
+            DEFAULT_URL + '/current/actions/GetActionDetailsByTargetGroup',
             callback=get_action_details_by_target_group_callback,
             content_type='application/json'
         )
@@ -602,14 +602,14 @@ class TestActions(unittest.TestCase):
     def test_get_action_details_by_target_group_with_wrong_date(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/actions/GetActionDetailsByTargetGroup',
+            DEFAULT_URL + '/current/actions/GetActionDetailsByTargetGroup',
             callback=get_action_details_by_target_group_callback,
             content_type='application/json'
         )
@@ -622,14 +622,14 @@ class TestActions(unittest.TestCase):
     def test_get_executed_campaign_details(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/actions/GetExecutedCampaignDetails',
+            DEFAULT_URL + '/current/actions/GetExecutedCampaignDetails',
             callback=get_executed_campaign_details_callback,
             content_type='application/json'
         )
@@ -665,14 +665,14 @@ class TestActions(unittest.TestCase):
     def test_get_executed_campaign_details_with_empty_date(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/actions/GetExecutedCampaignDetails',
+            DEFAULT_URL + '/current/actions/GetExecutedCampaignDetails',
             callback=get_executed_campaign_details_callback,
             content_type='application/json'
         )
@@ -684,14 +684,14 @@ class TestActions(unittest.TestCase):
     def test_get_executed_campaign_details_with_wrong_date(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/actions/GetExecutedCampaignDetails',
+            DEFAULT_URL + '/current/actions/GetExecutedCampaignDetails',
             callback=get_executed_campaign_details_callback,
             content_type='application/json'
         )
@@ -704,14 +704,14 @@ class TestActions(unittest.TestCase):
     def test_get_campaign_details(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/actions/GetCampaignDetails',
+            DEFAULT_URL + '/current/actions/GetCampaignDetails',
             callback=get_campaign_details_callback,
             content_type='application/json'
         )
@@ -726,14 +726,14 @@ class TestActions(unittest.TestCase):
     def test_get_campaign_details_with_empty_campaign_id(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/actions/GetCampaignDetails',
+            DEFAULT_URL + '/current/actions/GetCampaignDetails',
             callback=get_campaign_details_callback,
             content_type='application/json'
         )
@@ -745,14 +745,14 @@ class TestActions(unittest.TestCase):
     def test_get_campaign_details_with_wrong_campaign_id(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/actions/GetCampaignDetails',
+            DEFAULT_URL + '/current/actions/GetCampaignDetails',
             callback=get_campaign_details_callback,
             content_type='application/json'
         )
@@ -765,14 +765,14 @@ class TestActions(unittest.TestCase):
     def test_get_execution_channels(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/actions/GetExecutionChannels',
+            DEFAULT_URL + '/current/actions/GetExecutionChannels',
             callback=get_execution_channels_callback,
             content_type='application/json'
         )
@@ -790,14 +790,14 @@ class TestActions(unittest.TestCase):
     def test_get_executed_campaign_channel_details(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/actions/GetExecutedCampaignChannelDetails',
+            DEFAULT_URL + '/current/actions/GetExecutedCampaignChannelDetails',
             callback=get_executed_campaign_channel_details_callback,
             content_type='application/json'
         )
@@ -815,14 +815,14 @@ class TestActions(unittest.TestCase):
     def test_get_executed_campaign_channel_details_empty_channel_id(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/actions/GetExecutedCampaignChannelDetails',
+            DEFAULT_URL + '/current/actions/GetExecutedCampaignChannelDetails',
             callback=get_executed_campaign_channel_details_callback,
             content_type='application/json'
         )
@@ -834,14 +834,14 @@ class TestActions(unittest.TestCase):
     def test_get_executed_campaign_channel_details_wrong_channel_id(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/actions/GetExecutedCampaignChannelDetails',
+            DEFAULT_URL + '/current/actions/GetExecutedCampaignChannelDetails',
             callback=get_executed_campaign_channel_details_callback,
             content_type='application/json'
         )
@@ -854,14 +854,14 @@ class TestActions(unittest.TestCase):
     def test_get_executed_campaigns_by_channel(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/actions/GetExecutedCampaignsByChannel',
+            DEFAULT_URL + '/current/actions/GetExecutedCampaignsByChannel',
             callback=get_executed_campaigns_by_channel_callback,
             content_type='application/json'
         )
@@ -874,14 +874,14 @@ class TestActions(unittest.TestCase):
     def test_get_executed_campaigns_by_channel_empty_date(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/actions/GetExecutedCampaignsByChannel',
+            DEFAULT_URL + '/current/actions/GetExecutedCampaignsByChannel',
             callback=get_executed_campaigns_by_channel_callback,
             content_type='application/json'
         )
@@ -893,14 +893,14 @@ class TestActions(unittest.TestCase):
     def test_get_executed_campaigns_by_channel_wrong_date(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/actions/GetExecutedCampaignsByChannel',
+            DEFAULT_URL + '/current/actions/GetExecutedCampaignsByChannel',
             callback=get_executed_campaigns_by_channel_callback,
             content_type='application/json'
         )

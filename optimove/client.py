@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from collections import OrderedDict
 from datetime import datetime
 from inspect import currentframe, getouterframes
 import json
@@ -41,8 +42,8 @@ class Client:
 
     def _headers(self):
         headers = {
-            'Accept': 'application/JSON',
-            'Content-type': 'application/JSON'
+            'Accept': 'application/json',
+            'Content-type': 'application/json'
         }
 
         if self.token:
@@ -62,13 +63,16 @@ class Client:
         headers = headers if headers else self._headers()
         LOGGER.debug("GET request: url=%s, payload=%s, headers=%s", url, payload, headers)
 
+        if payload:
+            payload = OrderedDict(sorted(payload.items(), key=lambda t: t[0]))
+
         try:
             response = requests.get(url, params=payload, headers=headers, timeout=self.timeout)
         except requests.exceptions.Timeout as error:
             LOGGER.error("Timeout reached, error=%s", error)
             raise Exception('Timeout reached {}sec, url is {}'.format(self.timeout, url))
 
-        LOGGER.debug("GET response: url=%s, response_data=%s", url, response.text)
+        LOGGER.debug("GET response: url=%s, response_data=%s", response.url, response.text)
         return self.dispatch_response(response)
 
     def post(self, url, payload=None, headers=None, check_token=True):
@@ -127,4 +131,4 @@ class Client:
             action_name = ''.join(action_name_list)
         else:
             action_name = method_name
-        return '%s/%s/%s' % (self._url, category_name, action_name)
+        return '%s/current/%s/%s' % (self._url, category_name, action_name)
