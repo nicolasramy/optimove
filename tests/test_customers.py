@@ -20,11 +20,11 @@ from helpers import login_callback, token_required
 def get_customers_by_action_callback(request):
     params = parse_qs(urlparse(request.url).query)
     if params['RecipientGroupID'][0] == '1' and params['ActionID'][0] == '2' and params['Date'][0] == '2015-06-24':
-        if 'CustomerAttribute' in params and 'CustomerAttributesDelimiter' in params:
-            if params['CustomerAttribute'][0] == 'Alias;Country' and params['CustomerAttributesDelimiter'][0] == ',':
+        if 'CustomerAttributes' in params and 'CustomerAttributesDelimiter' in params:
+            if params['CustomerAttributes'][0] == 'Alias;Country' and params['CustomerAttributesDelimiter'][0] == ',':
                 resp_body = [
-                    {'CustomerID': '231342', 'CustomerAttribute': 'BuddyZZ,UK'},
-                    {'CustomerID': '943157', 'CustomerAttribute': 'Pax65,DE'}
+                    {'CustomerID': '231342', 'CustomerAttributes': ['BuddyZZ', 'UK']},
+                    {'CustomerID': '943157', 'CustomerAttributes': ['Pax65', 'DE']}
                 ]
 
             else:
@@ -46,11 +46,11 @@ def get_customers_by_action_callback(request):
 def get_customer_actions_by_target_group_callback(request):
     params = parse_qs(urlparse(request.url).query)
     if params['TargetGroupID'][0] == '2' and params['Date'][0] == '2015-12-24':
-        if 'CustomerAttribute' in params and 'CustomerAttributesDelimiter' in params:
-            if params['CustomerAttribute'][0] == 'Alias;Country' and params['CustomerAttributesDelimiter'][0] == ',':
+        if 'CustomerAttributes' in params and 'CustomerAttributesDelimiter' in params:
+            if params['CustomerAttributes'][0] == 'Alias;Country' and params['CustomerAttributesDelimiter'][0] == ',':
                 resp_body = [
-                    {'CustomerID': 'A1342', 'ActionID': 49, 'ChannelID': 6, 'CustomerAttribute': 'BuddyZZ,UK'},
-                    {'CustomerID': 'G4650', 'ActionID': 49, 'ChannelID': 6, 'CustomerAttribute': 'Mighty6,ES'}
+                    {'CustomerID': 'A1342', 'ActionID': 49, 'ChannelID': 6, 'CustomerAttributes': ['BuddyZZ', 'UK']},
+                    {'CustomerID': 'G4650', 'ActionID': 49, 'ChannelID': 6, 'CustomerAttributes': ['Mighty6', 'ES']}
                 ]
 
             else:
@@ -72,11 +72,11 @@ def get_customer_actions_by_target_group_callback(request):
 def get_customer_one_time_actions_by_date_callback(request):
     params = parse_qs(urlparse(request.url).query)
     if params['Date'][0] == '2015-06-24':
-        if 'CustomerAttribute' in params and 'CustomerAttributesDelimiter' in params:
-            if params['CustomerAttribute'][0] == 'Alias;Country' and params['CustomerAttributesDelimiter'][0] == ',':
+        if 'CustomerAttributes' in params and 'CustomerAttributesDelimiter' in params:
+            if params['CustomerAttributes'][0] == 'Alias;Country' and params['CustomerAttributesDelimiter'][0] == ',':
                 resp_body = [
-                    {'CustomerID': '8D871', 'ActionID': 19, 'ChannelID': 3, 'CustomerAttribute': 'Yo999,UA'},
-                    {'CustomerID': '8U76T', 'ActionID': 19, 'ChannelID': 3, 'CustomerAttribute': 'Neto2,TR'}
+                    {'CustomerID': '8D871', 'ActionID': 19, 'ChannelID': 3, 'CustomerAttributes': ['Yo999', 'UA']},
+                    {'CustomerID': '8U76T', 'ActionID': 19, 'ChannelID': 3, 'CustomerAttributes': ['Neto2', 'TR']}
                 ]
 
             else:
@@ -98,13 +98,13 @@ def get_customer_one_time_actions_by_date_callback(request):
 def get_target_group_changers_callback(request):
     params = parse_qs(urlparse(request.url).query)
     if params['StartDate'][0] == '2015-09-01' and params['EndDate'][0] == '2015-09-30':
-        if 'CustomerAttribute' in params and 'CustomerAttributesDelimiter' in params:
-            if params['CustomerAttribute'][0] == 'Alias;Country' and params['CustomerAttributesDelimiter'][0] == ',':
+        if 'CustomerAttributes' in params and 'CustomerAttributesDelimiter' in params:
+            if params['CustomerAttributes'][0] == 'Alias;Country' and params['CustomerAttributesDelimiter'][0] == ',':
                 resp_body = [
                     {'CustomerID': '231342', 'InitialTargetGroupID': 4, 'FinalTargetGroupID': 12,
-                     'CustomerAttribute': 'BuddyZZ,UK'},
+                     'CustomerAttributes': ['BuddyZZ', 'UK']},
                     {'CustomerID': '931342', 'InitialTargetGroupID': -1, 'FinalTargetGroupID': 8,
-                     'CustomerAttribute': 'Pax65,DE'}
+                     'CustomerAttributes': ['Pax65', 'DE']}
                 ]
 
             else:
@@ -126,24 +126,24 @@ def get_target_group_changers_callback(request):
 def get_customer_attribute_changers_callback(request):
     params = parse_qs(urlparse(request.url).query)
     if params['StartDate'][0] == '2015-01-30' and params['EndDate'][0] == '2015-01-31'and \
-            params['ChangedCustomerAttribute'][0] == 'OptimailUnsubscribed':
+            params['ChangedCustomerAttributes'][0] == 'OptimailUnsubscribed':
         if 'CustomerAttributes' in params and 'CustomerAttributesDelimiter' in params:
             if params['CustomerAttributes'][0] == 'Alias;Country' and params['CustomerAttributesDelimiter'][0] == ',':
                 resp_body = [
-                    {'CustomerID': '231342', 'InitialCustomerAttribute': 'NULL',
-                     'FinalCustomerAttribute': 'SuperBrand', 'CustomerAttribute': 'BuddyZZ,UK'},
-                    {'CustomerID': '231343', 'InitialCustomerAttribute': 'SuperBrand',
-                     'FinalCustomerAttribute': 'Super Brand, Mega Brand', 'CustomerAttribute': 'Pax65,DE'}
+                    {'CustomerID': '231342', 'InitialCustomerAttributes': 'NULL',
+                     'FinalCustomerAttributes': 'SuperBrand', 'CustomerAttributes': ['BuddyZZ', 'UK']},
+                    {'CustomerID': '231343', 'InitialCustomerAttributes': 'SuperBrand',
+                     'FinalCustomerAttributes': 'Super Brand, Mega Brand', 'CustomerAttributes': ['Pax65', 'DE']}
                 ]
             else:
                 return 404, HEADERS['text'], 'Not Found'
 
         else:
             resp_body = [
-                {'CustomerID': '231342', 'InitialCustomerAttribute': 'NULL',
-                 'FinalCustomerAttribute': 'SuperBrand'},
-                {'CustomerID': '231343', 'InitialCustomerAttribute': 'SuperBrand',
-                 'FinalCustomerAttribute': 'Super Brand, Mega Brand'}
+                {'CustomerID': '231342', 'InitialCustomerAttributes': 'NULL',
+                 'FinalCustomerAttributes': 'SuperBrand'},
+                {'CustomerID': '231343', 'InitialCustomerAttributes': 'SuperBrand',
+                 'FinalCustomerAttributes': 'Super Brand, Mega Brand'}
             ]
 
         return 200, HEADERS['json'], json.dumps(resp_body)
@@ -156,7 +156,7 @@ def get_customer_attribute_changers_callback(request):
 def get_customer_future_values_callback(request):
     params = parse_qs(urlparse(request.url).query)
 
-    if 'LifecycleStageID' in params and 'CustomerAttribute' not in params and 'CustomerAttributeValue' not in params:
+    if 'LifecycleStageID' in params and 'CustomerAttributes' not in params and 'CustomerAttributeValue' not in params:
         if params['LifecycleStageID'][0] == '6':
             resp_body = [
                 {'CustomerID': '631942', 'FutureValue': 342.65},
@@ -167,8 +167,8 @@ def get_customer_future_values_callback(request):
         else:
             return 404, HEADERS['text'], 'Not Found'
 
-    elif 'LifecycleStageID' not in params and 'CustomerAttribute' in params and 'CustomerAttributeValue' in params:
-        if params['CustomerAttribute'][0] == 'Country' and params['CustomerAttributeValue'][0] == 'Australia':
+    elif 'LifecycleStageID' not in params and 'CustomerAttributes' in params and 'CustomerAttributeValue' in params:
+        if params['CustomerAttributes'][0] == 'Country' and params['CustomerAttributeValue'][0] == 'Australia':
             resp_body = [
                 {'CustomerID': '631942', 'FutureValue': 342.65},
                 {'CustomerID': '257938', 'FutureValue': 102.33}
@@ -256,13 +256,13 @@ def get_customer_send_details_by_campaign_callback(request):
 def get_customer_send_details_by_channel_callback(request):
     params = parse_qs(urlparse(request.url).query)
     if params['ChannelID'][0] == '5' and params['CampaignID'][0] == '65874':
-        if 'CustomerAttribute' in params and 'CustomerAttributesDelimiter' in params:
-            if params['CustomerAttribute'][0] == 'Email;Country' and params['CustomerAttributesDelimiter'][0] == ',':
+        if 'CustomerAttributes' in params and 'CustomerAttributesDelimiter' in params:
+            if params['CustomerAttributes'][0] == 'Email;Country' and params['CustomerAttributesDelimiter'][0] == ',':
                 resp_body = [
                     {'CustomerID': '96134', 'TemplateID': 14, 'ScheduledTime': '2016-08-30 10:00:00',
-                     'CustomerAttribute': 'jdavis@aol.com,US'},
+                     'CustomerAttributes': ['jdavis@aol.com', 'US']},
                     {'CustomerID': '13482', 'TemplateID': 14, 'ScheduledTime': '2016-08-30 10:00:00',
-                     'CustomerAttribute': 'plsmits@gmail.com,UK'}
+                     'CustomerAttributes': ['plsmits@gmail.com', 'UK']}
                 ]
 
             else:
@@ -312,14 +312,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customers_by_action(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/customers/GetCustomersByAction',
+            DEFAULT_URL + '/current/customers/GetCustomersByAction',
             callback=get_customers_by_action_callback,
             content_type='application/json'
         )
@@ -332,14 +332,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customers_by_action_with_empty_date(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/customers/GetCustomersByAction',
+            DEFAULT_URL + '/current/customers/GetCustomersByAction',
             callback=get_customers_by_action_callback,
             content_type='application/json'
         )
@@ -351,14 +351,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customers_by_action_with_wrong_date(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/customers/GetCustomersByAction',
+            DEFAULT_URL + '/current/customers/GetCustomersByAction',
             callback=get_customers_by_action_callback,
             content_type='application/json'
         )
@@ -371,14 +371,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customers_by_action_with_attributes(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/customers/GetCustomersByAction',
+            DEFAULT_URL + '/current/customers/GetCustomersByAction',
             callback=get_customers_by_action_callback,
             content_type='application/json'
         )
@@ -406,14 +406,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customers_by_action_with_wrong_delimiter(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/customers/GetCustomersByAction',
+            DEFAULT_URL + '/current/customers/GetCustomersByAction',
             callback=get_customers_by_action_callback,
             content_type='application/json'
         )
@@ -426,14 +426,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_actions_by_target_group(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/customers/GetCustomerActionsByTargetGroup',
+            DEFAULT_URL + '/current/customers/GetCustomerActionsByTargetGroup',
             callback=get_customer_actions_by_target_group_callback,
             content_type='application/json'
         )
@@ -457,14 +457,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_actions_by_target_group_with_empty_date(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/customers/GetCustomerActionsByTargetGroup',
+            DEFAULT_URL + '/current/customers/GetCustomerActionsByTargetGroup',
             callback=get_customer_actions_by_target_group_callback,
             content_type='application/json'
         )
@@ -476,14 +476,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_actions_by_target_group_with_wrong_date(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/customers/GetCustomerActionsByTargetGroup',
+            DEFAULT_URL + '/current/customers/GetCustomerActionsByTargetGroup',
             callback=get_customer_actions_by_target_group_callback,
             content_type='application/json'
         )
@@ -496,14 +496,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_actions_by_target_group_with_attributes(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/customers/GetCustomerActionsByTargetGroup',
+            DEFAULT_URL + '/current/customers/GetCustomerActionsByTargetGroup',
             callback=get_customer_actions_by_target_group_callback,
             content_type='application/json'
         )
@@ -538,14 +538,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_actions_by_target_group_with_wrong_delimiter(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/customers/GetCustomerActionsByTargetGroup',
+            DEFAULT_URL + '/current/customers/GetCustomerActionsByTargetGroup',
             callback=get_customer_actions_by_target_group_callback,
             content_type='application/json'
         )
@@ -558,14 +558,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_one_time_actions_by_date(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/customers/GetCustomerOneTimeActionsByDate',
+            DEFAULT_URL + '/current/customers/GetCustomerOneTimeActionsByDate',
             callback=get_customer_one_time_actions_by_date_callback,
             content_type='application/json'
         )
@@ -589,14 +589,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_one_time_actions_by_date_with_empty_date(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/customers/GetCustomerOneTimeActionsByDate',
+            DEFAULT_URL + '/current/customers/GetCustomerOneTimeActionsByDate',
             callback=get_customer_one_time_actions_by_date_callback,
             content_type='application/json'
         )
@@ -608,14 +608,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_one_time_actions_by_date_with_wrong_date(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/customers/GetCustomerOneTimeActionsByDate',
+            DEFAULT_URL + '/current/customers/GetCustomerOneTimeActionsByDate',
             callback=get_customer_one_time_actions_by_date_callback,
             content_type='application/json'
         )
@@ -628,14 +628,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_one_time_actions_by_date_with_attributes(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/customers/GetCustomerOneTimeActionsByDate',
+            DEFAULT_URL + '/current/customers/GetCustomerOneTimeActionsByDate',
             callback=get_customer_one_time_actions_by_date_callback,
             content_type='application/json'
         )
@@ -667,14 +667,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_one_time_actions_by_date_with_wrong_delimiter(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/customers/GetCustomerOneTimeActionsByDate',
+            DEFAULT_URL + '/current/customers/GetCustomerOneTimeActionsByDate',
             callback=get_customer_one_time_actions_by_date_callback,
             content_type='application/json'
         )
@@ -687,14 +687,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_target_group_changers(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/customers/GetTargetGroupChangers',
+            DEFAULT_URL + '/current/customers/GetTargetGroupChangers',
             callback=get_target_group_changers_callback,
             content_type='application/json'
         )
@@ -718,14 +718,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_target_group_changers_with_empty_date(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/customers/GetTargetGroupChangers',
+            DEFAULT_URL + '/current/customers/GetTargetGroupChangers',
             callback=get_target_group_changers_callback,
             content_type='application/json'
         )
@@ -737,14 +737,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_target_group_changers_with_wrong_date(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/customers/GetTargetGroupChangers',
+            DEFAULT_URL + '/current/customers/GetTargetGroupChangers',
             callback=get_target_group_changers_callback,
             content_type='application/json'
         )
@@ -757,14 +757,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_target_group_changers_with_attributes(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/customers/GetTargetGroupChangers',
+            DEFAULT_URL + '/current/customers/GetTargetGroupChangers',
             callback=get_target_group_changers_callback,
             content_type='application/json'
         )
@@ -796,14 +796,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_target_group_changers_with_wrong_delimiter(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/customers/GetTargetGroupChangers',
+            DEFAULT_URL + '/current/customers/GetTargetGroupChangers',
             callback=get_target_group_changers_callback,
             content_type='application/json'
         )
@@ -816,14 +816,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_attribute_changers(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/customers/GetCustomerAttributeChangers',
+            DEFAULT_URL + '/current/customers/GetCustomerAttributeChangers',
             callback=get_customer_attribute_changers_callback,
             content_type='application/json'
         )
@@ -847,14 +847,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_attribute_changers_with_empty_date(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/customers/GetCustomerAttributeChangers',
+            DEFAULT_URL + '/current/customers/GetCustomerAttributeChangers',
             callback=get_customer_attribute_changers_callback,
             content_type='application/json'
         )
@@ -867,14 +867,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_attribute_changers_with_wrong_date(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/customers/GetCustomerAttributeChangers',
+            DEFAULT_URL + '/current/customers/GetCustomerAttributeChangers',
             callback=get_customer_attribute_changers_callback,
             content_type='application/json'
         )
@@ -887,14 +887,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_attribute_changers_with_attributes(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/customers/GetCustomerAttributeChangers',
+            DEFAULT_URL + '/current/customers/GetCustomerAttributeChangers',
             callback=get_customer_attribute_changers_callback,
             content_type='application/json'
         )
@@ -927,14 +927,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_attribute_changers_with_wrong_delimiter(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/customers/GetCustomerAttributeChangers',
+            DEFAULT_URL + '/current/customers/GetCustomerAttributeChangers',
             callback=get_customer_attribute_changers_callback,
             content_type='application/json'
         )
@@ -947,14 +947,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_future_values(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/customers/GetCustomerFutureValues',
+            DEFAULT_URL + '/current/customers/GetCustomerFutureValues',
             callback=get_customer_future_values_callback,
             content_type='application/json'
         )
@@ -970,14 +970,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_future_values_alt(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/customers/GetCustomerFutureValues',
+            DEFAULT_URL + '/current/customers/GetCustomerFutureValues',
             callback=get_customer_future_values_callback,
             content_type='application/json'
         )
@@ -993,14 +993,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_future_values_without_params(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/customers/GetCustomerFutureValues',
+            DEFAULT_URL + '/current/customers/GetCustomerFutureValues',
             callback=get_customer_future_values_callback,
             content_type='application/json'
         )
@@ -1012,14 +1012,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_future_values_with_wrong_params_combination(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/customers/GetCustomerFutureValues',
+            DEFAULT_URL + '/current/customers/GetCustomerFutureValues',
             callback=get_customer_future_values_callback,
             content_type='application/json'
         )
@@ -1031,14 +1031,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_future_values_with_wrong_customer_attribute(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/customers/GetCustomerFutureValues',
+            DEFAULT_URL + '/current/customers/GetCustomerFutureValues',
             callback=get_customer_future_values_callback,
             content_type='application/json'
         )
@@ -1051,14 +1051,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_last_action_executed(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/customers/GetCustomerLastActionExecuted',
+            DEFAULT_URL + '/current/customers/GetCustomerLastActionExecuted',
             callback=get_customer_last_action_executed_callback,
             content_type='application/json'
         )
@@ -1077,14 +1077,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_last_action_executed_with_empty_customer_id(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/customers/GetCustomerLastActionExecuted',
+            DEFAULT_URL + '/current/customers/GetCustomerLastActionExecuted',
             callback=get_customer_last_action_executed_callback,
             content_type='application/json'
         )
@@ -1096,14 +1096,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_last_action_executed_with_wrong_customer_id(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/customers/GetCustomerLastActionExecuted',
+            DEFAULT_URL + '/current/customers/GetCustomerLastActionExecuted',
             callback=get_customer_last_action_executed_callback,
             content_type='application/json'
         )
@@ -1116,14 +1116,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_action_details_by_date(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/customers/GetCustomerActionDetailsByDate',
+            DEFAULT_URL + '/current/customers/GetCustomerActionDetailsByDate',
             callback=get_customer_action_details_by_date_callback,
             content_type='application/json'
         )
@@ -1149,14 +1149,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_action_details_by_date_with_empty_date(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/customers/GetCustomerActionDetailsByDate',
+            DEFAULT_URL + '/current/customers/GetCustomerActionDetailsByDate',
             callback=get_customer_action_details_by_date_callback,
             content_type='application/json'
         )
@@ -1168,14 +1168,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_action_details_by_date_with_wrong_date(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/customers/GetCustomerActionDetailsByDate',
+            DEFAULT_URL + '/current/customers/GetCustomerActionDetailsByDate',
             callback=get_customer_action_details_by_date_callback,
             content_type='application/json'
         )
@@ -1188,14 +1188,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_action_details_by_date(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/customers/GetCustomerActionDetailsByDate',
+            DEFAULT_URL + '/current/customers/GetCustomerActionDetailsByDate',
             callback=get_customer_action_details_by_date_callback,
             content_type='application/json'
         )
@@ -1221,14 +1221,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_action_details_by_date_with_empty_date(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/customers/GetCustomerActionDetailsByDate',
+            DEFAULT_URL + '/current/customers/GetCustomerActionDetailsByDate',
             callback=get_customer_action_details_by_date_callback,
             content_type='application/json'
         )
@@ -1240,14 +1240,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_action_details_by_date_with_wrong_date(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/customers/GetCustomerActionDetailsByDate',
+            DEFAULT_URL + '/current/customers/GetCustomerActionDetailsByDate',
             callback=get_customer_action_details_by_date_callback,
             content_type='application/json'
         )
@@ -1260,14 +1260,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customers_action_ended_by_date(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/customers/GetCustomersActionEndedByDate',
+            DEFAULT_URL + '/current/customers/GetCustomersActionEndedByDate',
             callback=get_customers_action_ended_by_date_callback,
             content_type='application/json'
         )
@@ -1297,14 +1297,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customers_action_ended_by_date_with_empty_date(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/customers/GetCustomersActionEndedByDate',
+            DEFAULT_URL + '/current/customers/GetCustomersActionEndedByDate',
             callback=get_customers_action_ended_by_date_callback,
             content_type='application/json'
         )
@@ -1316,14 +1316,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customers_action_ended_by_date_with_wrong_date(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/customers/GetCustomersActionEndedByDate',
+            DEFAULT_URL + '/current/customers/GetCustomersActionEndedByDate',
             callback=get_customers_action_ended_by_date_callback,
             content_type='application/json'
         )
@@ -1336,14 +1336,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_send_details_by_campaign(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/customers/GetCustomerSendDetailsByCampaign',
+            DEFAULT_URL + '/current/customers/GetCustomerSendDetailsByCampaign',
             callback=get_customer_send_details_by_campaign_callback,
             content_type='application/json'
         )
@@ -1369,14 +1369,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_send_details_by_campaign_with_empty_campaign_id(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/customers/GetCustomerSendDetailsByCampaign',
+            DEFAULT_URL + '/current/customers/GetCustomerSendDetailsByCampaign',
             callback=get_customer_send_details_by_campaign_callback,
             content_type='application/json'
         )
@@ -1388,14 +1388,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_send_details_by_campaign_with_templates(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/customers/GetCustomerSendDetailsByCampaign',
+            DEFAULT_URL + '/current/customers/GetCustomerSendDetailsByCampaign',
             callback=get_customer_send_details_by_campaign_callback,
             content_type='application/json'
         )
@@ -1423,14 +1423,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_send_details_by_campaign_with_wrong_campaign_id(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/customers/GetCustomerSendDetailsByCampaign',
+            DEFAULT_URL + '/current/customers/GetCustomerSendDetailsByCampaign',
             callback=get_customer_send_details_by_campaign_callback,
             content_type='application/json'
         )
@@ -1443,14 +1443,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_send_details_by_channel(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/customers/GetCustomerSendDetailsByChannel',
+            DEFAULT_URL + '/current/customers/GetCustomerSendDetailsByChannel',
             callback=get_customer_send_details_by_channel_callback,
             content_type='application/json'
         )
@@ -1474,14 +1474,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_send_details_by_channel_with_empty_campaign_id(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/customers/GetCustomerSendDetailsByChannel',
+            DEFAULT_URL + '/current/customers/GetCustomerSendDetailsByChannel',
             callback=get_customer_send_details_by_channel_callback,
             content_type='application/json'
         )
@@ -1493,14 +1493,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_send_details_by_channel_with_attributes(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/customers/GetCustomerSendDetailsByChannel',
+            DEFAULT_URL + '/current/customers/GetCustomerSendDetailsByChannel',
             callback=get_customer_send_details_by_channel_callback,
             content_type='application/json'
         )
@@ -1532,14 +1532,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_send_details_by_channel_with_wrong_delimiter(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/customers/GetCustomerSendDetailsByChannel',
+            DEFAULT_URL + '/current/customers/GetCustomerSendDetailsByChannel',
             callback=get_customer_send_details_by_channel_callback,
             content_type='application/json'
         )
@@ -1552,14 +1552,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_customer_send_details_by_channel_with_wrong_campaign_id(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/customers/GetCustomerSendDetailsByChannel',
+            DEFAULT_URL + '/current/customers/GetCustomerSendDetailsByChannel',
             callback=get_customer_send_details_by_channel_callback,
             content_type='application/json'
         )
@@ -1572,14 +1572,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_currently_targeted_customers(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/customers/GetCurrentlyTargetedCustomers',
+            DEFAULT_URL + '/current/customers/GetCurrentlyTargetedCustomers',
             callback=get_currently_targeted_customers_callback,
             content_type='application/json'
         )
@@ -1607,14 +1607,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_canceled_campaign_customers(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/customers/GetCanceledCampaignCustomers',
+            DEFAULT_URL + '/current/customers/GetCanceledCampaignCustomers',
             callback=get_canceled_campaign_customers_callback,
             content_type='application/json'
         )
@@ -1638,14 +1638,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_canceled_campaign_customers_with_empty_campaign_id(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/customers/GetCanceledCampaignCustomers',
+            DEFAULT_URL + '/current/customers/GetCanceledCampaignCustomers',
             callback=get_canceled_campaign_customers_callback,
             content_type='application/json'
         )
@@ -1657,14 +1657,14 @@ class TestCustomers(unittest.TestCase):
     def test_get_canceled_campaign_customers_with_wrong_campaign_id(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/customers/GetCanceledCampaignCustomers',
+            DEFAULT_URL + '/current/customers/GetCanceledCampaignCustomers',
             callback=get_canceled_campaign_customers_callback,
             content_type='application/json'
         )

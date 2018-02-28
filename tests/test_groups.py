@@ -69,14 +69,14 @@ class TestGroups(unittest.TestCase):
     def test_get_target_group_name(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/groups/GetTargetGroupName',
+            DEFAULT_URL + '/current/groups/GetTargetGroupName',
             callback=get_target_group_name_callback,
             content_type='application/json'
         )
@@ -89,14 +89,14 @@ class TestGroups(unittest.TestCase):
     def test_get_target_group_name_with_empty_target_group_id(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/groups/GetTargetGroupName',
+            DEFAULT_URL + '/current/groups/GetTargetGroupName',
             callback=get_target_group_name_callback,
             content_type='application/json'
         )
@@ -108,14 +108,14 @@ class TestGroups(unittest.TestCase):
     def test_get_target_group_name_with_wrong_name(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/groups/GetTargetGroupName',
+            DEFAULT_URL + '/current/groups/GetTargetGroupName',
             callback=get_target_group_name_callback,
             content_type='application/json'
         )
@@ -128,14 +128,14 @@ class TestGroups(unittest.TestCase):
     def test_get_target_group_id(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/groups/GetTargetGroupID',
+            DEFAULT_URL + '/current/groups/GetTargetGroupID',
             callback=get_target_group_id_callback,
             content_type='application/json'
         )
@@ -148,14 +148,14 @@ class TestGroups(unittest.TestCase):
     def test_get_target_group_id_with_empty_name(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/groups/GetTargetGroupID',
+            DEFAULT_URL + '/current/groups/GetTargetGroupID',
             callback=get_target_group_id_callback,
             content_type='application/json'
         )
@@ -167,14 +167,14 @@ class TestGroups(unittest.TestCase):
     def test_get_target_group_id_with_wrong_name(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/groups/GetTargetGroupID',
+            DEFAULT_URL + '/current/groups/GetTargetGroupID',
             callback=get_target_group_id_callback,
             content_type='application/json'
         )
@@ -187,14 +187,14 @@ class TestGroups(unittest.TestCase):
     def test_get_target_groups_by_date(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/groups/GetTargetGroupsByDate',
+            DEFAULT_URL + '/current/groups/GetTargetGroupsByDate',
             callback=get_target_groups_by_date_callback,
             content_type='application/json'
         )
@@ -207,14 +207,14 @@ class TestGroups(unittest.TestCase):
     def test_get_target_groups_by_date_with_empty_date(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/groups/GetTargetGroupsByDate',
+            DEFAULT_URL + '/current/groups/GetTargetGroupsByDate',
             callback=get_target_groups_by_date_callback,
             content_type='application/json'
         )
@@ -226,14 +226,14 @@ class TestGroups(unittest.TestCase):
     def test_get_target_groups_by_date_with_wrong_date(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/groups/GetTargetGroupsByDate',
+            DEFAULT_URL + '/current/groups/GetTargetGroupsByDate',
             callback=get_target_groups_by_date_callback,
             content_type='application/json'
         )
@@ -246,14 +246,14 @@ class TestGroups(unittest.TestCase):
     def test_get_target_group_details(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/groups/GetTargetGroupDetails',
+            DEFAULT_URL + '/current/groups/GetTargetGroupDetails',
             callback=get_target_group_details_callback,
             content_type='application/json'
         )
