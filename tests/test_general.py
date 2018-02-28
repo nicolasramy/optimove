@@ -51,7 +51,7 @@ class TestGeneral(unittest.TestCase):
     def test_login_success(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
@@ -63,7 +63,7 @@ class TestGeneral(unittest.TestCase):
     def test_login_fail(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
@@ -75,7 +75,7 @@ class TestGeneral(unittest.TestCase):
     def test_login_no_credentials(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
@@ -87,14 +87,14 @@ class TestGeneral(unittest.TestCase):
     def test_last_update_date(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/general/GetLastDataUpdate',
+            DEFAULT_URL + '/current/general/GetLastDataUpdate',
             callback=get_last_data_update_callback,
             content_type='application/json'
         )
@@ -107,14 +107,14 @@ class TestGeneral(unittest.TestCase):
     def test_register_event_listener(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/RegisterEventListener',
+            DEFAULT_URL + '/current/general/RegisterEventListener',
             callback=register_event_listener_callback,
             content_type='application/json'
         )
@@ -128,14 +128,14 @@ class TestGeneral(unittest.TestCase):
     def test_register_event_listener_with_empty_url(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/RegisterEventListener',
+            DEFAULT_URL + '/current/general/RegisterEventListener',
             callback=register_event_listener_callback,
             content_type='application/json'
         )
@@ -148,14 +148,14 @@ class TestGeneral(unittest.TestCase):
     def test_unregister_event_listener(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/UnregisterEventListener',
+            DEFAULT_URL + '/current/general/UnregisterEventListener',
             callback=unregister_event_listener_callback,
             content_type='application/json'
         )
@@ -168,14 +168,14 @@ class TestGeneral(unittest.TestCase):
     def test_unregister_event_listener_with_empty_event_type(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/UnregisterEventListener',
+            DEFAULT_URL + '/current/general/UnregisterEventListener',
             callback=unregister_event_listener_callback,
             content_type='application/json'
         )

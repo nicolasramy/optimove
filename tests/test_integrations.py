@@ -123,14 +123,14 @@ class TestIntegrations(unittest.TestCase):
     def test_add_promotions(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/integrations/AddPromotions',
+            DEFAULT_URL + '/current/integrations/AddPromotions',
             callback=add_promotions_callback,
             content_type='application/json'
         )
@@ -146,14 +146,14 @@ class TestIntegrations(unittest.TestCase):
     def test_add_promotions_with_empty_promotions(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/integrations/AddPromotions',
+            DEFAULT_URL + '/current/integrations/AddPromotions',
             callback=add_promotions_callback,
             content_type='application/json'
         )
@@ -165,14 +165,14 @@ class TestIntegrations(unittest.TestCase):
     def test_add_promotions_overflow(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/integrations/AddPromotions',
+            DEFAULT_URL + '/current/integrations/AddPromotions',
             callback=add_promotions_callback,
             content_type='application/json'
         )
@@ -189,14 +189,14 @@ class TestIntegrations(unittest.TestCase):
     def test_get_promotions(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/integrations/GetPromotions',
+            DEFAULT_URL + '/current/integrations/GetPromotions',
             callback=get_promotions_callback,
             content_type='application/json'
         )
@@ -212,14 +212,14 @@ class TestIntegrations(unittest.TestCase):
     def test_delete_promotions(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/integrations/DeletePromotions',
+            DEFAULT_URL + '/current/integrations/DeletePromotions',
             callback=delete_promotions_callback,
             content_type='application/json'
         )
@@ -232,14 +232,14 @@ class TestIntegrations(unittest.TestCase):
     def test_delete_promotions_with_empty_promotions(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/integrations/DeletePromotions',
+            DEFAULT_URL + '/current/integrations/DeletePromotions',
             callback=delete_promotions_callback,
             content_type='application/json'
         )
@@ -251,14 +251,14 @@ class TestIntegrations(unittest.TestCase):
     def test_delete_promotions_overflow(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/integrations/DeletePromotions',
+            DEFAULT_URL + '/current/integrations/DeletePromotions',
             callback=delete_promotions_callback,
             content_type='application/json'
         )
@@ -275,14 +275,14 @@ class TestIntegrations(unittest.TestCase):
     def test_add_channel_templates(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/integrations/AddChannelTemplates',
+            DEFAULT_URL + '/current/integrations/AddChannelTemplates',
             callback=add_channel_templates_callback,
             content_type='application/json'
         )
@@ -298,14 +298,14 @@ class TestIntegrations(unittest.TestCase):
     def test_add_channel_templates_with_empty_channel_id(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/integrations/AddChannelTemplates',
+            DEFAULT_URL + '/current/integrations/AddChannelTemplates',
             callback=add_channel_templates_callback,
             content_type='application/json'
         )
@@ -320,14 +320,14 @@ class TestIntegrations(unittest.TestCase):
     def test_add_channel_templates_overflow(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/integrations/AddChannelTemplates',
+            DEFAULT_URL + '/current/integrations/AddChannelTemplates',
             callback=add_channel_templates_callback,
             content_type='application/json'
         )
@@ -352,14 +352,14 @@ class TestIntegrations(unittest.TestCase):
     def test_get_channels_templates(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/integrations/GetChannelTemplates',
+            DEFAULT_URL + '/current/integrations/GetChannelTemplates',
             callback=get_channel_templates_callback,
             content_type='application/json'
         )
@@ -375,14 +375,14 @@ class TestIntegrations(unittest.TestCase):
     def test_get_channels_templates_with_empty_channel_id(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/integrations/GetChannelTemplates',
+            DEFAULT_URL + '/current/integrations/GetChannelTemplates',
             callback=get_channel_templates_callback,
             content_type='application/json'
         )
@@ -394,14 +394,14 @@ class TestIntegrations(unittest.TestCase):
     def test_get_channels_templates_with_wrong_channel_id(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.GET,
-            DEFAULT_URL + '/integrations/GetChannelTemplates',
+            DEFAULT_URL + '/current/integrations/GetChannelTemplates',
             callback=get_channel_templates_callback,
             content_type='application/json'
         )
@@ -414,14 +414,14 @@ class TestIntegrations(unittest.TestCase):
     def test_delete_channel_templates(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/integrations/DeleteChannelTemplates',
+            DEFAULT_URL + '/current/integrations/DeleteChannelTemplates',
             callback=delete_channel_templates_callback,
             content_type='application/json'
         )
@@ -437,14 +437,14 @@ class TestIntegrations(unittest.TestCase):
     def test_delete_channel_templates_with_empty_channel_templates(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/integrations/DeleteChannelTemplates',
+            DEFAULT_URL + '/current/integrations/DeleteChannelTemplates',
             callback=delete_channel_templates_callback,
             content_type='application/json'
         )
@@ -456,14 +456,14 @@ class TestIntegrations(unittest.TestCase):
     def test_delete_channel_templates_overflow(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/integrations/DeleteChannelTemplates',
+            DEFAULT_URL + '/current/integrations/DeleteChannelTemplates',
             callback=delete_channel_templates_callback,
             content_type='application/json'
         )
@@ -483,14 +483,14 @@ class TestIntegrations(unittest.TestCase):
     def test_add_channel_apps(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/integrations/AddChannelApps',
+            DEFAULT_URL + '/current/integrations/AddChannelApps',
             callback=add_channel_apps_callback,
             content_type='application/json'
         )
@@ -506,14 +506,14 @@ class TestIntegrations(unittest.TestCase):
     def test_add_channel_apps_with_empty_channel_id(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/integrations/AddChannelApps',
+            DEFAULT_URL + '/current/integrations/AddChannelApps',
             callback=add_channel_apps_callback,
             content_type='application/json'
         )
@@ -528,14 +528,14 @@ class TestIntegrations(unittest.TestCase):
     def test_add_channel_apps_overflow(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/integrations/AddChannelApps',
+            DEFAULT_URL + '/current/integrations/AddChannelApps',
             callback=add_channel_apps_callback,
             content_type='application/json'
         )
@@ -552,14 +552,14 @@ class TestIntegrations(unittest.TestCase):
     def test_delete_channel_apps(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/integrations/DeleteChannelApps',
+            DEFAULT_URL + '/current/integrations/DeleteChannelApps',
             callback=delete_channel_apps_callback,
             content_type='application/json'
         )
@@ -575,14 +575,14 @@ class TestIntegrations(unittest.TestCase):
     def test_delete_channel_apps_with_empty_channel_apps(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/integrations/DeleteChannelApps',
+            DEFAULT_URL + '/current/integrations/DeleteChannelApps',
             callback=delete_channel_apps_callback,
             content_type='application/json'
         )
@@ -594,14 +594,14 @@ class TestIntegrations(unittest.TestCase):
     def test_delete_channel_apps_overflow(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/integrations/DeleteChannelApps',
+            DEFAULT_URL + '/current/integrations/DeleteChannelApps',
             callback=delete_channel_apps_callback,
             content_type='application/json'
         )
@@ -621,14 +621,14 @@ class TestIntegrations(unittest.TestCase):
     def test_update_campaign_metrics(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/integrations/UpdateCampaignMetrics',
+            DEFAULT_URL + '/current/integrations/UpdateCampaignMetrics',
             callback=update_campaign_metrics_callback,
             content_type='application/json'
         )
@@ -652,14 +652,14 @@ class TestIntegrations(unittest.TestCase):
     def test_update_campaign_metrics_with_empty_metrics(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/integrations/UpdateCampaignMetrics',
+            DEFAULT_URL + '/current/integrations/UpdateCampaignMetrics',
             callback=update_campaign_metrics_callback,
             content_type='application/json'
         )
@@ -671,14 +671,14 @@ class TestIntegrations(unittest.TestCase):
     def test_update_campaign_metrics_overflow(self):
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/general/login',
+            DEFAULT_URL + '/current/general/login',
             callback=login_callback,
             content_type='application/json'
         )
 
         responses.add_callback(
             responses.POST,
-            DEFAULT_URL + '/integrations/UpdateCampaignMetrics',
+            DEFAULT_URL + '/current/integrations/UpdateCampaignMetrics',
             callback=update_campaign_metrics_callback,
             content_type='application/json'
         )
