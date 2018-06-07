@@ -52,7 +52,7 @@ class Client:
         return headers
 
     def _refresh_token(self):
-        if not self.expire or (self.expire - datetime.utcnow()).seconds >= 1200:
+        if not self.expire or (datetime.utcnow() - self.expire).seconds >= 1200:
             self.general.login(self.general.username, self.general.password)
         return
 
