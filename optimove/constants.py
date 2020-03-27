@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 AUTHORIZED_DELIMITERS = (',', ';')
 UNAUTHORIZED_DELIMITERS = (':', '/', '?', '&', '#', '%', '$', '+', '=')
 

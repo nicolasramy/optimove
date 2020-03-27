@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
+from __future__ import absolute_import, unicode_literals
 
 import json
 import random
 import string
 import unittest
-from urlparse import parse_qs, urlparse
+from six.moves.urllib.parse import parse_qs, urlparse
 
 from optimove.client import Client
 from optimove.constants import DEFAULT_URL
 from optimove.integrations import Integrations
 import responses
 
-from constants import HEADERS
-from helpers import login_callback, token_required
+from tests.constants import HEADERS
+from tests.helpers import login_callback, token_required
 
 
 """Callbacks"""
@@ -473,7 +473,7 @@ class TestIntegrations(unittest.TestCase):
         for channel_template_id in range(150):
             channel_template = {
                 'template_id': channel_template_id,
-                'channel_id': random.choice(range(1, 5))
+                'channel_id': random.randint(1, 4)
             }
             too_much_channel_templates.append(channel_template)
 
@@ -611,7 +611,7 @@ class TestIntegrations(unittest.TestCase):
         for channel_app_id in range(150):
             channel_app = {
                 'app_id': channel_app_id,
-                'channel_id': random.choice(range(1, 5))
+                'channel_id': random.randint(1, 4)
             }
             too_much_channel_apps.append(channel_app)
 
@@ -686,7 +686,7 @@ class TestIntegrations(unittest.TestCase):
         client = Client('username', 'password')
         too_much_metrics = []
         for campaign_id in range(25):
-            template_id = random.choice(range(1, 100))
+            template_id = random.randint(1, 99)
             too_much_metrics.append({
                 'channel_id': 3,
                 'campaign_id': campaign_id,

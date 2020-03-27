@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
+from __future__ import absolute_import, unicode_literals
 
 from collections import OrderedDict
 from datetime import datetime
@@ -9,20 +9,20 @@ import logging
 
 import requests
 
-from constants import DEFAULT_URL, TIMEOUT
-from general import General
-from model import Model
-from actions import Actions
-from groups import Groups
-from customers import Customers
-from segments import Segments
-from integrations import Integrations
+from optimove.constants import DEFAULT_URL, TIMEOUT
+from optimove.general import General
+from optimove.model import Model
+from optimove.actions import Actions
+from optimove.groups import Groups
+from optimove.customers import Customers
+from optimove.segments import Segments
+from optimove.integrations import Integrations
 
 
 LOGGER = logging.getLogger(__name__)
 
 
-class Client:
+class Client(object):
     token = None
     expire = None
 
