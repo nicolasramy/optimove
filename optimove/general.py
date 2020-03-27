@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-
 from datetime import datetime
-from urllib import quote_plus
+from six.moves.urllib.parse import quote_plus
 
 
 class General(object):

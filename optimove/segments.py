@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from . import constants
+from optimove.constants import AUTHORIZED_DELIMITERS, UNAUTHORIZED_DELIMITERS
 
 
 class Segments(object):
@@ -58,7 +58,7 @@ class Segments(object):
             data['CustomerAttributes'] = ';'.join(attributes)
 
             if delimiter:
-                if delimiter in constants.AUTHORIZED_DELIMITERS and delimiter not in constants.UNAUTHORIZED_DELIMITERS:
+                if delimiter in AUTHORIZED_DELIMITERS and delimiter not in UNAUTHORIZED_DELIMITERS:
                     data['CustomerAttributesDelimiter'] = delimiter
                 else:
                     raise Exception('Invalid delimiter')
@@ -94,7 +94,7 @@ class Segments(object):
             data['CustomerAttributes'] = ';'.join(attributes)
 
             if delimiter:
-                if delimiter in constants.AUTHORIZED_DELIMITERS and delimiter not in constants.UNAUTHORIZED_DELIMITERS:
+                if delimiter in AUTHORIZED_DELIMITERS and delimiter not in UNAUTHORIZED_DELIMITERS:
                     data['CustomerAttributesDelimiter'] = delimiter
                 else:
                     raise Exception('Invalid delimiter')

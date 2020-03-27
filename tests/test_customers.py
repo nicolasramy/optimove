@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
+from __future__ import absolute_import, unicode_literals
 
 import json
 import unittest
-from urlparse import parse_qs, urlparse
+from six.moves.urllib.parse import parse_qs, urlparse
 
 from optimove.client import Client
 from optimove.constants import DEFAULT_URL
 import responses
 
-from constants import HEADERS
-from helpers import login_callback, token_required
+from tests.constants import HEADERS
+from tests.helpers import login_callback, token_required
 
 
 """Callbacks"""

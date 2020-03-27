@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
+from __future__ import unicode_literals, absolute_import
 
 import json
 import unittest
@@ -9,8 +9,8 @@ from optimove.general import General
 from optimove.constants import DEFAULT_URL
 import responses
 
-from constants import HEADERS, TOKEN
-from helpers import login_callback, token_required
+from tests.constants import HEADERS, TOKEN
+from tests.helpers import login_callback, token_required
 
 
 """Callbacks"""

@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
+from __future__ import unicode_literals, absolute_import
 
 import json
 
-from constants import TOKEN, HEADERS
+from tests.constants import TOKEN, HEADERS
 
 
 def login_callback(request):
