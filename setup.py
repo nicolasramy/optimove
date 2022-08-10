@@ -16,7 +16,7 @@ setup(
     description='This library allows you to quickly and easily use the Optimove Web API v3 via Python',
     long_description=open('README.rst').read(),
     include_package_data=True,
-    install_requires=['requests', 'six', 'urllib3[secure]'],
+    install_requires=['requests', 'six', 'urllib3'],
     tests_require=['mock', 'responses'],
     test_suite='tests',
     url='https://github.com/nicolasramy/optimove',
